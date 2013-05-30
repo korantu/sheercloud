@@ -8,22 +8,13 @@ Communication happens over HTTP/HTTPS protocol.
 
 The server understands usual http verbs formed as:
 
-   *server address*/*verb*?param1=value1&param2=value2...
+   <server address>/<verb>?param1=value1&param2=value2...
 
 Each connection contains user/password, so no special login is required beforehand at the moment.
 
 Existing verbs include:
 
-- [x] "/authorize" : Verify that user/pass are ok, not necessary for other tasks.
-- [x] "/upload"    : Post contents of a file to server.
-- [x] "/download"  : Retrieve contents of a file from server.
-- [x] "/delete"    : Remove file from server.
-
-Verbs under development are:
-- [ ] Clever uploading to avoid sending already known files
-- [ ] "/render" : Starts rendering on a file
-- [ ] "/status" : Provides a status for a rendering job
-- [ ] "/cancel" : Stops a rendering job
-
-## File locations
-Each user has its own folder for his projects. Same files, for example models, are done using hardlinks. Most likely the structure is the same as on the user's local machine, but it is TBD for now.
+- "/authorize" : Verify that user/pass are ok, not necessary for other tasks.
+- "/upload"    : Post contents of a file to server.
+- "/download"  : Retreive contents of a file from server.
+- "/delete"    : Remove file from server.
