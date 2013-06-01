@@ -2,12 +2,12 @@ package cloud_test
 
 import (
 	"cloud"
+	"io/ioutil"
+	"os"
+	"path"
 	"strings"
 	"testing"
 	"time"
-	"os"
-	"path"
-	"io/ioutil"
 )
 
 func init() {
