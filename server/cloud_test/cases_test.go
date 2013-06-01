@@ -5,6 +5,8 @@ import (
 	"strings"
 	"testing"
 	"time"
+	"os"
+	"path"
 )
 
 func init() {
@@ -72,6 +74,31 @@ func TestUsers(t *testing.T) {
 	ceo := cloud.GetUser("important", "7890")
 	Must(t, ceo.Name == "Big CEO", "Get the user")
 }
+
+type ConcreteStuff struct {
+	PieceA, PieceB int 
+}
+
+type AbstractConfig struct {
+	ConcreteString string
+	RealConcreteStuff ConcreteStuff
+}
+
+func TestConfig(t *testing.T) {
+	place := path.Join( os.TempDir(), "abstract.config")
+	t.Log( place)
+	a := AbstractConfig{ "Entity", ConcreteStuff {42, time.Now().Nanosecond() } }
+	var b AbstractConfig
+	err := cloud.ConfigWrite( place, a)
+	t.Log( err)
+	Must( t, err == nil, "Saving" )
+	err = cloud.ConfigRead( place, &b)
+	t.Log( err)
+	Must( t, err == nil, "Loading" )
+	Must( t, b.RealConcreteStuff.PieceB == a.RealConcreteStuff.PieceB, "Check loading") 
+}
+
+
 
 
 
