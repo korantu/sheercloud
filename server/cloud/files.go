@@ -38,7 +38,7 @@ func NewFileStore(where string) (result *FileStore, err error) {
 
 	fn := func(path string, info os.FileInfo, err error) error {
 		if err == nil && !info.IsDir() {
-			result.files = append(result.files, path[len(where):])
+			result.files = append(result.files, path[len(where)+1:])
 		}
 		return err
 	}
