@@ -7,6 +7,7 @@ import (
 	"time"
 	"os"
 	"path"
+	"io/ioutil"
 )
 
 func init() {
@@ -97,6 +98,35 @@ func TestConfig(t *testing.T) {
 	Must( t, err == nil, "Loading" )
 	Must( t, b.RealConcreteStuff.PieceB == a.RealConcreteStuff.PieceB, "Check loading") 
 }
+
+func TestFileStore(t * testing.T){
+	location := path.Join( os.TempDir(), "cloud")
+	
+	os.Mkdir( location, os.FileMode( 0777))
+
+	make_file := func( name string, contents string) {
+		file_location := path.Join( location, name)
+		ioutil.WriteFile( file_location, []byte(contents), os.FileMode( 0666))
+	}
+
+	initial_files := []string {"A.txt", "lot.txt", "of.txt", "files.txt"}
+	for _, name := range initial_files {
+		make_file( name, name + " contains nothing useful")
+	}
+
+	store, err := cloud.NewFileStore( location)
+	Must( t, err == nil, "Create store")
+	t.Log( err)
+	size := store.Size() 
+	Must( t, size == len( initial_files), "Number of entries")
+	make_file( "extra.txt", "even less useful")
+	store, err = cloud.NewFileStore( location)
+	Must(t, err == nil, "Re-check")
+	Must(t, store.Size() == size + 1, "Check that new file is there")
+}
+
+
+
 
 
 
