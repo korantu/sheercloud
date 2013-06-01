@@ -62,12 +62,12 @@ func TestFileTransfer(t *testing.T) {
 	Must(t, string(good_guy.Download("scene.txt")) == "Act I", "Download")
 }
 
-func TestFileDelete( t* testing.T) {
+func TestFileDelete(t *testing.T) {
 	Must(t, good_guy.Upload("to_remove/scene.txt", []byte("Act I")) == "OK", "Upload temporary")
 	Must(t, good_guy.Delete("to_remove/scene.txt") == "OK", "Deletion")
 	Must(t, good_guy.Delete("to_remove/not_scene.txt") == "OK", "Deletion of non-existing file")
-	Must(t, strings.Contains( string(good_guy.Download("to_remove/not_scene.txt")), "FAIL"), "Download non-existing")
-	Must(t, strings.Contains( string(good_guy.Download("to_remove/scene.txt")), "FAIL"), "Download deleted")
+	Must(t, strings.Contains(string(good_guy.Download("to_remove/not_scene.txt")), "FAIL"), "Download non-existing")
+	Must(t, strings.Contains(string(good_guy.Download("to_remove/scene.txt")), "FAIL"), "Download deleted")
 }
 
 func TestUsers(t *testing.T) {
