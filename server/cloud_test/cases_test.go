@@ -77,69 +77,53 @@ func TestUsers(t *testing.T) {
 }
 
 type ConcreteStuff struct {
-	PieceA, PieceB int 
+	PieceA, PieceB int
 }
 
 type AbstractConfig struct {
-	ConcreteString string
+	ConcreteString    string
 	RealConcreteStuff ConcreteStuff
 }
 
 func TestConfig(t *testing.T) {
-	place := path.Join( os.TempDir(), "abstract.config")
-	t.Log( place)
-	a := AbstractConfig{ "Entity", ConcreteStuff {42, time.Now().Nanosecond() } }
+	place := path.Join(os.TempDir(), "abstract.config")
+	t.Log(place)
+	a := AbstractConfig{"Entity", ConcreteStuff{42, time.Now().Nanosecond()}}
 	var b AbstractConfig
-	err := cloud.ConfigWrite( place, a)
-	t.Log( err)
-	Must( t, err == nil, "Saving" )
-	err = cloud.ConfigRead( place, &b)
-	t.Log( err)
-	Must( t, err == nil, "Loading" )
-	Must( t, b.RealConcreteStuff.PieceB == a.RealConcreteStuff.PieceB, "Check loading") 
+	err := cloud.ConfigWrite(place, a)
+	t.Log(err)
+	Must(t, err == nil, "Saving")
+	err = cloud.ConfigRead(place, &b)
+	t.Log(err)
+	Must(t, err == nil, "Loading")
+	Must(t, b.RealConcreteStuff.PieceB == a.RealConcreteStuff.PieceB, "Check loading")
 }
 
-func TestFileStore(t * testing.T){
-	location := path.Join( os.TempDir(), "cloud")
-	
-	os.Mkdir( location, os.FileMode( 0777))
+func TestFileStore(t *testing.T) {
+	location := path.Join(os.TempDir(), "cloud")
+	os.RemoveAll(location)
+	os.Mkdir(location, os.FileMode(0777))
 
-	make_file := func( name string, contents string) {
-		file_location := path.Join( location, name)
-		ioutil.WriteFile( file_location, []byte(contents), os.FileMode( 0666))
+	make_file := func(name string, contents string) {
+		file_location := path.Join(location, name)
+		ioutil.WriteFile(file_location, []byte(contents), os.FileMode(0666))
 	}
 
-	initial_files := []string {"A.txt", "lot.txt", "of.txt", "files.txt"}
+	initial_files := []string{"A.txt", "lot.txt", "of.txt", "files.txt"}
 	for _, name := range initial_files {
-		make_file( name, name + " contains nothing useful")
+		make_file(name, name+" contains nothing useful")
 	}
 
-	store, err := cloud.NewFileStore( location)
-	Must( t, err == nil, "Create store")
-	t.Log( err)
-	size := store.Size() 
-	Must( t, size == len( initial_files), "Number of entries")
-	make_file( "extra.txt", "even less useful")
-	store, err = cloud.NewFileStore( location)
+	store, err := cloud.NewFileStore(location)
+	Must(t, err == nil, "Create store")
+	t.Log(err)
+	size := store.Size()
+	Must(t, size == len(initial_files), "Number of entries")
+	make_file("extra.txt", "even less useful")
+	store, err = cloud.NewFileStore(location)
 	Must(t, err == nil, "Re-check")
-	Must(t, store.Size() == size + 1, "Check that new file is there")
+	Must(t, store.Size() == size+1, "Check that new file is there")
+	store.Add("real.txt", []byte("Now we are talking"), true)
+	Must(t, store.Size() == size+2, "Check that another new file is there")
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
