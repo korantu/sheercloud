@@ -68,7 +68,10 @@ func (store *FileStore) Add(where string, content []byte, wait_till_done bool) (
 	}
 
 	store.update_fs <- func() (err error) {
-		err = ioutil.WriteFile(store.OsPath(where), content, os.FileMode(0666))
+		full_name := store.OsPath(where)
+		file_dir := path.Dir(full_name)
+		os.MkdirAll(file_dir, os.FileMode(0777))
+		err = ioutil.WriteFile(full_name, content, os.FileMode(0666))
 		completed <- true
 		return
 	}
