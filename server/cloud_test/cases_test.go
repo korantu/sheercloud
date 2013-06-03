@@ -100,6 +100,9 @@ func TestConfig(t *testing.T) {
 }
 
 func TestFileStore(t *testing.T) {
+	a, b := cloud.GetID([]byte("ABC")), cloud.GetID([]byte("CBA"))
+	Must(t, a != b, "Hash smoketest")
+
 	location := path.Join(os.TempDir(), "cloud")
 	os.RemoveAll(location)
 	os.Mkdir(location, os.FileMode(0777))

@@ -10,16 +10,27 @@ import (
 
 type waiter chan func() error
 
+type ID string
+
+func GetID(data []byte) ID {
+	return ID("uncalculated")
+}
+
+type file struct {
+	name string
+	id   ID
+}
+
 type FileStore struct {
-	location               string
-	files                  []string
-	queue waiter
+	location string
+	files    []file
+	queue    waiter
 }
 
 func NewFileStore(where string) (result *FileStore, err error) {
 	result = &FileStore{
 		where,
-		[]string{},
+		[]file{},
 		make(waiter, 1)}
 
 	do_update := func(a waiter) {
@@ -36,7 +47,7 @@ func NewFileStore(where string) (result *FileStore, err error) {
 
 	fn := func(path string, info os.FileInfo, err error) error {
 		if err == nil && !info.IsDir() {
-			result.files = append(result.files, path[len(where)+1:])
+			result.files = append(result.files, file{path[len(where)+1:],GetID([]byte("None"))})
 		}
 		return err
 	}
@@ -61,7 +72,7 @@ func (store *FileStore) Add(where string, content []byte, wait_till_done bool) (
 	completed := make(chan bool, 1)
 
 	store.queue <- func() (err error) {
-		store.files = append(store.files, where)
+		store.files = append(store.files, file{where, GetID(content)})
 		full_name := store.OsPath(where)
 		file_dir := path.Dir(full_name)
 		os.MkdirAll(file_dir, os.FileMode(0777))
