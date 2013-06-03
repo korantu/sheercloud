@@ -6,6 +6,8 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"crypto/md5"
+	"fmt"
 )
 
 type waiter chan func() error
@@ -13,7 +15,10 @@ type waiter chan func() error
 type ID string
 
 func GetID(data []byte) ID {
-	return ID("uncalculated")
+	hash := md5.New()
+	hash.Write( data)
+	sum := fmt.Sprintf("%x", hash.Sum(nil))
+	return ID(sum)
 }
 
 type file struct {
