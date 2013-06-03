@@ -13,14 +13,13 @@ type waiter chan func() error
 type FileStore struct {
 	location               string
 	files                  []string
-	update_info, update_fs waiter
+	queue waiter
 }
 
 func NewFileStore(where string) (result *FileStore, err error) {
 	result = &FileStore{
 		where,
 		[]string{},
-		make(waiter, 1),
 		make(waiter, 1)}
 
 	do_update := func(a waiter) {
@@ -33,8 +32,7 @@ func NewFileStore(where string) (result *FileStore, err error) {
 	}
 
 	// Queues
-	go do_update(result.update_fs)
-	go do_update(result.update_info)
+	go do_update(result.queue)
 
 	fn := func(path string, info os.FileInfo, err error) error {
 		if err == nil && !info.IsDir() {
@@ -62,12 +60,8 @@ func (store *FileStore) OsPath(name string) string {
 func (store *FileStore) Add(where string, content []byte, wait_till_done bool) (err error) {
 	completed := make(chan bool, 1)
 
-	store.update_info <- func() (err error) {
+	store.queue <- func() (err error) {
 		store.files = append(store.files, where)
-		return
-	}
-
-	store.update_fs <- func() (err error) {
 		full_name := store.OsPath(where)
 		file_dir := path.Dir(full_name)
 		os.MkdirAll(file_dir, os.FileMode(0777))
