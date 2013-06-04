@@ -86,20 +86,24 @@ func (store *FileStore) OsPath(name string) string {
 	return path.Join(store.location, name)
 }
 
-func (store *FileStore) Add(where string, content []byte, wait_till_done bool) (err error) {
-	completed := make(chan bool, 1)
-
+func (store *FileStore) Add(where string, content []byte) (err error) {
 	store.queue <- func() (err error) {
 		store.files = append(store.files, file{where, GetID(content)})
 		full_name := store.OsPath(where)
 		file_dir := path.Dir(full_name)
 		os.MkdirAll(file_dir, os.FileMode(0777))
 		err = ioutil.WriteFile(full_name, content, os.FileMode(0666))
-		completed <- true
 		return
 	}
-	if wait_till_done {
-		<-completed
+	return
+}
+
+func (store *FileStore) Sync() {
+	done := make(chan bool, 1)
+	store.queue <- func() (err error) {
+		done <- true
+		return
 	}
+	<-done
 	return
 }
