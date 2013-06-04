@@ -8,6 +8,7 @@ import (
 	"strings"
 	"testing"
 	"time"
+	"runtime/debug"
 )
 
 func init() {
@@ -21,6 +22,7 @@ func init() {
 func Must(t *testing.T, be_true bool, reason string) {
 	if !be_true {
 		t.Log(reason)
+		debug.PrintStack()
 		t.Fail()
 	}
 }
