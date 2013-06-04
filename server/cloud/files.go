@@ -1,23 +1,26 @@
 package cloud
 
 import (
+	"crypto/md5"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 	"path"
 	"path/filepath"
-	"crypto/md5"
-	"fmt"
 )
 
 type waiter chan func() error
 
 type ID string
 
+var hasher = md5.New()
+
+//GetID computes an ID of the given byte sequence; MD5 in this case.
 func GetID(data []byte) ID {
-	hash := md5.New()
-	hash.Write( data)
-	sum := fmt.Sprintf("%x", hash.Sum(nil))
+	hasher.Reset()
+	hasher.Write(data)
+	sum := fmt.Sprintf("%x", hasher.Sum(nil))
 	return ID(sum)
 }
 
