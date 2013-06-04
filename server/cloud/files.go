@@ -35,6 +35,22 @@ type FileStore struct {
 	queue    waiter
 }
 
+// populateFromDisk() Reads all the files in the disk in the folder and makes sure they are in the store
+func (store *FileStore) populateFromDisk(location string) (err error) {
+	fn := func(path string, info os.FileInfo, err error) error {
+		if err == nil && !info.IsDir() {
+			var bytes []byte
+			bytes, err = ioutil.ReadFile(path)
+			store.Add(path[len(location)+1:], bytes)
+		}
+		return err
+	}
+
+	err = filepath.Walk(location, fn)
+	return
+}
+
+// NewFileStore starts processing of queue and populates files
 func NewFileStore(where string) (result *FileStore, err error) {
 	result = &FileStore{
 		where,
@@ -50,17 +66,11 @@ func NewFileStore(where string) (result *FileStore, err error) {
 		}
 	}
 
-	// Queues
+	// Queue
 	go do_update(result.queue)
 
-	fn := func(path string, info os.FileInfo, err error) error {
-		if err == nil && !info.IsDir() {
-			result.files = append(result.files, file{path[len(where)+1:],GetID([]byte("None"))})
-		}
-		return err
-	}
-
-	err = filepath.Walk(where, fn)
+	// Get existing store
+	err = result.populateFromDisk(where)
 	return
 }
 
