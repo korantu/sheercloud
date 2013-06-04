@@ -120,13 +120,15 @@ func TestFileStore(t *testing.T) {
 	store, err := cloud.NewFileStore(location)
 	Must(t, err == nil, "Create store")
 	t.Log(err)
+	store.Sync()
 	size := store.Size()
 	Must(t, size == len(initial_files), "Number of entries")
 	make_file("extra.txt", "even less useful")
 	store, err = cloud.NewFileStore(location)
+	store.Sync()
 	Must(t, err == nil, "Re-check")
 	Must(t, store.Size() == size+1, "Check that new file is there")
-	store.Add("real.txt", []byte("Now we are talking"), true)
+	store.Add("real.txt", []byte("Now we are talking"))
+	store.Sync()
 	Must(t, store.Size() == size+2, "Check that another new file is there")
-
 }
