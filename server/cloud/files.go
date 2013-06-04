@@ -98,6 +98,10 @@ func (store *FileStore) Add(where string, content []byte) (err error) {
 	return
 }
 
+func (store *FileStore) Got( id ID) bool {
+	return false
+}
+
 func (store *FileStore) Sync() {
 	done := make(chan bool, 1)
 	store.queue <- func() (err error) {
