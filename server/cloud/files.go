@@ -169,3 +169,8 @@ func (store *FileStore) Sync() {
 	<-done
 	return
 }
+
+func (store *FileStore) Test(name CloudPath) int {
+	fmt.Println("%v", name)
+	return len(name)
+}
