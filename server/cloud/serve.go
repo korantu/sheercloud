@@ -70,7 +70,6 @@ func user(param map[string][]string) *User {
 }
 
 func authorize(w http.ResponseWriter, r *http.Request) {
-	print("Authorizing\n");
 	u := user(r.URL.Query())
 	if u == nil {
 		say(w, "FAIL")
@@ -79,13 +78,12 @@ func authorize(w http.ResponseWriter, r *http.Request) {
 	say(w, "OK")
 }
 
-// TODO take out all the file dancing outside 
+// TODO take out all the file dancing outside
 func upload(w http.ResponseWriter, r *http.Request) {
-	print("Uploading\n");
 	// Main response:
 	incoming, err := ioutil.ReadAll(r.Body) // Must read body first
 	if err != nil {
-		say( w, "FAIL:" + err.Error())
+		say(w, "FAIL:"+err.Error())
 		return
 	}
 
@@ -129,7 +127,6 @@ func upload(w http.ResponseWriter, r *http.Request) {
 
 // TODO Refactor
 func download(w http.ResponseWriter, r *http.Request) {
-	print("Downloading\n");
 	// Main response:
 	_, err := ioutil.ReadAll(r.Body) // Must read body first
 	if err != nil {
@@ -149,36 +146,35 @@ func download(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	full_name := path.Join(u.Login, file[0])
-	if strings.Contains( full_name, "..") {
+	if strings.Contains(full_name, "..") {
 		say(w, "FAIL: No names containing .. are allowed")
 		return
 	}
-	info, err := os.Stat( full_name)
+	info, err := os.Stat(full_name)
 	if err != nil {
-		say(w, "FAIL:" + err.Error())
+		say(w, "FAIL:"+err.Error())
 		return
 	}
 	if info.IsDir() {
 		say(w, "FAIL: Unable to download directory;")
 		return
 	}
-	
-	data, err := ioutil.ReadFile( full_name)
+
+	data, err := ioutil.ReadFile(full_name)
 	if err != nil {
-		say(w, "FAIL:" + err.Error())
+		say(w, "FAIL:"+err.Error())
 		return
 	}
 	// All seem okay.
-	w.Write( data)
+	w.Write(data)
 }
 
-// TODO take out all the file dancing outside 
+// TODO take out all the file dancing outside
 func delete(w http.ResponseWriter, r *http.Request) {
-	print("Deleting\n");
 	// Main response:
 	_, err := ioutil.ReadAll(r.Body) // Must read body first
 	if err != nil {
-		say( w, "FAIL:" + err.Error())
+		say(w, "FAIL:"+err.Error())
 		return
 	}
 
@@ -246,15 +242,14 @@ func (i Identity) Authorize() string {
 	return string(Get("authorize?login=" + i.Login + "&password=" + i.Password))
 }
 
-
-func (i Identity) Upload( remote string, data []byte) string {
-	return string(Post("upload?login=" + i.Login + "&password=" + i.Password + "&file=" + remote, data))
+func (i Identity) Upload(remote string, data []byte) string {
+	return string(Post("upload?login="+i.Login+"&password="+i.Password+"&file="+remote, data))
 }
 
-func (i Identity) Download( remote string) []byte {
+func (i Identity) Download(remote string) []byte {
 	return Get("download?login=" + i.Login + "&password=" + i.Password + "&file=" + remote)
 }
 
-func (i Identity) Delete( remote string) string {
+func (i Identity) Delete(remote string) string {
 	return string(Get("delete?login=" + i.Login + "&password=" + i.Password + "&file=" + remote))
 }

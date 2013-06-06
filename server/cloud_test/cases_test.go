@@ -3,12 +3,12 @@ package cloud_test
 import (
 	"cloud"
 	"io/ioutil"
+	"log"
 	"os"
 	"path"
 	"strings"
 	"testing"
 	"time"
-	"runtime/debug"
 )
 
 func init() {
@@ -19,22 +19,19 @@ func init() {
 	print("Done.\n")
 }
 
-func Must(t *testing.T, be_true bool, reason string) {
-	if !be_true {
-		t.Log(reason)
-		debug.PrintStack()
-		t.Fail()
-	}
-}
-
 func TestSimplePostGet(t *testing.T) {
 	post_resp := string(cloud.Post("info", []byte("ABC123")))
 	get_resp := string(cloud.Get("info?a=1&a=2&b=3"))
 	t.Log(post_resp)
 	t.Log(get_resp)
-	Must(t, strings.Contains(post_resp, "[ABC123]"), "Echo back posted file")
-	Must(t, strings.Contains(get_resp, "b:3"), "Parse single parameters")
-	Must(t, strings.Contains(get_resp, "a:1|2"), "Parse multiple parameters")
+	switch true {
+	case !strings.Contains(post_resp, "[ABC123]"):
+		t.Error("Echo back posted file")
+	case !strings.Contains(get_resp, "b:3"):
+		t.Error("Parse single parameters")
+	case !strings.Contains(get_resp, "a:1|2"):
+		t.Error("Parse multiple parameters")
+	}
 }
 
 var good_guy, bad_guy = cloud.Identity{"abc", "123"}, cloud.Identity{"bbq", "123"}
@@ -43,11 +40,16 @@ func TestLogin(t *testing.T) {
 	// Raw
 	good_result := string(cloud.Get("authorize?login=important&password=7890"))
 	bad_result := string(cloud.Get("authorize?login=important&password=789"))
-	Must(t, good_result == "OK", "Correct user")
-	Must(t, bad_result == "FAIL", "Wrong password")
-	// Nicer
-	Must(t, good_guy.Authorize() == "OK", "Correct user")
-	Must(t, strings.Contains(bad_guy.Authorize(), "FAIL"), "Wrong user")
+	switch false {
+	case good_result == "OK":
+		t.Error("Correct user")
+	case bad_result == "FAIL":
+		t.Error("Wrong password")
+	case good_guy.Authorize() == "OK":
+		t.Error("Correct user")
+	case strings.Contains(bad_guy.Authorize(), "FAIL"):
+		t.Error("Wrong user")
+	}
 }
 
 func TestFileTransfer(t *testing.T) {
@@ -56,26 +58,39 @@ func TestFileTransfer(t *testing.T) {
 	downloaded := string(cloud.Get("download?login=important&password=7890&file=numbers.txt"))
 	t.Log(uploaded)
 	t.Log(downloaded)
-	Must(t, uploaded == "OK", "File upload")
-	Must(t, downloaded == "12345", "File download")
-	// Nicer
-	Must(t, strings.Contains(bad_guy.Upload("scene.txt", []byte("Act I")), "FAIL"), "Upload by a bad guy")
-	// Flow
-	Must(t, good_guy.Upload("scene.txt", []byte("Act I")) == "OK", "Upload")
-	Must(t, string(good_guy.Download("scene.txt")) == "Act I", "Download")
+	switch false {
+	case uploaded == "OK":
+		t.Error("File upload")
+	case downloaded == "12345":
+		t.Error("File download")
+	case strings.Contains(bad_guy.Upload("scene.txt", []byte("Act I")), "FAIL"):
+		t.Error("Upload by a bad guy")
+	case good_guy.Upload("scene.txt", []byte("Act I")) == "OK":
+		t.Error("Upload")
+	case string(good_guy.Download("scene.txt")) == "Act I":
+		t.Error("Download")
+	}
 }
 
 func TestFileDelete(t *testing.T) {
-	Must(t, good_guy.Upload("to_remove/scene.txt", []byte("Act I")) == "OK", "Upload temporary")
-	Must(t, good_guy.Delete("to_remove/scene.txt") == "OK", "Deletion")
-	Must(t, good_guy.Delete("to_remove/not_scene.txt") == "OK", "Deletion of non-existing file")
-	Must(t, strings.Contains(string(good_guy.Download("to_remove/not_scene.txt")), "FAIL"), "Download non-existing")
-	Must(t, strings.Contains(string(good_guy.Download("to_remove/scene.txt")), "FAIL"), "Download deleted")
+	switch false {
+	case good_guy.Upload("to_remove/scene.txt", []byte("Act I")) == "OK":
+		t.Error("Upload temporary")
+	case good_guy.Delete("to_remove/scene.txt") == "OK":
+		t.Error("Deletion")
+	case good_guy.Delete("to_remove/not_scene.txt") == "OK":
+		t.Error("Deletion of non-existing file")
+	case strings.Contains(string(good_guy.Download("to_remove/not_scene.txt")), "FAIL"):
+		t.Error("Download non-existing")
+	case strings.Contains(string(good_guy.Download("to_remove/scene.txt")), "FAIL"):
+		t.Error("Download deleted")
+	}
 }
 
 func TestUsers(t *testing.T) {
-	ceo := cloud.GetUser("important", "7890")
-	Must(t, ceo.Name == "Big CEO", "Get the user")
+	if ceo := cloud.GetUser("important", "7890"); ceo.Name != "Big CEO" {
+		t.Error("Fail to get the user")
+	}
 }
 
 type ConcreteStuff struct {
@@ -94,43 +109,100 @@ func TestConfig(t *testing.T) {
 	var b AbstractConfig
 	err := cloud.ConfigWrite(place, a)
 	t.Log(err)
-	Must(t, err == nil, "Saving")
+	if err != nil {
+		t.Error("Saving")
+	}
 	err = cloud.ConfigRead(place, &b)
 	t.Log(err)
-	Must(t, err == nil, "Loading")
-	Must(t, b.RealConcreteStuff.PieceB == a.RealConcreteStuff.PieceB, "Check loading")
+	if err != nil {
+		t.Error("Loading")
+	}
+	if b.RealConcreteStuff.PieceB != a.RealConcreteStuff.PieceB {
+		t.Error("Check loading")
+	}
+}
+
+func TestFileStoreHash(t *testing.T) {
+	a, b := cloud.GetID([]byte("ABC")), cloud.GetID([]byte("CBA"))
+	if a == b {
+		t.Error("Hash smoketest")
+	}
+}
+
+func make_file(store *cloud.FileStore, name string, contents string) {
+	file_location := store.OsPath(cloud.CloudPath(name))
+	os.MkdirAll(path.Dir(file_location), os.FileMode(0777))
+	if err := ioutil.WriteFile(file_location, []byte(contents), os.FileMode(0666)); err != nil {
+		log.Panic(err.Error())
+	}
+}
+
+type TestGround string
+
+var tg = TestGround(path.Join(os.TempDir(), "cloud"))
+
+func (test_ground TestGround) create_files(t *testing.T) {
+	location := string(test_ground)
+	os.RemoveAll(location)
+	os.MkdirAll(location, os.FileMode(0777))
+	store, err := cloud.NewFileStore(location)
+	if err != nil {
+		t.Error("Failed to create store:" + err.Error())
+	}
+
+	initial_files := []string{"A.txt", "alot.txt", "of.txt", "files.txt", "a/usera.txt"}
+	for _, name := range initial_files {
+		make_file(store, name, name+" contains nothing useful")
+	}
+}
+
+func (test_ground TestGround) get_store(t *testing.T) (store *cloud.FileStore) {
+	location := string(test_ground)
+	var err error
+	if store, err = cloud.NewFileStore(location); err != nil {
+		t.Fatalf("Unable to create file store: %s", err.Error())
+	}
+	return store
+}
+
+func TestTypes(t *testing.T) {
+	store := tg.get_store(t)
+	if  store.Test("hi") != 2 { t.Error("Parameter check") }
+}
+
+func TestStoreCreation(t *testing.T) {
+	tg.create_files(t)
+	store := tg.get_store(t)
+	store.Sync()
+	if store.Size() != 5 {
+		t.Errorf("Incorrect store size: %i", store.Size())
+	}
 }
 
 func TestFileStore(t *testing.T) {
-	a, b := cloud.GetID([]byte("ABC")), cloud.GetID([]byte("CBA"))
-	Must(t, a != b, "Hash smoketest")
-
-	location := path.Join(os.TempDir(), "cloud")
-	os.RemoveAll(location)
-	os.Mkdir(location, os.FileMode(0777))
-
-	make_file := func(name string, contents string) {
-		file_location := path.Join(location, name)
-		ioutil.WriteFile(file_location, []byte(contents), os.FileMode(0666))
-	}
-
-	initial_files := []string{"A.txt", "lot.txt", "of.txt", "files.txt"}
-	for _, name := range initial_files {
-		make_file(name, name+" contains nothing useful")
-	}
-
-	store, err := cloud.NewFileStore(location)
-	Must(t, err == nil, "Create store")
-	t.Log(err)
+	tg.create_files(t)
+	store := tg.get_store(t)
 	store.Sync()
 	size := store.Size()
-	Must(t, size == len(initial_files), "Number of entries")
-	make_file("extra.txt", "even less useful")
-	store, err = cloud.NewFileStore(location)
+	useless := "even less useful"
+	useless_id := cloud.GetID([]byte(useless)) // Check later
+	make_file(store, "extra.txt", useless)
+
+	store = tg.get_store(t)
 	store.Sync()
-	Must(t, err == nil, "Re-check")
-	Must(t, store.Size() == size+1, "Check that new file is there")
+	if store.Size() != size+1 {
+		t.Error("Check that new file is there")
+	}
 	store.Add("real.txt", []byte("Now we are talking"))
 	store.Sync()
-	Must(t, store.Size() == size+2, "Check that another new file is there")
+	if store.Size() != size+2 {
+		t.Error("Check that another new file is there")
+	}
+	if store.GotID(useless_id) == nil {
+		t.Error("File should be locatable")
+	}
+	usera := store.GotPrefix("a/")
+	if expected, got := 1, len(usera); expected != got {
+		t.Errorf("Matched %d instead of %d; %v", got, expected, usera)
+	}
 }
