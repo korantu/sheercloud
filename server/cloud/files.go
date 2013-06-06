@@ -85,13 +85,14 @@ func (store *FileStore) Place() string {
 	return store.location
 }
 
-func (store *FileStore) OsPath(name string) string {
-	return path.Join(store.location, name)
+func (store *FileStore) OsPath(name CloudPath) string {
+	return path.Join(store.location, string(name))
 }
 
-func (store *FileStore) Add(where string, content []byte) (err error) {
+func (store *FileStore) Add(where CloudPath, content []byte) (err error) {
 	store.queue <- func() (err error) {
-		store.files = append(store.files, file{where, GetID(content)})
+		next := File{where, GetID(content)}
+		store.files = append(store.files, next)
 		full_name := store.OsPath(where)
 		file_dir := path.Dir(full_name)
 		os.MkdirAll(file_dir, os.FileMode(0777))
@@ -101,8 +102,62 @@ func (store *FileStore) Add(where string, content []byte) (err error) {
 	return
 }
 
-func (store *FileStore) Got( id ID) bool {
-	return false
+func (store *FileStore) GotID(id ID) *File {
+	for _, file := range store.files {
+		if file.Id == id {
+			return &file
+		}
+	}
+	return nil
+}
+
+func (store *FileStore) GotName(name CloudPath) *File {
+	for _, file := range store.files {
+		if file.Name == name {
+			return &file
+		}
+	}
+	return nil
+}
+
+func (store *FileStore) GotPrefix(prefix string) (result []File) {
+	for _, file := range store.files {
+		if strings.HasPrefix(string(file.Name), prefix) {
+			result = append(result, file)
+		}
+	}
+	return
+}
+
+func (store *FileStore) Link(new_name CloudPath, id ID) (err error) {
+	old_file := store.GotID(id)
+	if old_file != nil {
+		err = os.Link( store.OsPath( old_file.Name), store.OsPath( new_name))
+		if err == nil {
+			next := File{new_name, id}
+			store.queue <- func() (err error) {
+				store.files = append(store.files, next)
+				return nil
+			}
+		}
+	} else {
+		err = os.ErrNotExist
+	}
+	return
+}
+
+func (store *FileStore) Remove(the_name CloudPath) {
+	store.queue <- func() (err error) {
+		file := store.GotName(the_name)
+		if file != nil {
+			err = os.Remove(store.OsPath(the_name))
+			if err == nil {
+				file.Name = ""
+				file.Id = ID("")
+			}
+		}
+		return
+	}
 }
 
 func (store *FileStore) Sync() {
