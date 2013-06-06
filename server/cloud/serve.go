@@ -12,6 +12,8 @@ import (
 	"strings"
 )
 
+// Create default configuration first, then provide facilities for saving/loading of such
+
 // TODO remove
 var port = "8080"
 
