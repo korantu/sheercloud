@@ -44,7 +44,7 @@ func (store *FileStore) populateFromDisk(location string) (err error) {
 		if err == nil && !info.IsDir() {
 			var bytes []byte
 			bytes, err = ioutil.ReadFile(path)
-			store.Add( CloudPath(path[len(location)+1:]), bytes)
+			store.Add(CloudPath(path[len(location)+1:]), bytes)
 		}
 		return err
 	}
