@@ -8,11 +8,14 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"strings"
 )
 
 type waiter chan func() error
 
 type ID string
+
+type CloudPath string
 
 var hasher = md5.New()
 
@@ -24,14 +27,14 @@ func GetID(data []byte) ID {
 	return ID(sum)
 }
 
-type file struct {
-	name string
-	id   ID
+type File struct {
+	Name CloudPath
+	Id   ID
 }
 
 type FileStore struct {
 	location string
-	files    []file
+	files    []File
 	queue    waiter
 }
 
@@ -41,7 +44,7 @@ func (store *FileStore) populateFromDisk(location string) (err error) {
 		if err == nil && !info.IsDir() {
 			var bytes []byte
 			bytes, err = ioutil.ReadFile(path)
-			store.Add(path[len(location)+1:], bytes)
+			store.Add( CloudPath(path[len(location)+1:]), bytes)
 		}
 		return err
 	}
@@ -54,7 +57,7 @@ func (store *FileStore) populateFromDisk(location string) (err error) {
 func NewFileStore(where string) (result *FileStore, err error) {
 	result = &FileStore{
 		where,
-		[]file{},
+		[]File{},
 		make(waiter, 1)}
 
 	do_update := func(a waiter) {
