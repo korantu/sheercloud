@@ -130,7 +130,7 @@ func download(w http.ResponseWriter, r *http.Request) {
 	// Main response:
 	_, err := ioutil.ReadAll(r.Body) // Must read body first
 	if err != nil {
-		say( w, "FAIL:" + err.Error())
+		say(w, "FAIL:"+err.Error())
 		return
 	}
 
@@ -170,7 +170,7 @@ func download(w http.ResponseWriter, r *http.Request) {
 }
 
 // TODO take out all the file dancing outside
-func delete(w http.ResponseWriter, r *http.Request) {
+func remove(w http.ResponseWriter, r *http.Request) {
 	// Main response:
 	_, err := ioutil.ReadAll(r.Body) // Must read body first
 	if err != nil {
@@ -197,7 +197,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		say(w, "FAIL: .. is not allowed in the path")
 		return
 	}
-	os.Remove( full_name)
+	os.Remove(full_name)
 	say(w, "OK")
 }
 
@@ -207,7 +207,7 @@ func Serve() {
 	http.HandleFunc("/authorize", authorize)
 	http.HandleFunc("/upload", upload)
 	http.HandleFunc("/download", download)
-	http.HandleFunc("/delete", delete)
+	http.HandleFunc("/delete", remove)
 	http.ListenAndServe(":"+port, nil)
 
 }

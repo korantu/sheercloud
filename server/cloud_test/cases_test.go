@@ -167,7 +167,9 @@ func (test_ground TestGround) get_store(t *testing.T) (store *cloud.FileStore) {
 
 func TestTypes(t *testing.T) {
 	store := tg.get_store(t)
-	if  store.Test("hi") != 2 { t.Error("Parameter check") }
+	if store.Test("hi") != 2 {
+		t.Error("Parameter check")
+	}
 }
 
 func TestStoreCreation(t *testing.T) {
@@ -177,6 +179,30 @@ func TestStoreCreation(t *testing.T) {
 	if store.Size() != 5 {
 		t.Errorf("Incorrect store size: %i", store.Size())
 	}
+}
+
+func TestStoreRemove(t *testing.T) {
+	tg.create_files(t)
+	store := tg.get_store(t)
+
+	if store.Sync(); store.Size() != 5 {
+		t.Errorf("Incorrect store size: %i", store.Size())
+	}
+
+	store.Add("cool/stuff/me.txt", []byte("123"))
+	if store.Sync(); store.Size() != 6 {
+		t.Errorf("Incorrect store size: %i", store.Size())
+	}
+
+	store.Remove("cool/stuff/me.txt")
+	if store.Sync(); store.Size() != 5 {
+		t.Errorf("Incorrect store size: %i", store.Size())
+	}
+
+	if file, err := os.Stat(store.OsPath("cool/stuff/me.txt")); err == nil {
+		t.Errorf("File %v is not supposed to really exist", file)
+	}
+
 }
 
 func TestFileStore(t *testing.T) {
@@ -201,8 +227,8 @@ func TestFileStore(t *testing.T) {
 	if store.GotID(useless_id) == nil {
 		t.Error("File should be locatable")
 	}
-	usera := store.GotPrefix("a/")
-	if expected, got := 1, len(usera); expected != got {
-		t.Errorf("Matched %d instead of %d; %v", got, expected, usera)
+	files, ids := store.GotPrefix("a/")
+	if expected, got := 1, len(files); expected != got {
+		t.Errorf("Matched %d instead of %d; %v|%v", got, expected, files, ids)
 	}
 }
