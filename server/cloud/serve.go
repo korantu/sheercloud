@@ -71,6 +71,35 @@ func user(param map[string][]string) *User {
 	return GetUser(login[0], password[0])
 }
 
+type CloudError string
+
+func (err *CloudError) Error() string {
+	return string(*err)
+}
+
+var file_not_specified = CloudError("File should be specified")
+var illegal_name = CloudError("Path cannot contain '..' or be empty")
+var file_list_is_empty = CloudError("No files are really specified")
+
+func file(param map[string][]string, user string) (paths []CloudPath, err error) {
+	none := []CloudPath{}
+	files, ok := param["file"]
+	if !ok {
+		return none, &file_not_specified
+	}
+	for _, a_file := range files {
+		if strings.Contains(a_file, "..") || a_file == "" {
+			return none, &illegal_name
+		}
+		full_name := path.Join(user, a_file)
+		paths = append(paths, CloudPath(full_name))
+	}
+	if len(paths) == 0 {
+		return none, &file_list_is_empty
+	}
+	return
+}
+
 func authorize(w http.ResponseWriter, r *http.Request) {
 	u := user(r.URL.Query())
 	if u == nil {
