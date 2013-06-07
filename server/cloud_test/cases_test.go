@@ -191,12 +191,12 @@ func TestStoreRemove(t *testing.T) {
 
 	new_file := cloud.CloudPath("cool/stuff/me.txt")
 
-	store.Add( new_file, []byte("123"))
+	store.Add(new_file, []byte("123"))
 	if store.Sync(); store.Size() != 6 {
 		t.Errorf("Incorrect store size: %i", store.Size())
 	}
 
-	if file, err := os.Stat(store.OsPath( new_file)); err != nil {
+	if file, err := os.Stat(store.OsPath(new_file)); err != nil {
 		t.Errorf("File %v got to exist, but not really: %v", file, err)
 	}
 
