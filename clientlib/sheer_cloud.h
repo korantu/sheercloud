@@ -30,6 +30,7 @@ class SheerCloudLink: public QNetworkAccessManager {
   void Upload(QString, const QByteArray &);
   void Download(QString, QByteArray &);
   void Delete(QString);
+  //  void ListAll(QHash<Qstring,Qstring> & out_list);
 
   signals:
   void done();
