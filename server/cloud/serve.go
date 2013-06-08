@@ -78,8 +78,13 @@ func (err *CloudError) Error() string {
 }
 
 var file_not_specified = CloudError("File should be specified")
-var illegal_name = CloudError("Path cannot contain '..' or be empty")
 var file_list_is_empty = CloudError("No files are really specified")
+
+func NewCloudError(reason string) error{
+	failure := CloudError(reason)
+	return &failure
+	
+}
 
 func file(param map[string][]string, user string) (paths []CloudPath, err error) {
 	none := []CloudPath{}
