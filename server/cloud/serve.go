@@ -105,6 +105,21 @@ func file(param map[string][]string, user string) (paths []CloudPath, err error)
 	return
 }
 
+// user_and_file is a very common request
+func user_and_file(param map[string][]string) ( the_user * User, paths []CloudPath, err error){
+	if the_user = user(param); the_user == nil {
+		err = NewCloudError("Failed to obtain a valid user") 
+		return // err
+	}
+
+	paths, err = file(param, the_user.Login)
+	if err != nil {
+		return // err
+	}
+
+	return 	// ok
+}
+
 func authorize(w http.ResponseWriter, r *http.Request) {
 	u := user(r.URL.Query())
 	if u == nil {
