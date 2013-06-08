@@ -94,7 +94,7 @@ func file(param map[string][]string, user string) (paths []CloudPath, err error)
 	}
 	for _, a_file := range files {
 		if strings.Contains(a_file, "..") || a_file == "" {
-			return none, &illegal_name
+			return none, NewCloudError( "Illegal name: " + a_file )
 		}
 		full_name := path.Join(user, a_file)
 		paths = append(paths, CloudPath(full_name))
