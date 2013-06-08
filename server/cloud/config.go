@@ -6,6 +6,14 @@ import (
 	"io/ioutil"
 )
 
+func init(){
+	var err error
+	theCloud, err = NewFileStore(".")
+	if err != nil {
+		panic(err.Error())
+	}
+}
+
 // ConfigRead reads configuration from file "where" into result.
 func ConfigRead(where string, result interface{}) (err error) {
 	in, err := os.Open(where)

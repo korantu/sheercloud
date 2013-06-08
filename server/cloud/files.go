@@ -33,6 +33,10 @@ type FileStore struct {
 	queue, meta_queue waiter
 }
 
+
+
+var theCloud * FileStore
+
 // populateFromDisk() Reads all the files in the disk in the folder and makes sure they are in the store
 func (store *FileStore) populateFromDisk(location string) (err error) {
 	fn := func(path string, info os.FileInfo, err error) error {
