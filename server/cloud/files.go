@@ -125,6 +125,20 @@ func (store *FileStore) Add(where CloudPath, content []byte) (err error) {
 	return
 }
 
+func (store *FileStore) GetContent(where CloudPath) (content []byte, err error) {
+	full_name := store.OsPath(where)
+	info, err := os.Stat(full_name)
+	if err != nil {
+		return
+	}
+	if info.IsDir() {
+		return nil,  NewCloudError("FAIL: Unable to download directory")
+	}
+
+	content, err = ioutil.ReadFile(full_name)
+	return
+}
+
 func (store *FileStore) GotID(id ID) * CloudPath {
 	for name, cloud_id := range store.files {
 		if cloud_id == id {
