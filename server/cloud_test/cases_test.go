@@ -9,6 +9,7 @@ import (
 	"strings"
 	"testing"
 	"time"
+	"bytes"
 )
 
 func init() {
@@ -190,11 +191,17 @@ func TestStoreRemove(t *testing.T) {
 	}
 
 	new_file := cloud.CloudPath("cool/stuff/me.txt")
+	new_content := []byte("123")
 
-	store.Add(new_file, []byte("123"))
+	store.Add(new_file, new_content)
 	if store.Sync(); store.Size() != 6 {
 		t.Errorf("Incorrect store size: %i", store.Size())
 	}
+
+
+	if content, err := store.GetContent(new_file); ! bytes.Equal(content, new_content) || err != nil {
+		t.Errorf("File content does not match; Othewise, bad (%v) things happened.", err)
+	} 
 
 	if file, err := os.Stat(store.OsPath(new_file)); err != nil {
 		t.Errorf("File %v got to exist, but not really: %v", file, err)

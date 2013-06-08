@@ -134,45 +134,19 @@ func upload(w http.ResponseWriter, r *http.Request) {
 	// Main response:
 	incoming, err := ioutil.ReadAll(r.Body) // Must read body first
 	if err != nil {
-		say(w, "FAIL:"+err.Error())
+		say(w, "FAIL: Reading data: "+err.Error())
 		return
 	}
 
-	q := r.URL.Query()
-	u := user(q)
-
-	if u == nil {
-		say(w, "FAIL")
-		return
-	}
-
-	file, ok := q["file"]
-	if !ok {
-		say(w, "FAIL: File name is not specified")
-		return
-	}
-	full_name := path.Join(u.Login, file[0])
-	dir := path.Dir(full_name)
-	if strings.Contains(dir, "..") {
-		say(w, "FAIL: .. is not allowed in the path")
-		return
-	}
-	err = os.MkdirAll(dir, 0777)
+	_, file_path, err := user_and_file(r.URL.Query())
 	if err != nil {
 		say(w, "FAIL:"+err.Error())
 		return
 	}
-	new_file, err := os.Create(full_name)
-	if err != nil {
-		say(w, "FAIL:"+err.Error())
-		return
-	}
-	defer new_file.Close()
-	_, err = new_file.Write(incoming)
-	if err != nil {
-		say(w, "FAIL:"+err.Error())
-		return
-	}
+
+	// Only use first path
+	theCloud.Add(file_path[0], incoming)
+
 	say(w, "OK")
 }
 
@@ -185,33 +159,14 @@ func download(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	q := r.URL.Query()
-	u := user(q)
-	if u == nil {
-		say(w, "FAIL")
-		return
-	}
-	file, ok := q["file"]
-	if !ok {
-		say(w, "FAIL: File name is not specified")
-		return
-	}
-	full_name := path.Join(u.Login, file[0])
-	if strings.Contains(full_name, "..") {
-		say(w, "FAIL: No names containing .. are allowed")
-		return
-	}
-	info, err := os.Stat(full_name)
+	_, file_path, err := user_and_file(r.URL.Query())
 	if err != nil {
 		say(w, "FAIL:"+err.Error())
 		return
 	}
-	if info.IsDir() {
-		say(w, "FAIL: Unable to download directory;")
-		return
-	}
 
-	data, err := ioutil.ReadFile(full_name)
+	data, err := theCloud.GetContent(file_path[0])
+
 	if err != nil {
 		say(w, "FAIL:"+err.Error())
 		return
