@@ -21,13 +21,36 @@ func init() {
 	print("Done.\n")
 }
 
+var content_counter = time.Now().Nanosecond()
+
+// some_content returns a string and a byte representation of some random bytes.
+func some_content() (as_string string, as_bytes []byte) {
+	content_counter++
+	as_string = fmt.Sprintf("<<<%d>>>", content_counter)
+	as_bytes = []byte(as_string)
+	return
+}
+
+func TestSomeContent(t *testing.T) {
+	a_string, a_bytes := some_content()
+	b_string, b_bytes := some_content()
+	if bytes.Equal(a_bytes, b_bytes) {
+		t.Errorf("Must be different: <%v> <%v>", a_bytes, b_bytes)
+	}
+	if !bytes.Equal(b_bytes, []byte(b_string)) || !bytes.Equal(a_bytes, []byte(a_string)) {
+		t.Error("Bytes and string must be same")
+	}
+
+}
+
 func TestSimplePostGet(t *testing.T) {
-	post_resp := string(cloud.Post("info", []byte("ABC123")))
+	a_string, a_bytes := some_content()
+	post_resp := string(cloud.Post("info", a_bytes))
 	get_resp := string(cloud.Get("info?a=1&a=2&b=3"))
 	t.Log(post_resp)
 	t.Log(get_resp)
 	switch true {
-	case !strings.Contains(post_resp, "[ABC123]"):
+	case !strings.Contains(post_resp, "["+a_string+"]"):
 		t.Error("Echo back posted file")
 	case !strings.Contains(get_resp, "b:3"):
 		t.Error("Parse single parameters")
@@ -55,21 +78,23 @@ func TestLogin(t *testing.T) {
 }
 
 func TestFileTransfer(t *testing.T) {
+	// Get some data for test
+	test_string, test_bytes := some_content()
 	// Raw
-	uploaded := string(cloud.Post("upload?login=important&password=7890&file=numbers.txt", []byte("12345")))
+	uploaded := string(cloud.Post("upload?login=important&password=7890&file=numbers.txt", test_bytes))
 	downloaded := string(cloud.Get("download?login=important&password=7890&file=numbers.txt"))
 	t.Log(uploaded)
 	t.Log(downloaded)
 	switch false {
 	case uploaded == "OK":
 		t.Error("File upload")
-	case downloaded == "12345":
+	case downloaded == test_string:
 		t.Error("File download")
 	case strings.Contains(bad_guy.Upload("scene.txt", []byte("Act I")), "FAIL"):
 		t.Error("Upload by a bad guy")
-	case good_guy.Upload("scene.txt", []byte("Act I")) == "OK":
+	case good_guy.Upload("scene.txt", test_bytes) == "OK":
 		t.Error("Upload")
-	case string(good_guy.Download("scene.txt")) == "Act I":
+	case string(good_guy.Download("scene.txt")) == test_string:
 		t.Error("Download")
 	}
 }
