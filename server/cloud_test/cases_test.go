@@ -1,7 +1,9 @@
 package cloud_test
 
 import (
+	"bytes"
 	"cloud"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -9,7 +11,6 @@ import (
 	"strings"
 	"testing"
 	"time"
-	"bytes"
 )
 
 func init() {
