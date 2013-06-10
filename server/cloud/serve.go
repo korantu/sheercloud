@@ -278,6 +278,24 @@ func (i Identity) Upload(remote string, data []byte) string {
 	return string(Post("upload?login="+i.Login+"&password="+i.Password+"&file="+remote, data))
 }
 
+type FileID struct {
+	File string
+	FileID string
+}
+
+func ParseIdList( raw_list [] byte) []FileID {
+	name_id_list := strings.Split(string(raw_list), "\n")
+	var result []FileID
+	for  n := 0; (n+1) < len(name_id_list); n+=2 {
+		result = append(result, FileID{name_id_list[n], name_id_list[n+1]})
+	}
+	return result
+}
+
+func (i Identity) List(remote string) []FileID {
+	return ParseIdList(Get("list?login="+i.Login+"&password="+i.Password+"&file="+remote))
+}
+
 func (i Identity) Download(remote string) []byte {
 	return Get("download?login=" + i.Login + "&password=" + i.Password + "&file=" + remote)
 }
@@ -285,3 +303,14 @@ func (i Identity) Download(remote string) []byte {
 func (i Identity) Delete(remote string) string {
 	return string(Get("delete?login=" + i.Login + "&password=" + i.Password + "&file=" + remote))
 }
+
+
+
+
+
+
+
+
+
+
+

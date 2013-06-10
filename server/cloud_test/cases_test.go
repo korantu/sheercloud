@@ -101,13 +101,61 @@ func TestFileTransfer(t *testing.T) {
 
 func TestFileList(t *testing.T) {
 	_, test_bytes := some_content()
-	for _, name := range []string{"a", "b", "c"} {
-		uploaded := string(cloud.Post("upload?login=important&password=7890&file=to/list/"+name+".txt", test_bytes))
+	names := []string{"a", "b", "c"}
+	checked := make(map[string]bool)
+	for _, name := range names {
+		a_full_name := "to/list/"+name+".txt"
+		checked[a_full_name] = false
+		uploaded := string(cloud.Post("upload?login=important&password=7890&file="+a_full_name, test_bytes))
 		t.Log(uploaded)
 	}
-	got := string(cloud.Get("list?login=important&password=7890&file=to/list"))
-	t.Log(got)
-	t.Fail()
+	got := cloud.Get("list?login=important&password=7890&file=to/list")
+	t.Log(string(got))
+	list := cloud.ParseIdList(got)
+	for _, to_check := range list {
+		if was_checked, ok := checked[to_check.File]; !ok || was_checked == true {
+			t.Error("List %v does not match reference %v", list, checked)
+		} 
+		checked[to_check.File] = true
+	}
+}
+
+func TestFileListInterface(t *testing.T) {
+	content := func() (some_bytes []byte) {
+		_, some_bytes = some_content()
+		return
+	}
+
+	type checkpoint struct{
+		data []byte
+		was_checked bool
+	}
+
+	var files_to_send = map[string] checkpoint { "to_list/scene.txt": { content(), false},
+		"to_list/scene88.txt": {content(), false},
+		"to_list/scene_more/cool.stuff.txt": {content(), false}}
+	for name, checking := range files_to_send {
+		if good_guy.Upload(name, checking.data) != "OK" {
+			t.Errorf( "Failed to upload %s", name)
+		} 
+	}
+	files_and_ids := good_guy.List("to_list")
+	if len(files_and_ids) != len(files_to_send) {
+		t.Errorf("Supposed to be of the same length: %v and %v", files_and_ids, files_to_send)
+	}
+	for _, the_file := range files_and_ids {
+		checkdata, ok := files_to_send[the_file.File]
+		if ! ok {
+			t.Errorf( "File %s was not really sent: %v", the_file.File, files_to_send)
+		}
+		if checkdata.was_checked {
+			t.Errorf( "Duplicate file %s detected", the_file.File)
+		}
+		if cloud.GetID(checkdata.data) != cloud.ID(the_file.FileID) {
+			t.Errorf( "Checksum mistmatch for %s", the_file.File)
+		}
+		checkdata.was_checked = true
+	}
 }
 
 func TestFileDelete(t *testing.T) {
