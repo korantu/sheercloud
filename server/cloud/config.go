@@ -2,11 +2,11 @@ package cloud
 
 import (
 	"encoding/json"
-	"os"
 	"io/ioutil"
+	"os"
 )
 
-func init(){
+func init() {
 	var err error
 	theCloud, err = NewFileStore(".")
 	if err != nil {
@@ -39,17 +39,3 @@ func ConfigWrite(where string, content interface{}) (err error) {
 func ConfigBackup(what string) {
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

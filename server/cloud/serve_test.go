@@ -31,7 +31,7 @@ func TestBadFileParameter(t *testing.T) {
 	}
 	for testcase, q := range cases {
 		if result, err := file(q, "abc"); err == nil {
-			t.Errorf( "Condition %s ( %v ) need to produce error, got %v instead", testcase, q, result)
+			t.Errorf("Condition %s ( %v ) need to produce error, got %v instead", testcase, q, result)
 		}
 	}
 }

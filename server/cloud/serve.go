@@ -2,6 +2,7 @@ package cloud
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -80,10 +81,10 @@ func (err *CloudError) Error() string {
 var file_not_specified = CloudError("File should be specified")
 var file_list_is_empty = CloudError("No files are really specified")
 
-func NewCloudError(reason string) error{
+func NewCloudError(reason string) error {
 	failure := CloudError(reason)
 	return &failure
-	
+
 }
 
 func file(param map[string][]string, user string) (paths []CloudPath, err error) {
@@ -106,9 +107,9 @@ func file(param map[string][]string, user string) (paths []CloudPath, err error)
 }
 
 // user_and_file is a very common request
-func user_and_file(param map[string][]string) ( the_user * User, paths []CloudPath, err error){
+func user_and_file(param map[string][]string) (the_user *User, paths []CloudPath, err error) {
 	if the_user = user(param); the_user == nil {
-		err = NewCloudError("Failed to obtain a valid user") 
+		err = NewCloudError("Failed to obtain a valid user")
 		return // err
 	}
 
@@ -150,7 +151,6 @@ func upload(w http.ResponseWriter, r *http.Request) {
 	say(w, "OK")
 }
 
-// TODO Refactor
 func download(w http.ResponseWriter, r *http.Request) {
 	// Main response:
 	_, err := ioutil.ReadAll(r.Body) // Must read body first
@@ -175,7 +175,32 @@ func download(w http.ResponseWriter, r *http.Request) {
 	w.Write(data)
 }
 
-// TODO take out all the file dancing outside
+func list(w http.ResponseWriter, r *http.Request) {
+	// Main response:
+	_, err := ioutil.ReadAll(r.Body) // Must read body first
+	if err != nil {
+		say(w, "FAIL:"+err.Error())
+		return
+	}
+
+	user, file_path, err := user_and_file(r.URL.Query())
+	if err != nil {
+		say(w, "FAIL:"+err.Error())
+		return
+	}
+
+	paths, ids := theCloud.GotPrefix(file_path[0])
+
+	var result string
+
+	for i, path := range paths {
+		user_path := user.ConvertToUserPath(path)
+		result += fmt.Sprintf("%s\n%s\n", user_path, ids[i])
+	}
+
+	w.Write([]byte(result))
+}
+
 func remove(w http.ResponseWriter, r *http.Request) {
 	// Main response:
 	_, err := ioutil.ReadAll(r.Body) // Must read body first
@@ -213,6 +238,7 @@ func Serve() {
 	http.HandleFunc("/authorize", authorize)
 	http.HandleFunc("/upload", upload)
 	http.HandleFunc("/download", download)
+	http.HandleFunc("/list", list)
 	http.HandleFunc("/delete", remove)
 	http.ListenAndServe(":"+port, nil)
 

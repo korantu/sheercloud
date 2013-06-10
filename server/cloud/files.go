@@ -28,14 +28,12 @@ func GetID(data []byte) ID {
 }
 
 type FileStore struct {
-	location string
-	files map [CloudPath]ID
+	location          string
+	files             map[CloudPath]ID
 	queue, meta_queue waiter
 }
 
-
-
-var theCloud * FileStore
+var theCloud *FileStore
 
 // populateFromDisk() Reads all the files in the disk in the folder and makes sure they are in the store
 func (store *FileStore) populateFromDisk(location string) (err error) {
@@ -132,14 +130,14 @@ func (store *FileStore) GetContent(where CloudPath) (content []byte, err error) 
 		return
 	}
 	if info.IsDir() {
-		return nil,  NewCloudError("FAIL: Unable to download directory")
+		return nil, NewCloudError("FAIL: Unable to download directory")
 	}
 
 	content, err = ioutil.ReadFile(full_name)
 	return
 }
 
-func (store *FileStore) GotID(id ID) * CloudPath {
+func (store *FileStore) GotID(id ID) *CloudPath {
 	for name, cloud_id := range store.files {
 		if cloud_id == id {
 			return &name
@@ -155,17 +153,17 @@ func (store *FileStore) GotName(name CloudPath) * ID {
 	return nil
 }
 
-func (store *FileStore) GotPrefix(prefix string) (names []CloudPath, ids []ID ) {
+func (store *FileStore) GotPrefix(prefix CloudPath) (names []CloudPath, ids []ID ) {
 	done := make( chan bool, 1)
 	store.meta_queue <- func() (err error) {
 		names, ids = []CloudPath{}, []ID{}
 		for name, id := range store.files {
-			if strings.HasPrefix(string(name), prefix) {
+			if strings.HasPrefix(string(name), string(prefix)) {
 				names = append(names, name)
 				ids = append(ids, id)
 			}
 		}
-		done<-true
+		done <- true
 		return
 	}
 	<-done
@@ -214,7 +212,7 @@ func (store *FileStore) Sync() {
 		return
 	}
 
-	store.queue <- fn 
+	store.queue <- fn
 	store.meta_queue <- fn
 
 	<-done

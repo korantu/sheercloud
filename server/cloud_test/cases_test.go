@@ -99,6 +99,17 @@ func TestFileTransfer(t *testing.T) {
 	}
 }
 
+func TestFileList(t *testing.T) {
+	_, test_bytes := some_content()
+	for _, name := range []string{"a", "b", "c"} {
+		uploaded := string(cloud.Post("upload?login=important&password=7890&file=to/list/"+name+".txt", test_bytes))
+		t.Log(uploaded)
+	}
+	got := string(cloud.Get("list?login=important&password=7890&file=to/list"))
+	t.Log(got)
+	t.Fail()
+}
+
 func TestFileDelete(t *testing.T) {
 	switch false {
 	case good_guy.Upload("to_remove/scene.txt", []byte("Act I")) == "OK":
