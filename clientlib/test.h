@@ -40,6 +40,7 @@ class TestSheerCloudReally: public QObject {
   void SheerLinkLogin();
   void SheerLinkUploadDownload();
   void SheerLinkUploadDownloadBulk();
+  void SheerLinkList();
   void SheerLinkProgress();
   void SheerLinkDelete();
 };

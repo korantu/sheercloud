@@ -15,15 +15,31 @@ void TestSheerCloudReally::SheerLinkLogin() {
 void TestSheerCloudReally::SheerLinkUploadDownload() {
   SheerLinkLogin();
 
-  link.Upload("very/important/oldfile.txt", "123");
+  QByteArray in = "1234345";
+
+  link.Upload("very/important/oldfile.txt", in);
   loop.exec();
 
   QByteArray result;
   link.Download("very/important/oldfile.txt", result);
   loop.exec();
 
-  QVERIFY2( result.contains("123"), "Sent/recieved data mismatch");
+  QVERIFY2( result.contains(in), "Sent/recieved data mismatch:" + result);
 };
+
+void TestSheerCloudReally::SheerLinkList() {
+  QByteArray in = "1234345";
+
+  link.Upload("very/much/all.txt", in);
+  loop.exec();
+  link.Upload("very/much/none.txt", in);
+  loop.exec();
+
+  QByteArray out; 
+  link.List("very/much", out);
+  loop.exec();
+  QVERIFY2( out.contains("all.txt") && out.contains("none.txt"), "Files not really listed: " + out); // Print out for now
+}
 
 void TestSheerCloudReally::SheerLinkUploadDownloadBulk() {
   SheerLinkLogin();
