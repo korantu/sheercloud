@@ -197,7 +197,7 @@ func list(w http.ResponseWriter, r *http.Request) {
 		user_path := user.ConvertToUserPath(path)
 		result += fmt.Sprintf("%s\n%s\n", user_path, ids[i])
 	}
-
+	
 	w.Write([]byte(result))
 }
 

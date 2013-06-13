@@ -74,7 +74,6 @@ void SheerCloudLink::login_completed(){
 
 void SheerCloudLink::upload_completed(){
   QByteArray got = m_reply->readAll();
-  disconnect( this, SLOT(upload_completed()) );
   request_completed();
 };
 
