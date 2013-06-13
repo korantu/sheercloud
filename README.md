@@ -16,6 +16,7 @@ Existing verbs include:
 
 - [x] "/authorize" : Verify that user/pass are ok, not necessary for other tasks.
 - [x] "/upload"    : Post contents of a file to server.
+- [x] "/list"      : Retrieve list of files starting with the provided prefix with their checksums.
 - [x] "/download"  : Retrieve contents of a file from server.
 - [x] "/delete"    : Remove file from server.
 
