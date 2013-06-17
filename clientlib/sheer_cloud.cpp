@@ -42,7 +42,18 @@ void SheerCloudLink::List(QString file, QByteArray & out){
   connect(m_reply, SIGNAL(downloadProgress ( qint64 , qint64 ) ), SIGNAL(progress ( qint64 , qint64 ) ));
 };
 
-
+QList<CloudFile> ParseList( const QByteArray & in){
+  QStringList list = QString(in).split("\n", QString::SkipEmptyParts);
+  // TODO iterate over list, how it is done in QT
+  QList<CloudFile> result;
+  for ( int i = 0; i+1 < list.size(); i+=2){
+    CloudFile entry;
+    entry.name = list.at(i);
+    entry.hash = list.at(i+1);
+    result.push_back(entry);
+  }
+  return result;
+}
 
 void SheerCloudLink::Delete(QString file){
   QNetworkRequest upload_req( QUrl( m_location + "/delete?login=" + m_login + "&password=" + m_password + "&file=" + file ));

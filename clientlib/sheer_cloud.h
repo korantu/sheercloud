@@ -1,12 +1,19 @@
 #ifndef __cloud_h__
 #define __cloud_h__
 
+#include <QStringList>
 #include <QString>
 #include <QByteArray>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QFile>
 
+// Tools
+struct CloudFile {
+  QString name, hash;
+};
+
+QList<CloudFile> ParseList( const QByteArray & in);
 
 class SheerCloudLink: public QNetworkAccessManager {
   Q_OBJECT;

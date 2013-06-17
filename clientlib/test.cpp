@@ -39,6 +39,9 @@ void TestSheerCloudReally::SheerLinkList() {
   link.List("very/much", out);
   loop.exec();
   QVERIFY2( out.contains("all.txt") && out.contains("none.txt"), "Files not really listed: " + out); // Print out for now
+
+  QList<CloudFile> listed = ParseList(out);
+  QVERIFY2( listed.size() == 2, "Expected 2 entries");
 }
 
 void TestSheerCloudReally::SheerLinkUploadDownloadBulk() {
