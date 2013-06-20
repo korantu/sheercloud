@@ -8,7 +8,7 @@ import (
 
 func init() {
 	var err error
-	theCloud, err  = NewFileStore(".")
+	theCloud, err = NewFileStore(".")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -27,11 +27,11 @@ func ConfigRead(where string, result interface{}) (err error) {
 
 // ConfigWrite writes content into file "where".
 func ConfigWrite(where string, content interface{}) (err error) {
-	indented, err := json.MarshalIndent( content, "", "  ")
+	indented, err := json.MarshalIndent(content, "", "  ")
 	if err != nil {
 		return err
 	}
-	err = ioutil.WriteFile( where, indented, os.FileMode(0666))
+	err = ioutil.WriteFile(where, indented, os.FileMode(0666))
 	return
 }
 

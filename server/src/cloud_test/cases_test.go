@@ -104,7 +104,7 @@ func TestFileList(t *testing.T) {
 	names := []string{"a", "b", "c"}
 	checked := make(map[string]bool)
 	for _, name := range names {
-		a_full_name := "to/list/"+name+".txt"
+		a_full_name := "to/list/" + name + ".txt"
 		checked[a_full_name] = false
 		uploaded := string(cloud.Post("upload?login=important&password=7890&file="+a_full_name, test_bytes))
 		t.Log(uploaded)
@@ -126,18 +126,18 @@ func TestFileListInterface(t *testing.T) {
 		return
 	}
 
-	type checkpoint struct{
-		data []byte
+	type checkpoint struct {
+		data        []byte
 		was_checked bool
 	}
 
-	var files_to_send = map[string] checkpoint { "to_list/scene.txt": { content(), false},
-		"to_list/scene88.txt": {content(), false},
+	var files_to_send = map[string]checkpoint{"to_list/scene.txt": {content(), false},
+		"to_list/scene88.txt":               {content(), false},
 		"to_list/scene_more/cool.stuff.txt": {content(), false}}
 	for name, checking := range files_to_send {
 		if good_guy.Upload(name, checking.data) != "OK" {
-			t.Errorf( "Failed to upload %s", name)
-		} 
+			t.Errorf("Failed to upload %s", name)
+		}
 	}
 	files_and_ids := good_guy.List("to_list")
 	if len(files_and_ids) != len(files_to_send) {
@@ -283,10 +283,9 @@ func TestStoreRemove(t *testing.T) {
 		t.Errorf("Incorrect store size: %i", store.Size())
 	}
 
-
-	if content, err := store.GetContent(new_file); ! bytes.Equal(content, new_content) || err != nil {
+	if content, err := store.GetContent(new_file); !bytes.Equal(content, new_content) || err != nil {
 		t.Errorf("File content does not match; Othewise, bad (%v) things happened.", err)
-	} 
+	}
 
 	if file, err := os.Stat(store.OsPath(new_file)); err != nil {
 		t.Errorf("File %v got to exist, but not really: %v", file, err)
