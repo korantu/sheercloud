@@ -8,7 +8,7 @@ import (
 
 func init() {
 	var err error
-	theCloud, err = NewFileStore(".")
+	theCloud, err  = NewFileStore(".")
 	if err != nil {
 		panic(err.Error())
 	}
