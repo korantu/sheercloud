@@ -19,12 +19,12 @@ Existing verbs include:
 - [x] "/list"      : Retrieve list of files starting with the provided prefix with their checksums.
 - [x] "/download"  : Retrieve contents of a file from server.
 - [x] "/delete"    : Remove file from server.
+- [x] "/job"       : Starts rendering on a file.
+- [x] "/progress"  : Provides a status for a rendering job.
 
 Verbs under development are:
-- [ ] Clever uploading to avoid sending already known files
-- [ ] "/render" : Starts rendering on a file
-- [ ] "/status" : Provides a status for a rendering job
-- [ ] "/cancel" : Stops a rendering job
+- [ ] Clever uploading to avoid sending already known files.
+- [ ] "/cancel"    : Stops a rendering job.
 
 ## File locations
 Each user has its own folder for his projects. Same files, for example models, are done using hardlinks. Most likely the structure is the same as on the user's local machine, but it is TBD for now.
