@@ -14,11 +14,12 @@ import (
 )
 
 func init() {
-	print("Starting test server with test users...\n")
-	cloud.Populate()
+	log.Print("Starting test server ...\n")
+	// Real server should probably configured away from the default location.
+	// cloud.Configure(where)
 	go cloud.Serve()
 	time.Sleep(100 * time.Millisecond)
-	print("Done.\n")
+	log.Print("Test server is up and running.\n")
 }
 
 var content_counter = time.Now().Nanosecond()
