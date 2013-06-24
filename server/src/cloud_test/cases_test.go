@@ -332,7 +332,50 @@ func TestFileStore(t *testing.T) {
 }
 
 func TestJobs(t *testing.T) {
-	started := string(cloud.Get("job?login=important&password=7890&file=scene.txt"))
-	t.Error(started)
+	started := string(cloud.Post("job?login=important&password=7890&file=scene.txt", []byte{}))
+	if strings.Contains(started, "FAIL") {
+		t.Error(started)
+	}
+	id := cloud.JobID(started[3:])
+
+	done_so_far := string(cloud.Get("progress?login=important&password=7890&id=" + string(id)))
+	if strings.Contains(started, "FAIL") {
+		t.Error(started)
+	}
+
+	if done_so_far[3:] != "PROGRESS" {
+		t.Error(done_so_far)
+	}
+
+	time.Sleep(time.Second + 100*time.Millisecond)
+	done_so_far = string(cloud.Get("progress?login=important&password=7890&id=" + string(id)))
+	if done_so_far[3:] != "DONE" {
+		t.Error(done_so_far)
+	}
+
+}
+
+// TODO: can be simpler
+func TestJobsSimple(t *testing.T) {
+	started := good_guy.Job("scene.txt")
+	if strings.Contains(started, "FAIL") {
+		t.Error(started)
+	}
+	id := cloud.JobID(started[3:])
+
+	done_so_far := good_guy.Progress(id)
+	if strings.Contains(started, "FAIL") {
+		t.Error(started)
+	}
+
+	if done_so_far[3:] != "PROGRESS" {
+		t.Error(done_so_far)
+	}
+
+	time.Sleep(time.Second + 100*time.Millisecond)
+
+	if done_so_far = good_guy.Progress(id); done_so_far[3:] != "DONE" {
+		t.Error(done_so_far)
+	}
 
 }

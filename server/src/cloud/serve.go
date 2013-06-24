@@ -351,3 +351,13 @@ func (i Identity) Delete(remote string) string {
 	log.Print("Attempting to delete " + remote)
 	return string(Get("delete?login=" + i.Login + "&password=" + i.Password + "&file=" + remote))
 }
+
+func (i Identity) Job(remote string) string {
+	log.Print("Starting processing " + remote)
+	return string(Post("job?login="+i.Login+"&password="+i.Password+"&file="+remote, []byte{}))
+}
+
+func (i Identity) Progress(id JobID) string {
+	log.Print("Getting reslut of job " + id)
+	return string(Get("progress?login=" + i.Login + "&password=" + i.Password + "&id=" + string(id)))
+}
