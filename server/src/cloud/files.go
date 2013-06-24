@@ -201,11 +201,13 @@ func (store *FileStore) Link(new_name CloudPath, id ID) (err error) {
 	return
 }
 
-func (store *FileStore) Remove(the_name CloudPath) {
+func (store *FileStore) Remove(got_the_name CloudPath) {
+	var the_name = got_the_name
 	store.queue <- func() (err error) {
 		file := store.GotName(the_name)
 		if file != nil {
-			err = os.Remove(store.OsPath(the_name))
+			to_remove := store.OsPath(the_name)
+			err = os.Remove(to_remove)
 			if err == nil {
 				store.UnNote(the_name)
 			}

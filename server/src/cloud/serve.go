@@ -7,8 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
- 	"path"
+	"path"
 	"runtime/debug"
 	"strings"
 )
@@ -95,7 +94,7 @@ func file(param map[string][]string, user string) (paths []CloudPath, err error)
 	}
 	for _, a_file := range files {
 		if strings.Contains(a_file, "..") || a_file == "" {
-			return none, NewCloudError( "Illegal name: " + a_file )
+			return none, NewCloudError("Illegal name: " + a_file)
 		}
 		full_name := path.Join(user, a_file)
 		paths = append(paths, CloudPath(full_name))
@@ -118,7 +117,7 @@ func user_and_file(param map[string][]string) (the_user *User, paths []CloudPath
 		return // err
 	}
 
-	return 	// ok
+	return // ok
 }
 
 func authorize(w http.ResponseWriter, r *http.Request) {
@@ -147,6 +146,26 @@ func upload(w http.ResponseWriter, r *http.Request) {
 
 	// Only use first path
 	theCloud.Add(file_path[0], incoming)
+
+	say(w, "OK")
+}
+
+func remove(w http.ResponseWriter, r *http.Request) {
+	// Main response:
+	_, err := ioutil.ReadAll(r.Body) // Must read body first
+	if err != nil {
+		say(w, "FAIL: Reading data: "+err.Error())
+		return
+	}
+
+	_, file_path, err := user_and_file(r.URL.Query())
+	if err != nil {
+		say(w, "FAIL:"+err.Error())
+		return
+	}
+
+	// Only use first path
+	theCloud.Remove(file_path[0])
 
 	say(w, "OK")
 }
@@ -197,39 +216,8 @@ func list(w http.ResponseWriter, r *http.Request) {
 		user_path := user.ConvertToUserPath(path)
 		result += fmt.Sprintf("%s\n%s\n", user_path, ids[i])
 	}
-	
+
 	w.Write([]byte(result))
-}
-
-func remove(w http.ResponseWriter, r *http.Request) {
-	// Main response:
-	_, err := ioutil.ReadAll(r.Body) // Must read body first
-	if err != nil {
-		say(w, "FAIL:"+err.Error())
-		return
-	}
-
-	q := r.URL.Query()
-	u := user(q)
-
-	if u == nil {
-		say(w, "FAIL")
-		return
-	}
-
-	file, ok := q["file"]
-	if !ok {
-		say(w, "FAIL: File name is not specified")
-		return
-	}
-	full_name := path.Join(u.Login, file[0])
-	dir := path.Dir(full_name)
-	if strings.Contains(dir, "..") {
-		say(w, "FAIL: .. is not allowed in the path")
-		return
-	}
-	os.Remove(full_name)
-	say(w, "OK")
 }
 
 // Server
@@ -241,7 +229,6 @@ func Serve() {
 	http.HandleFunc("/list", list)
 	http.HandleFunc("/delete", remove)
 	http.ListenAndServe(":"+port, nil)
-
 }
 
 // Client
@@ -279,21 +266,21 @@ func (i Identity) Upload(remote string, data []byte) string {
 }
 
 type FileID struct {
-	File string
+	File   string
 	FileID string
 }
 
-func ParseIdList( raw_list [] byte) []FileID {
+func ParseIdList(raw_list []byte) []FileID {
 	name_id_list := strings.Split(string(raw_list), "\n")
 	var result []FileID
-	for  n := 0; (n+1) < len(name_id_list); n+=2 {
+	for n := 0; (n + 1) < len(name_id_list); n += 2 {
 		result = append(result, FileID{name_id_list[n], name_id_list[n+1]})
 	}
 	return result
 }
 
 func (i Identity) List(remote string) []FileID {
-	return ParseIdList(Get("list?login="+i.Login+"&password="+i.Password+"&file="+remote))
+	return ParseIdList(Get("list?login=" + i.Login + "&password=" + i.Password + "&file=" + remote))
 }
 
 func (i Identity) Download(remote string) []byte {
@@ -301,16 +288,6 @@ func (i Identity) Download(remote string) []byte {
 }
 
 func (i Identity) Delete(remote string) string {
+	log.Print("Attempting to delete " + remote)
 	return string(Get("delete?login=" + i.Login + "&password=" + i.Password + "&file=" + remote))
 }
-
-
-
-
-
-
-
-
-
-
-

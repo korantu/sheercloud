@@ -10,6 +10,7 @@ func init() {
 	var err error
 	tmpdir := os.TempDir()
 	theCloud, err = NewFileStore(tmpdir + "/store")
+	//theCloud, err = NewFileStore(".")
 	if err != nil {
 		panic(err.Error())
 	}
