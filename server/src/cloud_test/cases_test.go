@@ -145,14 +145,14 @@ func TestFileListInterface(t *testing.T) {
 	}
 	for _, the_file := range files_and_ids {
 		checkdata, ok := files_to_send[the_file.File]
-		if ! ok {
-			t.Errorf( "File %s was not really sent: %v", the_file.File, files_to_send)
+		if !ok {
+			t.Errorf("File %s was not really sent: %v", the_file.File, files_to_send)
 		}
 		if checkdata.was_checked {
-			t.Errorf( "Duplicate file %s detected", the_file.File)
+			t.Errorf("Duplicate file %s detected", the_file.File)
 		}
 		if cloud.GetID(checkdata.data) != cloud.ID(the_file.FileID) {
-			t.Errorf( "Checksum mistmatch for %s", the_file.File)
+			t.Errorf("Checksum mistmatch for %s", the_file.File)
 		}
 		checkdata.was_checked = true
 	}
