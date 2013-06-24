@@ -21,3 +21,7 @@ Makefile
 
 # Own
 clientlib/clientlib
+
+# Misc
+TAGS
+cloud_test.test
