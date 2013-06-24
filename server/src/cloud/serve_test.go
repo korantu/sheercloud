@@ -49,4 +49,9 @@ func TestJobs(t *testing.T) {
 	if _, err := JobDone("notreally"); err == nil {
 		t.Error("Error is not reported for unknown id")
 	}
+
+	if id_a, id_b := DoJob("scene.txt"), DoJob("scene.txt"); id_a == id_b {
+		t.Error("Impossible:", id_a, " and ", id_b)
+	}
+
 }

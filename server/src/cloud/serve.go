@@ -131,6 +131,62 @@ func authorize(w http.ResponseWriter, r *http.Request) {
 	say(w, "OK")
 }
 
+func job(w http.ResponseWriter, r *http.Request) {
+	// Main response:
+	_, err := ioutil.ReadAll(r.Body) // Must read body first
+	if err != nil {
+		say(w, "FAIL: Reading data: "+err.Error())
+		return
+	}
+
+	_, file_path, err := user_and_file(r.URL.Query())
+	if err != nil {
+		say(w, "FAIL:"+err.Error())
+		return
+	}
+
+	// Render
+	result := DoJob(string(file_path[0]))
+
+	say(w, fmt.Sprintf("OK:%s", result))
+}
+
+func progress(w http.ResponseWriter, r *http.Request) {
+	// Main response:
+	_, err := ioutil.ReadAll(r.Body) // Must read body first
+	if err != nil {
+		say(w, "FAIL: Reading data: "+err.Error())
+		return
+	}
+
+	the_user := user(r.URL.Query())
+	if the_user == nil {
+		say(w, "FAIL:"+err.Error())
+		return
+	}
+
+	id, ok := r.URL.Query()["id"]
+
+	if !ok {
+		say(w, "FAIL:id parameter is required")
+		return
+	}
+
+	// Render
+	result, err := JobDone(JobID(id[0]))
+	if err != nil {
+		say(w, "FAIL:"+err.Error())
+		return
+	}
+
+	if *result {
+		say(w, fmt.Sprintf("OK:DONE"))
+	} else {
+		say(w, fmt.Sprintf("OK:PROGRESS"))
+	}
+
+}
+
 // TODO take out all the file dancing outside
 func upload(w http.ResponseWriter, r *http.Request) {
 	// Main response:
@@ -230,6 +286,8 @@ func Serve() {
 	http.HandleFunc("/download", download)
 	http.HandleFunc("/list", list)
 	http.HandleFunc("/delete", remove)
+	http.HandleFunc("/job", job)
+	http.HandleFunc("/progress", progress)
 	http.ListenAndServe(":"+port, nil)
 }
 

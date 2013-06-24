@@ -330,3 +330,9 @@ func TestFileStore(t *testing.T) {
 		t.Errorf("Matched %d instead of %d; %v|%v", got, expected, files, ids)
 	}
 }
+
+func TestJobs(t *testing.T) {
+	started := string(cloud.Get("job?login=important&password=7890&file=scene.txt"))
+	t.Error(started)
+
+}
