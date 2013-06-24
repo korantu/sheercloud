@@ -7,13 +7,20 @@ import (
 )
 
 func init() {
-	var err error
 	tmpdir := os.TempDir()
-	theCloud, err = NewFileStore(tmpdir + "/store")
-	//theCloud, err = NewFileStore(".")
+	Configure(tmpdir + "/store")
+}
+
+func Configure(where string) {
+	var err error
+	// Create filestore from the location
+	theCloud, err = NewFileStore(where)
 	if err != nil {
 		panic(err.Error())
 	}
+
+	// Populate users (dummy for now)
+	Populate(test_guys)
 }
 
 // ConfigRead reads configuration from file "where" into result.
