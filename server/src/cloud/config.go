@@ -8,7 +8,8 @@ import (
 
 func init() {
 	var err error
-	theCloud, err = NewFileStore(".")
+	tmpdir := os.TempDir()
+	theCloud, err = NewFileStore(tmpdir + "/store")
 	if err != nil {
 		panic(err.Error())
 	}

@@ -52,6 +52,17 @@ func (store *FileStore) populateFromDisk(location string) (err error) {
 
 // NewFileStore starts processing of queue and populates files
 func NewFileStore(where string) (result *FileStore, err error) {
+	if fi, err := os.Stat(where); err == nil {
+		if !fi.IsDir() {
+			failed := CloudError("Storage place " + where + " should be a directory")
+			return nil, &failed
+		}
+	} else {
+		os.MkdirAll(where, 0777)
+		log.Print("Created " + where + " for storage.")
+		err = nil
+	}
+
 	result = &FileStore{
 		where,
 		make(map[CloudPath]ID),
@@ -99,14 +110,14 @@ func (store *FileStore) NoteContent(where CloudPath, content []byte) {
 	store.NoteID(where, GetID(content))
 }
 
-func (store *FileStore) UnNote(where CloudPath){
+func (store *FileStore) UnNote(where CloudPath) {
 	store.meta_queue <- func() (err error) {
 		delete(store.files, where)
 		return
 	}
 }
 
-func (store *FileStore) KeepContent( where CloudPath, content []byte) {
+func (store *FileStore) KeepContent(where CloudPath, content []byte) {
 	store.queue <- func() (err error) {
 		full_name := store.OsPath(where)
 		file_dir := path.Dir(full_name)
@@ -146,15 +157,15 @@ func (store *FileStore) GotID(id ID) *CloudPath {
 	return nil
 }
 
-func (store *FileStore) GotName(name CloudPath) * ID {
+func (store *FileStore) GotName(name CloudPath) *ID {
 	if id, ok := store.files[name]; ok {
 		return &id
-	} 
+	}
 	return nil
 }
 
-func (store *FileStore) GotPrefix(prefix CloudPath) (names []CloudPath, ids []ID ) {
-	done := make( chan bool, 1)
+func (store *FileStore) GotPrefix(prefix CloudPath) (names []CloudPath, ids []ID) {
+	done := make(chan bool, 1)
 	store.meta_queue <- func() (err error) {
 		names, ids = []CloudPath{}, []ID{}
 		for name, id := range store.files {
@@ -171,20 +182,20 @@ func (store *FileStore) GotPrefix(prefix CloudPath) (names []CloudPath, ids []ID
 }
 
 func (store *FileStore) Link(new_name CloudPath, id ID) (err error) {
-	done := make( chan bool, 1)
-	store.queue <-  func () (err error) {
+	done := make(chan bool, 1)
+	store.queue <- func() (err error) {
 		old_name := store.GotID(id)
 		if old_name != nil {
-			err = os.Link( store.OsPath( *old_name), store.OsPath( new_name))
+			err = os.Link(store.OsPath(*old_name), store.OsPath(new_name))
 			if err == nil {
-				store.NoteID( new_name, id)
-				done <-true
+				store.NoteID(new_name, id)
+				done <- true
 			}
-		} 	
+		}
 		done <- false
 		return
 	}
-	if was_linked := <-done; ! was_linked {
+	if was_linked := <-done; !was_linked {
 		err = os.ErrNotExist
 	}
 	return

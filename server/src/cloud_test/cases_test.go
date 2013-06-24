@@ -115,7 +115,7 @@ func TestFileList(t *testing.T) {
 	for _, to_check := range list {
 		if was_checked, ok := checked[to_check.File]; !ok || was_checked == true {
 			t.Error("List %v does not match reference %v", list, checked)
-		} 
+		}
 		checked[to_check.File] = true
 	}
 }
