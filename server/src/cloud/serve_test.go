@@ -2,6 +2,7 @@ package cloud
 
 import (
 	"testing"
+	"time"
 )
 
 func TestTrivial(t *testing.T) {
@@ -33,5 +34,19 @@ func TestBadFileParameter(t *testing.T) {
 		if result, err := file(q, "abc"); err == nil {
 			t.Errorf("Condition %s ( %v ) need to produce error, got %v instead", testcase, q, result)
 		}
+	}
+}
+
+func TestJobs(t *testing.T) {
+	id := DoJob("scene.txt")
+	if r, err := JobDone(id); err != nil || *r {
+		t.Error("Should not be done yet:", err)
+	}
+	time.Sleep(time.Second + 20*time.Millisecond)
+	if r, err := JobDone(id); err != nil || !*r {
+		t.Error("Should be done already:", err)
+	}
+	if _, err := JobDone("notreally"); err == nil {
+		t.Error("Error is not reported for unknown id")
 	}
 }
