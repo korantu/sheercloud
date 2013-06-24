@@ -122,8 +122,10 @@ func user_and_file(param map[string][]string) (the_user *User, paths []CloudPath
 
 func authorize(w http.ResponseWriter, r *http.Request) {
 	u := user(r.URL.Query())
+	log.Printf("checking user from %v", r.URL.Query())
 	if u == nil {
 		say(w, "FAIL")
+		log.Printf("Authorization failed")
 		return
 	}
 	say(w, "OK")
