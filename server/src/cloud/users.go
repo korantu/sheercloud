@@ -1,7 +1,6 @@
 package cloud
 
 import (
-	"log"
 	"strings"
 )
 
@@ -16,6 +15,10 @@ type Users []User
 
 // Storage
 var by_login = make(map[string]User)
+
+func NumberOfUsers() int {
+	return len(by_login)
+}
 
 // ResetUsers removes all existing users
 func ResetUsers() {
@@ -49,8 +52,6 @@ func GetUser(login, password string) *User {
 	if !ok || u.Password != password {
 		return nil
 	}
-
-	log.Printf("Worked")
 	return &u
 }
 
@@ -60,15 +61,16 @@ var test_guys = Users{
 	User{Login: "important", Password: "7890", Name: "Big CEO"},
 }
 
-func DumpUsers() {
-	for k, v := range by_login {
-		log.Printf("User [%s] record [%v]", k, v)
+func DumpUsers() (result Users) {
+	result = Users{}
+	for _, user := range by_login {
+		result = append(result, user)
 	}
+	return
 }
 
 func Populate(ppl Users) {
 	for _, user := range ppl {
-		log.Printf("Adding [%s], [%s]", user.Login, user.Password)
 		AddUser(user)
 		DumpUsers()
 	}
