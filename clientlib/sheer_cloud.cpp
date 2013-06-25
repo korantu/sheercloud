@@ -61,6 +61,11 @@ void SheerCloudLink::Delete(QString file){
   connect( m_reply, SIGNAL(finished() ), this, SLOT(delete_completed()) );
 };
 
+void SheerCloudLink::Job(QString, JobID &out){};
+void SheerCloudLink::Progress(JobID, JobResult &out){};
+
+
+
 bool SheerCloudLink::Authorized(){
   return m_is_authorized;
 };

@@ -13,6 +13,9 @@ struct CloudFile {
   QString name, hash;
 };
 
+typedef bool JobResult;
+typedef QString JobID;
+
 QList<CloudFile> ParseList( const QByteArray & in);
 
 class SheerCloudLink: public QNetworkAccessManager {
@@ -38,6 +41,9 @@ class SheerCloudLink: public QNetworkAccessManager {
   void Download(QString, QByteArray &);
   void List(QString, QByteArray &);
   void Delete(QString);
+
+  void Job(QString, JobID &out);
+  void Progress(JobID, JobResult &out);
 
   signals:
   void done();
