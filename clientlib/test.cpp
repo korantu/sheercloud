@@ -106,6 +106,32 @@ void TestSheerCloudReally::SheerLinkDelete() {
   QVERIFY2( ! result.contains("123"), "Deleted file should have failed to be downloaded");
 };
 
+void TestSheerCloudReally::SheerLinkRender() {
+  SheerLinkLogin();
+
+  JobID rendering;
+  link.Job("very/not_needed/scene.txt", rendering);
+  loop.exec();
+
+  qDebug() << rendering;
+  
+  JobResult result;
+
+  link.Progress(rendering, result);
+  loop.exec();
+  qDebug() << result;
+
+  QVERIFY2( !result, "Not ready yet");
+
+  QTest::qSleep(1020); // Sleep a bit
+
+  link.Progress(rendering, result);
+  loop.exec();
+  qDebug() << result;
+
+  QVERIFY2( result, "Ready");
+}
+
 void TestSheerCloudReally::progress_check(qint64 now, qint64 total){
   m_now = now;
   m_total = total;

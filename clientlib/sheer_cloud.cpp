@@ -61,10 +61,19 @@ void SheerCloudLink::Delete(QString file){
   connect( m_reply, SIGNAL(finished() ), this, SLOT(delete_completed()) );
 };
 
-void SheerCloudLink::Job(QString, JobID &out){};
-void SheerCloudLink::Progress(JobID, JobResult &out){};
+void SheerCloudLink::Job(QString file, JobID &out){
+  job_id = &out;
+  QNetworkRequest upload_req( QUrl( m_location + "/job?login=" + m_login + "&password=" + m_password + "&file=" + file ));
+  m_reply = get( upload_req);
+  connect( m_reply, SIGNAL(finished() ), this, SLOT(job_requested()) );
+};
 
-
+void SheerCloudLink::Progress(JobID id, JobResult &out){
+  job_result = &out;
+  QNetworkRequest upload_req( QUrl( m_location + "/progress?login=" + m_login + "&password=" + m_password + "&id=" + id ));
+  m_reply = get( upload_req);
+  connect( m_reply, SIGNAL(finished() ), this, SLOT(progress_requested()) );
+};
 
 bool SheerCloudLink::Authorized(){
   return m_is_authorized;
@@ -103,5 +112,20 @@ void SheerCloudLink::download_completed(){
 
 void SheerCloudLink::delete_completed(){
   QByteArray got = m_reply->readAll();
+  request_completed();
+};
+
+
+void SheerCloudLink::job_requested(){
+  QByteArray out = m_reply->readAll();
+  *job_id = QString(out).replace("OK:", "");
+  request_completed();
+};
+
+
+void SheerCloudLink::progress_requested(){
+  QByteArray got = m_reply->readAll();
+  // qDebug() << got;
+  *job_result = ( QString(got) == "OK:DONE" );
   request_completed();
 };

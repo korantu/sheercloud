@@ -28,6 +28,9 @@ class SheerCloudLink: public QNetworkAccessManager {
 
   QByteArray * m_out; // Keep track of output
 
+  JobID * job_id;
+  JobResult * job_result;
+
   void request_completed(); // Prepare for the next request
 
  public:
@@ -54,6 +57,8 @@ class SheerCloudLink: public QNetworkAccessManager {
   void upload_completed();
   void download_completed();
   void delete_completed();
+  void job_requested();
+  void progress_requested();
 };
 
 #endif

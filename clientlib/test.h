@@ -43,6 +43,8 @@ class TestSheerCloudReally: public QObject {
   void SheerLinkList();
   void SheerLinkProgress();
   void SheerLinkDelete();
+  void SheerLinkRender();
+
 };
 
 #endif //  __test_h__
