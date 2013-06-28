@@ -93,7 +93,7 @@ func file(param map[string][]string, user string) (paths []CloudPath, err error)
 		return none, &file_not_specified
 	}
 	for _, a_file := range files {
-		if strings.Contains(a_file, "..") || a_file == "" {
+		if strings.Contains(a_file, "..") ||  strings.Contains(a_file, ":") || a_file == "" {
 			return none, NewCloudError("Illegal name: " + a_file)
 		}
 		full_name := path.Join(user, a_file)
@@ -189,6 +189,7 @@ func progress(w http.ResponseWriter, r *http.Request) {
 
 // TODO take out all the file dancing outside
 func upload(w http.ResponseWriter, r *http.Request) {
+	log.Print("Attempting upload")
 	// Main response:
 	incoming, err := ioutil.ReadAll(r.Body) // Must read body first
 	if err != nil {
