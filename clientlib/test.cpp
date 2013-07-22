@@ -69,14 +69,16 @@ void TestSheerCloudReally::SheerLinkProgress() {
   link.Upload("very/huge/old_progressfile.txt", massive);
   int was = m_progress_reports;
   loop.exec();
-  QVERIFY2( m_progress_reports - was > 3, "At least 3 reports expected");
+  QVERIFY2( m_progress_reports - was > 3, "At least 3 reports expected when uploading");
   QVERIFY2( m_total == size, "Total is not correct");
   QVERIFY2( m_now == size, "Current is not correct");
-  
 
   QByteArray result;
   link.Download("very/huge/old_progressfile.txt", result);
+  was = m_progress_reports;
   loop.exec();
+  QVERIFY2( m_progress_reports > was, "Reports expected when downloading");
+
 
   QVERIFY2( result == massive, "Sent/recieved data mismatch");
 };

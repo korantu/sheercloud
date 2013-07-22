@@ -32,7 +32,7 @@ void SheerCloudLink::Download(QString file, QByteArray & out){
   m_reply = get( QNetworkRequest( QUrl( m_location + "/download?login=" + m_login + "&password=" + m_password + "&file=" + file ) ));
   m_out = &out;
   connect(m_reply, SIGNAL(finished()), SLOT(download_completed()));
-  connect(m_reply, SIGNAL(downloadProgress ( qint64 , qint64 ) ), SIGNAL(progress ( qint64 , qint64 ) ));
+  connect(m_reply, SIGNAL(downloadProgress ( qint64 , qint64 ) ), this, SIGNAL(progress ( qint64 , qint64 ) ));
 };
 
 void SheerCloudLink::List(QString file, QByteArray & out){

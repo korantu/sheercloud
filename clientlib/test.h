@@ -30,7 +30,6 @@ class TestSheerCloudReally: public QObject {
    m_now = 0;
    m_total = 0;
    m_progress_reports = 0;
-
   };
 
  public slots:
