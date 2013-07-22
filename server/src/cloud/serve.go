@@ -14,9 +14,6 @@ import (
 
 // Create default configuration first, then provide facilities for saving/loading of such
 
-// TODO remove
-var port = "8080"
-
 // For autocomplete tests, does not usually work.
 func Ping() bool {
 	return true
@@ -279,7 +276,7 @@ func list(w http.ResponseWriter, r *http.Request) {
 }
 
 // Server
-func Serve() {
+func Serve(port string) {
 	http.HandleFunc("/info", info)
 	http.HandleFunc("/authorize", authorize)
 	http.HandleFunc("/upload", upload)
@@ -288,7 +285,9 @@ func Serve() {
 	http.HandleFunc("/delete", remove)
 	http.HandleFunc("/job", job)
 	http.HandleFunc("/progress", progress)
-	http.ListenAndServe(":"+port, nil)
+	if err := http.ListenAndServe(":"+port, nil); err != nil {
+		log.Panic(err.Error())
+	}
 }
 
 // Client

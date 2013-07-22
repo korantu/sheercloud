@@ -1,0 +1,1 @@
+Server (golang) and client (Qt) to provide CairnSmith with cloud sync possibility.

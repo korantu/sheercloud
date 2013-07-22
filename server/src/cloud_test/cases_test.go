@@ -17,7 +17,7 @@ func init() {
 	log.Print("Starting test server ...\n")
 	// Real server should probably configured away from the default location.
 	// cloud.Configure(where)
-	go cloud.Serve()
+	go cloud.Serve("8080")
 	time.Sleep(100 * time.Millisecond)
 	log.Print("Test server is up and running.\n")
 }
