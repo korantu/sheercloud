@@ -275,9 +275,20 @@ func list(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(result))
 }
 
+func version(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte(Version))
+}
+
+func api(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("{api:1}"))
+}
+
 // Server
-func Serve(port string) {
+func Serve(port, static string) {
+	http.Handle("/f/", http.StripPrefix("/f/", http.FileServer(http.Dir(static))))
+	http.HandleFunc("/api", api)
 	http.HandleFunc("/info", info)
+	http.HandleFunc("/version", version)
 	http.HandleFunc("/authorize", authorize)
 	http.HandleFunc("/upload", upload)
 	http.HandleFunc("/download", download)
