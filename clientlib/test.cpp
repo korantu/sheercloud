@@ -78,6 +78,8 @@ void TestSheerCloudReally::SheerLinkProgress() {
   was = m_progress_reports;
   loop.exec();
   QVERIFY2( m_progress_reports > was, "Reports expected when downloading");
+  QVERIFY2( m_total == size, "Total is not correct when downloading");
+  QVERIFY2( m_now == size, "Current is not correct when downloading");
 
 
   QVERIFY2( result == massive, "Sent/recieved data mismatch");
@@ -115,13 +117,13 @@ void TestSheerCloudReally::SheerLinkRender() {
   link.Job("very/not_needed/scene.txt", rendering);
   loop.exec();
 
-  qDebug() << rendering;
+  //qDebug() << rendering;
   
   JobResult result;
 
   link.Progress(rendering, result);
   loop.exec();
-  qDebug() << result;
+  //qDebug() << result;
 
   QVERIFY2( !result, "Not ready yet");
 
@@ -129,7 +131,7 @@ void TestSheerCloudReally::SheerLinkRender() {
 
   link.Progress(rendering, result);
   loop.exec();
-  qDebug() << result;
+  //qDebug() << result;
 
   QVERIFY2( result, "Ready");
 }
@@ -137,6 +139,7 @@ void TestSheerCloudReally::SheerLinkRender() {
 void TestSheerCloudReally::progress_check(qint64 now, qint64 total){
   m_now = now;
   m_total = total;
+  QVERIFY2( m_total != -1, "Progress has to be reported properly");
   m_progress_reports++;
 }
 

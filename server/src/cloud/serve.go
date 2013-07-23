@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"path"
 	"runtime/debug"
+	"strconv"
 	"strings"
 )
 
@@ -188,7 +189,7 @@ func progress(w http.ResponseWriter, r *http.Request) {
 func upload(w http.ResponseWriter, r *http.Request) {
 	// Main response:
 	incoming, err := ioutil.ReadAll(r.Body) // Must read body first
-	if err != nil {
+	if err != nil || r.ContentLength != int64(len(incoming)) {
 		say(w, "FAIL: Reading data: "+err.Error())
 		return
 	}
@@ -245,6 +246,7 @@ func download(w http.ResponseWriter, r *http.Request) {
 		say(w, "FAIL:"+err.Error())
 		return
 	}
+	w.Header().Set("Content-Length", strconv.FormatInt(int64(len(data)), 10))
 	// All seem okay.
 	w.Write(data)
 }
@@ -285,7 +287,7 @@ func api(w http.ResponseWriter, r *http.Request) {
 
 // Server
 func Serve(port, static string) {
-	http.Handle("/f/", http.StripPrefix("/f/", http.FileServer(http.Dir(static))))
+	http.Handle("/ui/", http.StripPrefix("/ui/", http.FileServer(http.Dir(static))))
 	http.HandleFunc("/api", api)
 	http.HandleFunc("/info", info)
 	http.HandleFunc("/version", version)
