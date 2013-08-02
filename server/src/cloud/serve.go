@@ -274,7 +274,7 @@ func list(w http.ResponseWriter, r *http.Request) {
 		user_path := user.ConvertToUserPath(path)
 		result += fmt.Sprintf("%s\n%s\n%d\n", user_path, ids[i].MD5, ids[i].TimeStamp.Unix())
 	}
-
+	log.Print("Listing ", len(paths), " files at ", file_path[0], " prefix")
 	w.Write([]byte(result))
 }
 
