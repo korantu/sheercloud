@@ -44,11 +44,12 @@ var theCloud *FileStore
 
 // populateFromDisk() Reads all the files in the disk in the folder and makes sure they are in the store
 func (store *FileStore) populateFromDisk(location string) (err error) {
-	fn := func(path string, info os.FileInfo, err error) error {
+	fn := func(in_path string, info os.FileInfo, err error) error {
 		if err == nil && !info.IsDir() {
 			var bytes []byte
-			bytes, err = ioutil.ReadFile(path)
-			store.NoteContent(CloudPath(path[len(location)+1:]), info.ModTime(), bytes)
+			bytes, err = ioutil.ReadFile(in_path)
+			user_path := strings.Replace(in_path, location+"/", "", 1)
+			store.NoteContent(CloudPath(user_path), info.ModTime(), bytes)
 		}
 		return err
 	}
