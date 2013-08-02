@@ -1,6 +1,7 @@
 #include "sheer_cloud.h"
 
 #include <QDebug>
+#include <QDateTime>
 
 SheerCloudLink::SheerCloudLink(QString location, QString login, QString password){
   m_is_authorized = false;
@@ -44,12 +45,12 @@ void SheerCloudLink::List(QString file, QByteArray & out){
 
 QList<CloudFile> ParseList( const QByteArray & in){
   QStringList list = QString(in).split("\n", QString::SkipEmptyParts);
-  // TODO iterate over list, how it is done in QT
   QList<CloudFile> result;
-  for ( int i = 0; i+1 < list.size(); i+=2){
+  for ( int i = 0; i+2 < list.size(); i+=3){
     CloudFile entry;
     entry.name = list.at(i);
     entry.hash = list.at(i+1);
+    entry.time = QDateTime::fromTime_t(list.at(i+1).toInt());
     result.push_back(entry);
   }
   return result;

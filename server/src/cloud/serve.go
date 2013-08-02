@@ -271,7 +271,7 @@ func list(w http.ResponseWriter, r *http.Request) {
 
 	for i, path := range paths {
 		user_path := user.ConvertToUserPath(path)
-		result += fmt.Sprintf("%s\n%s\n", user_path, ids[i])
+		result += fmt.Sprintf("%s\n%s\n%s\n", user_path, ids[i].MD5, ids[i].TimeStamp.Unix())
 	}
 
 	w.Write([]byte(result))
@@ -338,15 +338,16 @@ func (i Identity) Upload(remote string, data []byte) string {
 }
 
 type FileID struct {
-	File   string
-	FileID string
+	File     string
+	FileID   string
+	FileTime string
 }
 
 func ParseIdList(raw_list []byte) []FileID {
 	name_id_list := strings.Split(string(raw_list), "\n")
 	var result []FileID
-	for n := 0; (n + 1) < len(name_id_list); n += 2 {
-		result = append(result, FileID{name_id_list[n], name_id_list[n+1]})
+	for n := 0; (n + 2) < len(name_id_list); n += 3 {
+		result = append(result, FileID{name_id_list[n], name_id_list[n+1], name_id_list[n+2]})
 	}
 	return result
 }

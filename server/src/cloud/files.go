@@ -9,22 +9,29 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 type waiter chan func() error
 
-type ID string
+type ID struct {
+	MD5       string
+	TimeStamp time.Time
+}
 
 type CloudPath string
 
 var hasher = md5.New()
 
 //GetID computes an ID of the given byte sequence; MD5 in this case.
-func GetID(data []byte) ID {
+func GetID(data []byte, when time.Time) ID {
+	return ID{MD5(data), when}
+}
+
+func MD5(data []byte) string {
 	hasher.Reset()
 	hasher.Write(data)
-	sum := fmt.Sprintf("%x", hasher.Sum(nil))
-	return ID(sum)
+	return fmt.Sprintf("%x", hasher.Sum(nil))
 }
 
 type FileStore struct {
@@ -41,7 +48,7 @@ func (store *FileStore) populateFromDisk(location string) (err error) {
 		if err == nil && !info.IsDir() {
 			var bytes []byte
 			bytes, err = ioutil.ReadFile(path)
-			store.NoteContent(CloudPath(path[len(location)+1:]), bytes)
+			store.NoteContent(CloudPath(path[len(location)+1:]), info.ModTime(), bytes)
 		}
 		return err
 	}
@@ -106,8 +113,8 @@ func (store *FileStore) NoteID(where CloudPath, id ID) {
 	}
 }
 
-func (store *FileStore) NoteContent(where CloudPath, content []byte) {
-	store.NoteID(where, GetID(content))
+func (store *FileStore) NoteContent(where CloudPath, when time.Time, content []byte) {
+	store.NoteID(where, GetID(content, when))
 }
 
 func (store *FileStore) UnNote(where CloudPath) {
@@ -129,7 +136,7 @@ func (store *FileStore) KeepContent(where CloudPath, content []byte) {
 
 func (store *FileStore) Add(where CloudPath, content []byte) (err error) {
 	store.KeepContent(where, content)
-	store.NoteContent(where, content)
+	store.NoteContent(where, time.Now(), content)
 
 	return
 }
@@ -150,7 +157,7 @@ func (store *FileStore) GetContent(where CloudPath) (content []byte, err error) 
 
 func (store *FileStore) GotID(id ID) *CloudPath {
 	for name, cloud_id := range store.files {
-		if cloud_id == id {
+		if cloud_id.MD5 == id.MD5 {
 			return &name
 		}
 	}

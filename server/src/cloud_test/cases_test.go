@@ -154,8 +154,8 @@ func TestFileListInterface(t *testing.T) {
 		if checkdata.was_checked {
 			t.Errorf("Duplicate file %s detected", the_file.File)
 		}
-		if cloud.GetID(checkdata.data) != cloud.ID(the_file.FileID) {
-			t.Errorf("Checksum mistmatch for %s", the_file.File)
+		if cloud.MD5(checkdata.data) != the_file.FileID {
+			t.Errorf("Checksum mistmatch for %#v", the_file)
 		}
 		checkdata.was_checked = true
 	}
@@ -212,7 +212,7 @@ func TestConfig(t *testing.T) {
 }
 
 func TestFileStoreHash(t *testing.T) {
-	a, b := cloud.GetID([]byte("ABC")), cloud.GetID([]byte("CBA"))
+	a, b := cloud.MD5([]byte("ABC")), cloud.MD5([]byte("CBA"))
 	if a == b {
 		t.Error("Hash smoketest")
 	}
@@ -311,7 +311,7 @@ func TestFileStore(t *testing.T) {
 	store.Sync()
 	size := store.Size()
 	useless := "even less useful"
-	useless_id := cloud.GetID([]byte(useless)) // Check later
+	useless_id := cloud.GetID([]byte(useless), time.Now()) // Check later
 	make_file(store, "extra.txt", useless)
 
 	store = tg.get_store(t)
