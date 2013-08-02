@@ -23,7 +23,7 @@ class TestSheerCloudReally: public QObject {
   int m_progress_reports;
  
  public:
- TestSheerCloudReally(): link("http://localhost:8080", "abc", "123") {
+ TestSheerCloudReally(): link("http://172.245.20.58:8080", "abc", "123") {
     link.connect( &link, SIGNAL(done()), &loop, SLOT(quit()));
     link.connect( &link, SIGNAL(progress(qint64 , qint64)), this, SLOT(progress_check(qint64 , qint64)));
 

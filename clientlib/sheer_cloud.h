@@ -7,10 +7,12 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QFile>
+#include <QDateTime>
 
 // Tools
 struct CloudFile {
   QString name, hash;
+  QDateTime time;
 };
 
 typedef bool JobResult;
