@@ -78,6 +78,7 @@ func (err *CloudError) Error() string {
 var file_not_specified = CloudError("File should be specified")
 var file_list_is_empty = CloudError("No files are really specified")
 
+// NewCloudError creates a cloud error to report
 func NewCloudError(reason string) error {
 	failure := CloudError(reason)
 	return &failure
