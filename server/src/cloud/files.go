@@ -108,6 +108,7 @@ func (store *FileStore) OsPath(name CloudPath) string {
 
 func (store *FileStore) NoteID(where CloudPath, id ID) {
 	store.meta_queue <- func() (err error) {
+		log.Print("Adding ", where, " to store")
 		store.files[where] = id
 		return
 	}

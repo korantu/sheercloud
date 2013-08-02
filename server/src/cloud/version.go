@@ -1,3 +1,3 @@
 package cloud
 
-const Version = "v0.1 (Timed)"
+const Version = "v0.1 (Timed Traced)"
