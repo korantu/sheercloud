@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func TestTrivial(t *testing.T) {
+func TestTrivialMore(t *testing.T) {
 	t.Log("Nothing to see here, move along.")
 }
 
@@ -37,7 +37,7 @@ func TestBadFileParameter(t *testing.T) {
 	}
 }
 
-func TestJobs(t *testing.T) {
+func TestJobsMore(t *testing.T) {
 	id := DoJob("scene.txt")
 	if r, err := JobDone(id); err != nil || *r {
 		t.Error("Should not be done yet:", err)

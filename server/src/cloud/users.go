@@ -39,8 +39,8 @@ func AddUser(a User) {
 	new_storage := make(map[string]User)
 	for k, v := range by_login {
 		new_storage[k] = v
-	}
 
+	}
 	new_storage[a.Login] = a
 	by_login = new_storage
 }
