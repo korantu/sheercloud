@@ -5,11 +5,9 @@ import (
 	"cloud"
 	"flag"
 	"log"
-	"os"
-	"path"
 )
 
-var storage_base = flag.String("store", path.Join(os.TempDir(), "cloud_storage"), "Location of the data")
+var storage_base = flag.String("store", "./store", "Location of the data")
 var ui_base = flag.String("ui", "./ui", "UI files location")
 var port = flag.String("port", "8080", "Port to bind to")
 var show_version = flag.Bool("version", false, "Show the version of the cloud")
