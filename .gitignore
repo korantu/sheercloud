@@ -25,3 +25,7 @@ clientlib/clientlib
 # Misc
 TAGS
 cloud_test.test
+
+# emacs
+*#*
+tool
