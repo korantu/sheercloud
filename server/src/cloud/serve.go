@@ -13,14 +13,9 @@ import (
 	"strings"
 )
 
-// Create default configuration first, then provide facilities for saving/loading of such
+// --- Niceties
 
-// For autocomplete tests, does not usually work.
-func Ping() bool {
-	return true
-}
-
-// Niceties
+// must_not paicks if error happens. TODO to investigate
 func must_not(err error) {
 	if err == nil {
 		return
@@ -29,11 +24,83 @@ func must_not(err error) {
 	log.Fatal(err.Error())
 }
 
+// say writes a string to io.Writer; not too nice
 func say(w io.Writer, msg string) {
 	io.WriteString(w, msg)
 }
 
-// Handlers
+// --- Request handling
+
+// user picks a user from request if it is a valid one
+func user(param map[string][]string) *User {
+	login := param["login"]
+	password := param["password"]
+	if len(login) == 0 || len(password) == 0 {
+		return nil
+	}
+	return GetUser(login[0], password[0])
+}
+
+// file picks out files from request
+func file(param map[string][]string, user string) (paths []CloudPath, err error) {
+	none := []CloudPath{}
+	files, ok := param["file"]
+	if !ok {
+		return none, &CloudError{"File should be specified"}
+	}
+	for _, a_file := range files {
+		if strings.Contains(a_file, "..") || strings.Contains(a_file, ":") || a_file == "" {
+			return none, &CloudError{"Illegal name: " + a_file}
+		}
+		full_name := path.Join(user, a_file)
+		paths = append(paths, CloudPath(full_name))
+	}
+	if len(paths) == 0 {
+		return none, &CloudError{"No files are really specified"}
+	}
+	return
+}
+
+// user_and_file is a very common request
+func user_and_file(param map[string][]string) (the_user *User, paths []CloudPath, err error) {
+	if the_user = user(param); the_user == nil {
+		err = &CloudError{"Failed to obtain a valid user"}
+		return // err
+	}
+
+	paths, err = file(param, the_user.Login)
+	if err != nil {
+		return // err
+	}
+
+	return // ok
+}
+
+// --- Error handling
+
+// CloudError handles errors in the couds
+type CloudError struct {
+	msg string
+}
+
+// Error is error interface
+func (err *CloudError) Error() string {
+	return err.msg
+}
+
+// catcher takes function which represents normal path through request.
+// If main path fails, function returned by catcher handles the resulting error.
+func catcher(a func(w http.ResponseWriter, r *http.Request) error) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if err := a(w, r); err != nil {
+			w.Write([]byte("FAIL:" + err.Error()))
+		}
+	}
+}
+
+// --- API Handlers
+
+// info provides test printout of the params of incloming request ***
 func info(w http.ResponseWriter, r *http.Request) {
 
 	list_params := func(in map[string][]string) {
@@ -60,65 +127,7 @@ func info(w http.ResponseWriter, r *http.Request) {
 	say(w, "Input:--["+string(incoming)+"]--\n")
 }
 
-func user(param map[string][]string) *User {
-	login := param["login"]
-	password := param["password"]
-	if len(login) == 0 || len(password) == 0 {
-		return nil
-	}
-	return GetUser(login[0], password[0])
-}
-
-type CloudError string
-
-func (err *CloudError) Error() string {
-	return string(*err)
-}
-
-var file_not_specified = CloudError("File should be specified")
-var file_list_is_empty = CloudError("No files are really specified")
-
-// NewCloudError creates a cloud error to report
-func NewCloudError(reason string) error {
-	failure := CloudError(reason)
-	return &failure
-
-}
-
-func file(param map[string][]string, user string) (paths []CloudPath, err error) {
-	none := []CloudPath{}
-	files, ok := param["file"]
-	if !ok {
-		return none, &file_not_specified
-	}
-	for _, a_file := range files {
-		if strings.Contains(a_file, "..") ||  strings.Contains(a_file, ":") || a_file == "" {
-			return none, NewCloudError("Illegal name: " + a_file)
-		}
-		full_name := path.Join(user, a_file)
-		paths = append(paths, CloudPath(full_name))
-	}
-	if len(paths) == 0 {
-		return none, &file_list_is_empty
-	}
-	return
-}
-
-// user_and_file is a very common request
-func user_and_file(param map[string][]string) (the_user *User, paths []CloudPath, err error) {
-	if the_user = user(param); the_user == nil {
-		err = NewCloudError("Failed to obtain a valid user")
-		return // err
-	}
-
-	paths, err = file(param, the_user.Login)
-	if err != nil {
-		return // err
-	}
-
-	return // ok
-}
-
+// authorize checks that there is such user; not required for operation ***
 func authorize(w http.ResponseWriter, r *http.Request) {
 	u := user(r.URL.Query())
 	log.Printf("checking user from %v", r.URL.Query())
@@ -130,6 +139,7 @@ func authorize(w http.ResponseWriter, r *http.Request) {
 	say(w, "OK")
 }
 
+// job is API call to start a job ***
 func job(w http.ResponseWriter, r *http.Request) {
 	// Main response:
 	_, err := ioutil.ReadAll(r.Body) // Must read body first
@@ -150,6 +160,7 @@ func job(w http.ResponseWriter, r *http.Request) {
 	say(w, fmt.Sprintf("OK:%s", result))
 }
 
+// progress returns the progress of a rendering job being done ***
 func progress(w http.ResponseWriter, r *http.Request) {
 	// Main response:
 	_, err := ioutil.ReadAll(r.Body) // Must read body first
@@ -186,7 +197,7 @@ func progress(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// TODO take out all the file dancing outside
+// upload call puts a file in the cloud ***
 func upload(w http.ResponseWriter, r *http.Request) {
 	log.Print("Attempting upload")
 	// Main response:
@@ -208,6 +219,7 @@ func upload(w http.ResponseWriter, r *http.Request) {
 	say(w, "OK")
 }
 
+// remove deletes a file from the cloud ***
 func remove(w http.ResponseWriter, r *http.Request) {
 	// Main response:
 	_, err := ioutil.ReadAll(r.Body) // Must read body first
@@ -228,6 +240,7 @@ func remove(w http.ResponseWriter, r *http.Request) {
 	say(w, "OK")
 }
 
+// download get a file from the cloud ***
 func download(w http.ResponseWriter, r *http.Request) {
 	// Main response:
 	_, err := ioutil.ReadAll(r.Body) // Must read body first
@@ -253,6 +266,7 @@ func download(w http.ResponseWriter, r *http.Request) {
 	w.Write(data)
 }
 
+// list returns a list of checksum and mtimes files from cloud ***
 func list(w http.ResponseWriter, r *http.Request) {
 	// Main response:
 	_, err := ioutil.ReadAll(r.Body) // Must read body first
@@ -279,17 +293,27 @@ func list(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(result))
 }
 
+/// version prints out a version ***
 func version(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(Version))
 }
 
+// fail is an always-failing call, for testing relevant functions ***
+func fail(w http.ResponseWriter, r *http.Request) error {
+	return &CloudError{"OK"}
+}
+
+// api is a call to end all calls - this is the entry point to something more complex ***
 func api(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("{api:1}"))
 }
 
-// Server
+// --- Service entry points
+
+// Serve starts all the API entry points
 func Serve(port, static string) {
 	http.Handle("/ui/", http.StripPrefix("/ui/", http.FileServer(http.Dir(static))))
+	http.HandleFunc("/error", catcher(fail))
 	http.HandleFunc("/api", api)
 	http.HandleFunc("/info", info)
 	http.HandleFunc("/version", version)
@@ -305,7 +329,9 @@ func Serve(port, static string) {
 	}
 }
 
-// Client
+// --- Client for testing
+
+// body reads all the request body for testing
 func body(resp *http.Response) []byte {
 	data, err := ioutil.ReadAll(resp.Body)
 	must_not(err)
