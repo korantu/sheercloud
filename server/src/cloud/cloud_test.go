@@ -7,9 +7,9 @@ import (
 )
 
 var guys = Users{
-	User{Login: "abc", Password: "123", Name: "Me"},
-	User{Login: "asd", Password: "456", Name: "Him"},
-	User{Login: "important", Password: "7890", Name: "Big CEO"},
+	User{Login: "sheer/abc", Password: "123", Name: "Me"},
+	User{Login: "sheer/asd", Password: "456", Name: "Him"},
+	User{Login: "sheer/important", Password: "7890", Name: "Big CEO"},
 }
 
 func TestAddUser(t *testing.T) {
@@ -32,6 +32,7 @@ func TestAddUser(t *testing.T) {
 
 func TestUserLoading(t *testing.T) {
 	if Populate(guys); NumberOfUsers() != 3 {
+		t.Logf("Users: %v", ListUsers())
 		t.Error("Unexpected number of users")
 	}
 

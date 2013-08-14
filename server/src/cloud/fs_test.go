@@ -33,7 +33,7 @@ func random_file(content string) string {
 	}
 	defer f.Close()
 
-	if _, err = f.Write([]byte(random_string())); err != nil {
+	if _, err = f.Write([]byte("Contents is " + random_string() + "\n")); err != nil {
 		panic(err)
 	}
 
@@ -72,8 +72,47 @@ func TestStateFileList(t *testing.T) {
 		}
 	}
 
-	if len(files.List("*")) != len(file_names) {
-		t.Error("List is not empty(?)")
+	check_file_list := func(a *FileList) {
+		if len(a.List("*")) != len(file_names) {
+			t.Error("Not all files are listed")
+		}
+
+		if len(a.List("cool.txt")) != 1 {
+			t.Error("One expected")
+		}
 	}
 
+	check_file_list(files)
+
+	var another_file_list *FileList
+
+	if another_file_list, err = NewFileList(tmp); err != nil {
+		t.Fatal("Unable to create duplicate file list: " + err.Error())
+	} else {
+		check_file_list(another_file_list)
+	}
+
+	cached_check := "cached.txt"
+	file_names = append(file_names, cached_check)
+	if err = another_file_list.Add(Location{cached_check}, random_file("contents of "+cached_check)); err != nil {
+		t.Error(err)
+		return
+	}
+
+	check_file_list(files)
+	check_file_list(another_file_list)
+
+	// Rename to force re-reading
+	tmp_next := tmp + "_renamed"
+	if os.Rename(tmp, tmp_next) != nil {
+		t.Error("Unable to rename the folder")
+	}
+
+	var yet_another_file_list *FileList
+
+	if yet_another_file_list, err = NewFileList(tmp_next); err != nil {
+		t.Fatal("Unable to create duplicate file list: " + err.Error())
+	} else {
+		check_file_list(yet_another_file_list)
+	}
 }

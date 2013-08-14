@@ -69,12 +69,12 @@ func TestSimplePostGet(t *testing.T) {
 	}
 }
 
-var good_guy, bad_guy = Identity{"abc", "123"}, Identity{"bbq", "123"}
+var good_guy, bad_guy = Identity{"sheer/abc", "123"}, Identity{"sheer/bbq", "123"}
 
 func TestLogin(t *testing.T) {
 	// Raw
-	good_result := string(Get("authorize?login=important&password=7890"))
-	bad_result := string(Get("authorize?login=important&password=789"))
+	good_result := string(Get("authorize?login=sheer/important&password=7890"))
+	bad_result := string(Get("authorize?login=sheer/important&password=789"))
 	switch false {
 	case good_result == "OK":
 		t.Error("Correct user")
@@ -91,8 +91,8 @@ func TestFileTransfer(t *testing.T) {
 	// Get some data for test
 	test_string, test_bytes := some_content()
 	// Raw
-	uploaded := string(Post("upload?login=important&password=7890&file=numbers.txt", test_bytes))
-	downloaded := string(Get("download?login=important&password=7890&file=numbers.txt"))
+	uploaded := string(Post("upload?login=sheer/important&password=7890&file=numbers.txt", test_bytes))
+	downloaded := string(Get("download?login=sheer/important&password=7890&file=numbers.txt"))
 	t.Log(uploaded)
 	t.Log(downloaded)
 	switch false {
@@ -116,10 +116,10 @@ func TestFileList(t *testing.T) {
 	for _, name := range names {
 		a_full_name := "to/list/" + name + ".txt"
 		checked[a_full_name] = false
-		uploaded := string(Post("upload?login=important&password=7890&file="+a_full_name, test_bytes))
+		uploaded := string(Post("upload?login=sheer/important&password=7890&file="+a_full_name, test_bytes))
 		t.Log(uploaded)
 	}
-	got := Get("list?login=important&password=7890&file=to/list")
+	got := Get("list?login=sheer/important&password=7890&file=to/list")
 	t.Log(string(got))
 	list := ParseIdList(got)
 	for _, to_check := range list {
@@ -184,7 +184,7 @@ func TestFileDelete(t *testing.T) {
 }
 
 func TestUsers(t *testing.T) {
-	if ceo := GetUser("important", "7890"); ceo.Name != "Big CEO" {
+	if ceo := GetUser("sheer/important", "7890"); ceo.Name != "Big CEO" {
 		t.Error("Fail to get the user")
 	}
 }
@@ -341,13 +341,13 @@ func TestFileStore(t *testing.T) {
 }
 
 func TestJobs(t *testing.T) {
-	started := string(Post("job?login=important&password=7890&file=scene.txt", []byte{}))
+	started := string(Post("job?login=sheer/important&password=7890&file=scene.txt", []byte{}))
 	if strings.Contains(started, "FAIL") {
 		t.Error(started)
 	}
 	id := JobID(started[3:])
 
-	done_so_far := string(Get("progress?login=important&password=7890&id=" + string(id)))
+	done_so_far := string(Get("progress?login=sheer/important&password=7890&id=" + string(id)))
 	if strings.Contains(started, "FAIL") {
 		t.Error(started)
 	}
@@ -357,7 +357,7 @@ func TestJobs(t *testing.T) {
 	}
 
 	time.Sleep(time.Second + 100*time.Millisecond)
-	done_so_far = string(Get("progress?login=important&password=7890&id=" + string(id)))
+	done_so_far = string(Get("progress?login=sheer/important&password=7890&id=" + string(id)))
 	if done_so_far[3:] != "DONE" {
 		t.Error(done_so_far)
 	}

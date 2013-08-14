@@ -21,6 +21,7 @@ import (
 	"log"
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
 	"time"
 )
@@ -60,17 +61,39 @@ func ensure_dir(name string) error {
 	return os.MkdirAll(name, 0777)
 }
 
+var file_list_cache = map[string]*FileList{}
+
 // NewFileList creates a file list for the given location.
 func NewFileList(base string) (*FileList, error) {
 	if err := ensure_dir(base); err != nil {
 		return nil, err
 	}
 
+	if cached, ok := file_list_cache[base]; ok {
+		return cached, nil
+	}
+
 	fl := &FileList{
 		Base:  base,
 		Files: map[string]*FileInfo{},
 	}
-	// TODO populate if needed.
+
+	filepath.Walk(base, func(path string, info os.FileInfo, err error) error {
+		if !info.IsDir() {
+			local := strings.Replace(path, base, "", 1)
+			if strings.HasPrefix(local, "/") || strings.HasPrefix(local, "\\") {
+				local = local[1:]
+			}
+			if fileinfo, err := fl.getFileInfo(Location{local}); err == nil {
+				fl.Files[local] = fileinfo
+			} else {
+				log.Printf("Unable to add to %s file %s : %s", base, path, err)
+			}
+		}
+		return nil
+	})
+
+	file_list_cache[base] = fl // Cache
 	return fl, nil
 }
 
