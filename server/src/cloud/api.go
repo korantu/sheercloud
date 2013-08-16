@@ -30,7 +30,7 @@ type ApiStatus struct {
 	Success bool
 }
 
-//--- #ApiDefinitions
+//---> KdlApiDefinitions
 
 // /ui/login
 type ApiLoginRequest struct {
