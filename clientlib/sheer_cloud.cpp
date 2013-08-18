@@ -50,7 +50,7 @@ QList<CloudFile> ParseList( const QByteArray & in){
     CloudFile entry;
     entry.name = list.at(i);
     entry.hash = list.at(i+1);
-    entry.time = QDateTime::fromTime_t(list.at(i+1).toInt());
+    entry.time = QDateTime::fromTime_t(list.at(i+2).toInt());
     result.push_back(entry);
   }
   return result;
