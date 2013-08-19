@@ -303,9 +303,20 @@ func fail(w http.ResponseWriter, r *http.Request) error {
 	return &CloudError{"OK"}
 }
 
-// api is a call to end all calls - this is the entry point to something more complex ***
-func api(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("{api:1}"))
+// apis definition ***
+func api_login(w http.ResponseWriter, r *http.Request) error {
+	w.Write([]byte("login"))
+	return nil
+}
+
+func api_users(w http.ResponseWriter, r *http.Request) error {
+	w.Write([]byte("users"))
+	return nil
+}
+
+func api_adduser(w http.ResponseWriter, r *http.Request) error {
+	w.Write([]byte("adduser"))
+	return nil
 }
 
 // --- Service entry points
@@ -314,7 +325,11 @@ func api(w http.ResponseWriter, r *http.Request) {
 func Serve(port, static string) {
 	http.Handle("/ui/", http.StripPrefix("/ui/", http.FileServer(http.Dir(static))))
 	http.HandleFunc("/error", catcher(fail))
-	http.HandleFunc("/api", api)
+
+	http.HandleFunc("/api/login", catcher(api_login))
+	http.HandleFunc("/api/users", catcher(api_users))
+	http.HandleFunc("/api/adduser", catcher(api_adduser))
+
 	http.HandleFunc("/info", info)
 	http.HandleFunc("/version", version)
 	http.HandleFunc("/authorize", authorize)

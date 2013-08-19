@@ -32,7 +32,7 @@ type ApiStatus struct {
 
 //---> KdlApiDefinitions
 
-// /ui/login
+// /api/login
 type ApiLoginRequest struct {
 	Username, Password string
 }
@@ -42,7 +42,7 @@ type ApiLoginReply struct {
 	Session string
 }
 
-// /ui/users
+// /api/users
 type ApiUsersRequest struct {
 	Session string
 }
@@ -52,7 +52,7 @@ type ApiUsersReply struct {
 	Users []ApiUser
 }
 
-// /ui/adduser
+// /api/adduser
 type ApiAddUserRequest struct {
 	Session        string
 	User, Password string
