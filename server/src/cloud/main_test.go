@@ -17,7 +17,8 @@ const ui_dir = "./ui"
 func init() {
 	log.Print("Starting test server ...\n")
 	// Real server should probably configured away from the default location.
-	// Configure(where)
+	// make sure the place is new.
+	Configure("/tmp/cloud_testing/" + fmt.Sprint(time.Now().Unix()))
 	go Serve("8080", ui_dir)
 	time.Sleep(100 * time.Millisecond)
 	log.Print("Test server is up and running.\n")

@@ -8,7 +8,7 @@ import (
 	"path"
 )
 
-func init() {
+func unused_init() {
 	tmpdir := os.TempDir()
 	Configure(tmpdir + "/store")
 }

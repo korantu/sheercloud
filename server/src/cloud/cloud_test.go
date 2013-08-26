@@ -31,7 +31,7 @@ func TestAddUser(t *testing.T) {
 }
 
 func TestUserLoading(t *testing.T) {
-	if Populate(guys); NumberOfUsers() != 3 {
+	if Populate(guys); NumberOfUsers() != 4 {
 		t.Logf("Users: %v", ListUsers())
 		t.Error("Unexpected number of users")
 	}
@@ -63,7 +63,7 @@ func TestInitialConfig(t *testing.T) {
 	AddUser(User{Login: "newer", Password: "secret", Name: "007"})
 	SaveUsers()
 	ResetUsers()
-	if Configure(the_place); NumberOfUsers() != 4 {
+	if Configure(the_place); NumberOfUsers() != 5 {
 		t.Errorf("Expected 4 users, got %d", NumberOfUsers())
 	}
 

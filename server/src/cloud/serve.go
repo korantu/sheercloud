@@ -303,22 +303,6 @@ func fail(w http.ResponseWriter, r *http.Request) error {
 	return &CloudError{"OK"}
 }
 
-// apis definition ***
-func api_login(w http.ResponseWriter, r *http.Request) error {
-	w.Write([]byte("login"))
-	return nil
-}
-
-func api_users(w http.ResponseWriter, r *http.Request) error {
-	w.Write([]byte("users"))
-	return nil
-}
-
-func api_adduser(w http.ResponseWriter, r *http.Request) error {
-	w.Write([]byte("adduser"))
-	return nil
-}
-
 // --- Service entry points
 
 // Serve starts all the API entry points

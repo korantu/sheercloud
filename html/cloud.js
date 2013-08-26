@@ -8,10 +8,15 @@ function Controller($scope, $http) {
 
     $scope.login = function() {
 	console.log("Attempting to login...")
-	
-	$http.get("/api/login").success(function(data) {
-	    $scope.user_name = data + ":" + $scope.login_name + " " + $scope.login_password
-	} )
+	$http.post("/api/login", '{ "Username": "login_name", "Password": "login_password" }' ).success(function(data) {
+	    if ( data.Success ) {
+		$scope.user_name = "Code:" + data.Session;
+	    } else {
+		$scope.user_name = "Login failed.";
+	    }
+	} ).error( function(data) {
+	    $scope.user_name = "Oops: " + data
+	})
 
     }
 }

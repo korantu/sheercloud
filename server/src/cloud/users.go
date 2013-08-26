@@ -4,10 +4,6 @@ import (
 	"strings"
 )
 
-/*
-
-*/
-
 // User state
 type User struct {
 	Name     string
@@ -68,6 +64,7 @@ func GetUser(login, password string) *User {
 }
 
 var test_guys = Users{
+	User{Login: "sheer", Password: "all", Name: "Sheer Industries"},
 	User{Login: "sheer/abc", Password: "123", Name: "Me"},
 	User{Login: "sheer/asd", Password: "456", Name: "Him"},
 	User{Login: "sheer/important", Password: "7890", Name: "Big CEO"},
