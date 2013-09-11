@@ -7,13 +7,63 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"path"
 	"runtime/debug"
 	"strconv"
 	"strings"
 )
 
+// Plan:
+// Replace fake fs with real ones.
+// Access actual files.
+// Keep some metatdata about what is being accessed and its information.
+// + Lots of code not needed.
+// + Can ask renderer to do things separately.
+// + Less configuration to maintain.
+// + Output from other modules immediately visible.
+
+//
+
 // --- Niceties
+/*
+
+Main starting point:
+
+CLOUD_ROOT
+ |
+ +-user1
+ | |
+ | +--- meta.json
+ | +---- data
+ |
+ +-user2
+  ...
+ |
+ +- meta.json
+ ....
+
+meta.json:
+ - password
+ - company
+ - bytes taken
+....
+*/
+
+var cloudRoot = ""
+
+func init() {
+	cloudRoot = os.Getenv("CLOUD_ROOT")
+	info, err := os.Stat(cloudRoot)
+	if cloudRoot == "" || err != nil || !info.IsDir() {
+		panic("CLOUD_ROOT is not pointing to a valid writable directory")
+	}
+}
+
+/* Todo:
+   1. Read company data
+   2. Read users data
+*/
 
 // must_not paicks if error happens. TODO to investigate
 func must_not(err error) {
