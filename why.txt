@@ -3,3 +3,4 @@ server/src/* should have links in $GOPATH
 cloud - server library
 cloud_test - external tests
 tool - server entry point
+tags.sh - keeps regenerating tags file

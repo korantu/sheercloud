@@ -8,6 +8,7 @@ import (
 	"path"
 )
 
+// Not needed
 func unused_init() {
 	tmpdir := os.TempDir()
 	Configure(tmpdir + "/store")
