@@ -1,6 +1,9 @@
 package cloud
 
 import (
+	"fmt"
+	"os"
+	"path"
 	"testing"
 	"time"
 )
@@ -21,6 +24,29 @@ func TestFileParameter(t *testing.T) {
 	}
 	if len(files) != 1 || string(files[0]) != "abc/"+name {
 		t.Error("Parameter was not correctly extracted: %v", files)
+	}
+}
+
+type Saved struct {
+	One, Two string
+	Three    int
+}
+
+func TestSaveLoad(t *testing.T) {
+	// Temp file
+	some_place := path.Join(os.TempDir(), fmt.Sprintf("%d.txt", time.Now().Unix()))
+	saved := &Saved{"a", "b", 3}
+	if err := Save(some_place, saved); err != nil {
+		t.Error(err.Error())
+		return
+	}
+	restored := &Saved{}
+	if err := Load(some_place, restored); err != nil {
+		t.Error(err.Error())
+		return
+	}
+	if saved.One != restored.One || saved.Two != restored.Two || saved.Three != restored.Three {
+		t.Errorf("%v != %v", saved, restored)
 	}
 }
 

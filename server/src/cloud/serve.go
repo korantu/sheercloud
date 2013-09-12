@@ -2,6 +2,7 @@ package cloud
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -65,7 +66,67 @@ func init() {
    2. Read users data
 */
 
-// must_not paicks if error happens. TODO to investigate
+type Company struct {
+	Title, Password string
+}
+
+type SomeUser struct {
+	FullName, Login, Password string
+	Renders, Storage          int
+}
+
+// Cloud root operations
+
+func WithRoot(task func(file *os.File) error) error {
+	root, err := os.Open(cloudRoot)
+	if err != nil {
+		return err
+	}
+	defer root.Close()
+	return task(root)
+}
+
+// WithEachDir iterates over every directory in the root and returns its name
+// the name is also a login name
+func WithEachDir(task func(string) error) error {
+	todo := func(file *os.File) error {
+		info, err := file.Readdir(-1)
+		if err != nil {
+			return nil
+		}
+		for _, entry := range info {
+			if entry.IsDir() {
+				if err := task(entry.Name()); err != nil {
+					return err
+				}
+			}
+		}
+		return nil
+	}
+	return WithRoot(todo)
+}
+
+// Save stores an object to file.
+func Save(place string, what interface{}) error {
+	var data []byte
+	var err error
+	if data, err = json.MarshalIndent(what, "", " "); err != nil {
+		return err
+	}
+	return ioutil.WriteFile(place, data, 0666)
+}
+
+// Load read from file.
+func Load(place string, what interface{}) error {
+	var data []byte
+	var err error
+	if data, err = ioutil.ReadFile(place); err != nil {
+		return err
+	}
+	return json.Unmarshal(data, what)
+}
+
+// must_not panicks if error happens. TODO to investigate
 func must_not(err error) {
 	if err == nil {
 		return
