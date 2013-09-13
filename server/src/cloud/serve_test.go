@@ -30,12 +30,13 @@ func TestFileParameter(t *testing.T) {
 type Saved struct {
 	One, Two string
 	Three    int
+	hidden   []int
 }
 
 func TestSaveLoad(t *testing.T) {
 	// Temp file
 	some_place := path.Join(os.TempDir(), fmt.Sprintf("%d.txt", time.Now().Unix()))
-	saved := &Saved{"a", "b", 3}
+	saved := &Saved{"a", "b", 3, []int{666}}
 	if err := Save(some_place, saved); err != nil {
 		t.Error(err.Error())
 		return
@@ -45,8 +46,34 @@ func TestSaveLoad(t *testing.T) {
 		t.Error(err.Error())
 		return
 	}
-	if saved.One != restored.One || saved.Two != restored.Two || saved.Three != restored.Three {
+	if saved.One != restored.One ||
+		saved.Two != restored.Two ||
+		saved.Three != restored.Three {
 		t.Errorf("%v != %v", saved, restored)
+	}
+
+	if 0 != len(restored.hidden) {
+		t.Error("Unexported fields should not be saved")
+	}
+}
+
+func test_config() *CloudConfig {
+	a := default_configuration()
+	a.organize()
+	return a
+}
+
+func TestConfigOrganize(t *testing.T) {
+	a := test_config()
+	if a.meta == nil || len(a.TheMembers) != len(a.meta.by_name) {
+		t.Error("by_name generation failed")
+	}
+}
+
+func TestConfigUser(t *testing.T) {
+	a := test_config()
+	if mbr := a.GetUser("kdl"); mbr == nil || mbr.Login != "kdl" {
+		t.Error("User access failed")
 	}
 }
 

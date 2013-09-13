@@ -15,95 +15,58 @@ import (
 	"strings"
 )
 
-// Plan:
-// Replace fake fs with real ones.
-// Access actual files.
-// Keep some metatdata about what is being accessed and its information.
-// + Lots of code not needed.
-// + Can ask renderer to do things separately.
-// + Less configuration to maintain.
-// + Output from other modules immediately visible.
-
-//
-
-// --- Niceties
-/*
-
-Main starting point:
-
-CLOUD_ROOT
- |
- +-user1
- | |
- | +--- meta.json
- | +---- data
- |
- +-user2
-  ...
- |
- +- meta.json
- ....
-
-meta.json:
- - password
- - company
- - bytes taken
-....
-*/
-
-var cloudRoot = ""
-
-func init() {
-	cloudRoot = os.Getenv("CLOUD_ROOT")
-	info, err := os.Stat(cloudRoot)
-	if cloudRoot == "" || err != nil || !info.IsDir() {
-		panic("CLOUD_ROOT is not pointing to a valid writable directory")
-	}
-}
-
 /* Todo:
-   1. Read company data
-   2. Read users data
+Create config strucutre.
 */
 
+//---> TodoNewConfiguration
+
+// Company specifies global company data, such as admin password,
+// payment facilities, etc.
 type Company struct {
-	Title, Password string
+	FullName, Login, Password string
 }
 
-type SomeUser struct {
+// Member specifies the user of the system, with the amount of resources allocated to him.
+type Member struct {
 	FullName, Login, Password string
 	Renders, Storage          int
 }
 
-// Cloud root operations
-
-func WithRoot(task func(file *os.File) error) error {
-	root, err := os.Open(cloudRoot)
-	if err != nil {
-		return err
-	}
-	defer root.Close()
-	return task(root)
+// Meta holds volatile configuration information which should not be saved.
+type Meta struct {
+	by_name map[string]int
 }
 
-// WithEachDir iterates over every directory in the root and returns its name
-// the name is also a login name
-func WithEachDir(task func(string) error) error {
-	todo := func(file *os.File) error {
-		info, err := file.Readdir(-1)
-		if err != nil {
-			return nil
-		}
-		for _, entry := range info {
-			if entry.IsDir() {
-				if err := task(entry.Name()); err != nil {
-					return err
-				}
-			}
-		}
-		return nil
+// CloudConfig keeps track of all the CairnSmith state
+type CloudConfig struct {
+	TheCompany Company
+	TheMembers []Member
+	TheRoot    string // Where files live.
+	meta       *Meta
+}
+
+// organize regenerates Meta-information, if needed
+func (a *CloudConfig) organize() {
+	the_map := make(map[string]int)
+	for i, mbr := range a.TheMembers {
+		the_map[mbr.Login] = i
 	}
-	return WithRoot(todo)
+	a.meta = &Meta{the_map}
+}
+
+// GetUser returns Member structure by login
+func (a *CloudConfig) GetUser(login string) *Member {
+	if n_mbr, ok := a.meta.by_name[login]; ok {
+		return &a.TheMembers[n_mbr]
+	}
+	return nil
+}
+
+// GetRoot returns the root for the particular user
+func (a *CloudConfig) GetRoot(login string) string {
+	good_path := strings.Replace(login, "/", "_", -1)
+	return path.Join(a.TheRoot, good_path)
 }
 
 // Save stores an object to file.
@@ -124,6 +87,86 @@ func Load(place string, what interface{}) error {
 		return err
 	}
 	return json.Unmarshal(data, what)
+}
+
+func default_configuration() *CloudConfig {
+	return &CloudConfig{
+		Company{"Test Company Inc.", "company", "abc"},
+		[]Member{
+			Member{"Konstantin Levinski", "kdl", "p@ssw0rd", 0, 0},
+			Member{"Alvine Agbo", "alvine", "abc", 0, 0},
+			Member{"Shawn Ignatius", "shawn", "secret", 0, 0},
+			Member{"Sheer Industries", "sheer", "all", 0, 0},
+			Member{"Me", "sheer/abc", "123", 0, 0},
+			Member{"Him", "sheer/asd", "456", 0, 0},
+			Member{"Big CEO", "sheer/important", "7890", 0, 0}},
+		os.TempDir(), nil}
+}
+
+//---> TodoRequestUniformity
+/*
+  Function who does the requests should have recieved everything completely ready.
+*/
+// RequestInfo stores verified information for processing
+type RequestInfo struct {
+	Who   string
+	Paths []string
+	Data  []byte // For now read in memory
+}
+
+// worker processes the information
+type worker func(http.ResponseWriter, *http.Request, *RequestInfo) error
+
+// parse_inputs_for generates a function which deals with input stuff, leaving worker only with actual logic
+func parse_inputs_for(cfg *CloudConfig, a worker) func(http.ResponseWriter, *http.Request) error {
+	return func(w http.ResponseWriter, r *http.Request) error {
+		// Reading
+		incoming, err := ioutil.ReadAll(r.Body) // Must read body first
+		if err != nil || r.ContentLength != int64(len(incoming)) {
+			return &CloudError{"Reading data: " + err.Error()}
+		}
+
+		param := r.URL.Query()
+
+		login := param["login"]
+		password := param["password"]
+		files := param["file"]
+
+		if len(login) == 0 || len(password) == 0 {
+			return &CloudError{"Authentication information missing"}
+		}
+
+		mbr := cfg.GetUser(login[0])
+		if mbr.Password != password[0] {
+			return &CloudError{"Authentication failed"}
+		}
+		return a(w, r, &RequestInfo{mbr.Login, files, incoming})
+	}
+}
+
+// catcher takes function which represents normal path through request.
+// If main path fails, function returned by catcher handles the resulting error.
+func catcher_for(a func(w http.ResponseWriter, r *http.Request) error) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if err := a(w, r); err != nil {
+			w.Write([]byte("FAIL:" + err.Error()))
+		}
+	}
+}
+
+//------------- partially legacy --------------
+func parse(param map[string][]string) (the_user *User, paths []CloudPath, err error) {
+	if the_user = user(param); the_user == nil {
+		err = &CloudError{"Failed to obtain a valid user"}
+		return // err
+	}
+
+	paths, err = file(param, the_user.Login)
+	if err != nil {
+		return // err
+	}
+
+	return // ok
 }
 
 // must_not panicks if error happens. TODO to investigate
