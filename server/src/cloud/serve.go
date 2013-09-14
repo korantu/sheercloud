@@ -1,6 +1,8 @@
 package cloud
 
 import (
+	"crypto/md5"
+
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -10,16 +12,30 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"path/filepath"
 	_ "runtime/debug"
 	"strconv"
 	"strings"
 )
 
+// Errors
+//---> TodoErrors Make errors capture traces. (And probably log themselves too?)
+
+// CloudError handles errors in the couds
+type CloudError struct {
+	msg string
+}
+
+// Error is error interface for CloudError
+func (err *CloudError) Error() string {
+	return err.msg
+}
+
 /* Todo:
 Create config strucutre.
 */
 
-//---> TodoNewConfiguration
+//---> TodoNewCloudConfiguration
 
 // Company specifies global company data, such as admin password,
 // payment facilities, etc.
@@ -69,6 +85,11 @@ func (a *CloudConfig) GetRoot(login string) string {
 	return path.Join(a.TheRoot, good_path)
 }
 
+// GetRoot returns the root for the particular user
+func (a *CloudConfig) GetOsPath(login, user_path string) string {
+	return path.Join(a.GetRoot(login), user_path)
+}
+
 // Save stores an object to file.
 func Save(place string, what interface{}) error {
 	var data []byte
@@ -114,6 +135,39 @@ func TheCloud() *CloudConfig {
 /*
   Function who does the requests should have recieved everything completely ready.
 */
+
+/* Simple handlers, no pre-processing needed */
+// version prints out a version
+func version(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte(Version))
+}
+
+func info(w http.ResponseWriter, r *http.Request) {
+
+	list_params := func(in map[string][]string) {
+		for key, values := range in {
+			say(w, key+":")
+			for i, value := range values {
+				if i != 0 {
+					say(w, "|")
+				}
+				say(w, value)
+			}
+			say(w, "\n")
+		}
+	}
+
+	// Main response:
+	incoming, err := ioutil.ReadAll(r.Body) // Must read body first
+	must_not(err)
+	in_url := r.URL.String()
+	say(w, "Request to: "+in_url+" \n")
+	list_params(r.URL.Query())
+	say(w, "Headers:\n")
+	list_params(r.Header)
+	say(w, "Input:--["+string(incoming)+"]--\n")
+}
+
 // RequestInfo stores verified information for processing
 type RequestInfo struct {
 	Who   string
@@ -124,11 +178,131 @@ type RequestInfo struct {
 // worker processes the information
 type worker func(http.ResponseWriter, *http.Request, *RequestInfo) error
 
-// authorizing_worker just sends "OK", the rest of the ork is done for him.
-func authorizing_worker(w http.ResponseWriter, r *http.Request, info *RequestInfo) error {
+// worker_authorizer just sends "OK", the rest of the ork is done for him.
+func worker_authorizer(w http.ResponseWriter, r *http.Request, info *RequestInfo) error {
 	if info.Who != "" {
 		w.Write([]byte("OK"))
 	}
+	return nil
+}
+
+//---> TodoFileHelpers
+// Not yet sure which
+func make_temp_file(data []byte) (string, error) {
+	var file *os.File
+	var err error
+	var n int
+	var name string
+	if file, err = ioutil.TempFile(os.TempDir(), "cloud"); err != nil {
+		return "", err
+	}
+
+	name = file.Name()
+
+	if n, err = file.Write(data); err != nil {
+		return "", &CloudError{"Unable to write recieved data to file:" + err.Error()}
+	} else if n != len(data) {
+		return "", &CloudError{"Not all of the data could be written"}
+	}
+
+	if err = file.Close(); err != nil {
+		return "", err
+	}
+
+	return name, nil
+}
+
+var md5_hasher = md5.New()
+
+// get_md5_for_data calculates string representation for given bytes
+func get_md5_for_data(data []byte) string {
+	md5_hasher.Reset()
+	md5_hasher.Write(data)
+	return fmt.Sprintf("%x", md5_hasher.Sum(nil))
+}
+
+// get_md5_for_file calculates md5 for file contents
+func get_md5_for_file(fpath string) (string, error) {
+	if data, err := ioutil.ReadFile(fpath); err != nil {
+		return "", err
+	} else {
+		return get_md5_for_data(data), nil
+	}
+}
+
+// worker_uploader puts a file in the cloud
+func worker_uploader(w http.ResponseWriter, r *http.Request, info *RequestInfo) error {
+	if len(info.Paths) < 1 {
+		return &CloudError{"Path to upload to is not provided"}
+	}
+	new_file := TheCloud().GetOsPath(info.Who, info.Paths[0])
+
+	if temp_file, err := make_temp_file(info.Data); err != nil {
+		return err
+	} else if err := os.Rename(temp_file, new_file); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// worker_deleter removes a file from the cloud
+func worker_deleter(w http.ResponseWriter, r *http.Request, info *RequestInfo) error {
+	if len(info.Paths) < 1 {
+		return &CloudError{"Path to upload to is not provided"}
+	}
+	doomed_file := TheCloud().GetOsPath(info.Who, info.Paths[0])
+
+	if err := os.RemoveAll(doomed_file); err != nil {
+		return nil
+	}
+
+	w.Write([]byte("OK"))
+	return nil
+}
+
+// worker_downloader download a file from the cloud
+func worker_downloader(w http.ResponseWriter, r *http.Request, info *RequestInfo) error {
+	if len(info.Paths) < 1 {
+		return &CloudError{"Path to download is not specified"}
+	}
+	picked_file := TheCloud().GetOsPath(info.Who, info.Paths[0])
+
+	if data, err := ioutil.ReadFile(picked_file); err != nil {
+		return err
+	} else { // All seem okay.
+		w.Header().Set("Content-Length", strconv.FormatInt(int64(len(data)), 10))
+		w.Write(data)
+	}
+	return nil
+}
+
+// worker_lister returns a list of checksum and mtimes files from cloud
+func worker_lister(w http.ResponseWriter, r *http.Request, info *RequestInfo) error {
+	the_root := TheCloud().GetRoot(info.Who)
+	listing_place := the_root
+	asked := ""
+
+	if len(info.Paths) > 0 {
+		asked = info.Paths[0]
+		listing_place = TheCloud().GetOsPath(info.Who, asked)
+	}
+
+	var result string = ""
+
+	filepath.Walk(listing_place, func(where string, fi os.FileInfo, err error) error {
+		md5 := ""
+		var md5err error
+		if md5, md5err = get_md5_for_file(where); err != nil {
+			return md5err
+		}
+		user_path := strings.Replace(where, listing_place, asked, 1)
+		mod_time := fi.ModTime().Unix()
+		result += fmt.Sprintf("%s\n%s\n%d\n", user_path, md5, mod_time)
+		return nil
+	})
+
+	w.Write([]byte(result))
 	return nil
 }
 
@@ -245,18 +419,6 @@ func user_and_file(param map[string][]string) (the_user *User, paths []CloudPath
 	return // ok
 }
 
-// --- Error handling
-
-// CloudError handles errors in the couds
-type CloudError struct {
-	msg string
-}
-
-// Error is error interface
-func (err *CloudError) Error() string {
-	return err.msg
-}
-
 // catcher takes function which represents normal path through request.
 // If main path fails, function returned by catcher handles the resulting error.
 func catcher(a func(w http.ResponseWriter, r *http.Request) error) func(w http.ResponseWriter, r *http.Request) {
@@ -270,31 +432,6 @@ func catcher(a func(w http.ResponseWriter, r *http.Request) error) func(w http.R
 // --- API Handlers
 
 // info provides test printout of the params of incloming request ***
-func info(w http.ResponseWriter, r *http.Request) {
-
-	list_params := func(in map[string][]string) {
-		for key, values := range in {
-			say(w, key+":")
-			for i, value := range values {
-				if i != 0 {
-					say(w, "|")
-				}
-				say(w, value)
-			}
-			say(w, "\n")
-		}
-	}
-
-	// Main response:
-	incoming, err := ioutil.ReadAll(r.Body) // Must read body first
-	must_not(err)
-	in_url := r.URL.String()
-	say(w, "Request to: "+in_url+" \n")
-	list_params(r.URL.Query())
-	say(w, "Headers:\n")
-	list_params(r.Header)
-	say(w, "Input:--["+string(incoming)+"]--\n")
-}
 
 // job is API call to start a job ***
 func job(w http.ResponseWriter, r *http.Request) {
@@ -450,11 +587,6 @@ func list(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(result))
 }
 
-/// version prints out a version ***
-func version(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte(Version))
-}
-
 // fail is an always-failing call, for testing relevant functions ***
 func fail(w http.ResponseWriter, r *http.Request) error {
 	return &CloudError{"OK"}
@@ -471,16 +603,20 @@ func Serve(port, static string) {
 	http.HandleFunc("/api/users", catcher(api_users))
 	http.HandleFunc("/api/adduser", catcher(api_adduser))
 
-	http.HandleFunc("/info", info)
-	http.HandleFunc("/version", version)
-	http.HandleFunc("/upload", upload)
-	http.HandleFunc("/download", download)
-	http.HandleFunc("/list", list)
-	http.HandleFunc("/delete", remove)
+	//---> TodoUnUpdatedHandlers
 	http.HandleFunc("/job", job)
 	http.HandleFunc("/progress", progress)
 
-	http.HandleFunc("/authorize", catch_errors_for(parse_inputs_for(TheCloud(), authorizing_worker)))
+	//---> TodoUpdateHandlers
+	http.HandleFunc("/info", info)
+	http.HandleFunc("/version", version)
+	http.HandleFunc("/authorize", catch_errors_for(parse_inputs_for(TheCloud(), worker_authorizer)))
+
+	//---> TodoConversionInProgress
+	http.HandleFunc("/list", list)
+	http.HandleFunc("/download", download)
+	http.HandleFunc("/upload", upload)
+	http.HandleFunc("/delete", remove)
 
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		log.Panic(err.Error())

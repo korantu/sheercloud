@@ -2,6 +2,7 @@ package cloud
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path"
 	"testing"
@@ -55,6 +56,44 @@ func TestSaveLoad(t *testing.T) {
 	if 0 != len(restored.hidden) {
 		t.Error("Unexported fields should not be saved")
 	}
+}
+
+func TestMakeTempFile(t *testing.T) {
+	name := ""
+	var err error
+	var test_string = "Got bytes"
+	if name, err = make_temp_file([]byte(test_string)); err != nil {
+		t.Fatal(err.Error())
+	}
+	if contents, err := ioutil.ReadFile(name); err != nil {
+		t.Fatal(err.Error())
+	} else if string(contents) != test_string {
+		t.Fatal("Bytes were not written")
+	}
+}
+
+func TestMd5Sum(t *testing.T) {
+	a, b, c := []byte("string a"), []byte("string b"), []byte("string c")
+	also_a := []byte("string a")
+	switch {
+	case get_md5_for_data(a) != get_md5_for_data(also_a):
+		t.Error("Checksums mismatched")
+	case get_md5_for_data(c) == get_md5_for_data(b):
+		t.Error("Different strings, same checksums")
+	}
+
+	name, sum := "", ""
+	var err error
+	if name, err = make_temp_file([]byte(also_a)); err != nil {
+		t.Fatal(err.Error())
+	}
+	if sum, err = get_md5_for_file(name); err != nil {
+		t.Fatal(err.Error())
+	}
+	if really := get_md5_for_data(a); sum != really {
+		t.Errorf("Expected %s, got %s", really, sum)
+	}
+
 }
 
 func test_config() *CloudConfig {
