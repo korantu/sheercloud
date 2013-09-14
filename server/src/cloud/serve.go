@@ -10,7 +10,7 @@ import (
 	"net/http"
 	"os"
 	"path"
-	"runtime/debug"
+	_ "runtime/debug"
 	"strconv"
 	"strings"
 )
@@ -90,7 +90,7 @@ func Load(place string, what interface{}) error {
 }
 
 func default_configuration() *CloudConfig {
-	return &CloudConfig{
+	cfg := &CloudConfig{
 		Company{"Test Company Inc.", "company", "abc"},
 		[]Member{
 			Member{"Konstantin Levinski", "kdl", "p@ssw0rd", 0, 0},
@@ -101,6 +101,13 @@ func default_configuration() *CloudConfig {
 			Member{"Him", "sheer/asd", "456", 0, 0},
 			Member{"Big CEO", "sheer/important", "7890", 0, 0}},
 		os.TempDir(), nil}
+	cfg.organize()
+	return cfg
+}
+
+// Entry point to getting configuration
+func TheCloud() *CloudConfig {
+	return default_configuration()
 }
 
 //---> TodoRequestUniformity
@@ -117,6 +124,14 @@ type RequestInfo struct {
 // worker processes the information
 type worker func(http.ResponseWriter, *http.Request, *RequestInfo) error
 
+// authorizing_worker just sends "OK", the rest of the ork is done for him.
+func authorizing_worker(w http.ResponseWriter, r *http.Request, info *RequestInfo) error {
+	if info.Who != "" {
+		w.Write([]byte("OK"))
+	}
+	return nil
+}
+
 // parse_inputs_for generates a function which deals with input stuff, leaving worker only with actual logic
 func parse_inputs_for(cfg *CloudConfig, a worker) func(http.ResponseWriter, *http.Request) error {
 	return func(w http.ResponseWriter, r *http.Request) error {
@@ -132,21 +147,21 @@ func parse_inputs_for(cfg *CloudConfig, a worker) func(http.ResponseWriter, *htt
 		password := param["password"]
 		files := param["file"]
 
-		if len(login) == 0 || len(password) == 0 {
+		if len(login) == 0 || len(password) == 0 || cfg == nil {
 			return &CloudError{"Authentication information missing"}
 		}
 
 		mbr := cfg.GetUser(login[0])
-		if mbr.Password != password[0] {
+		if mbr == nil || mbr.Password != password[0] {
 			return &CloudError{"Authentication failed"}
 		}
 		return a(w, r, &RequestInfo{mbr.Login, files, incoming})
 	}
 }
 
-// catcher takes function which represents normal path through request.
+// catch_errors_for takes function which represents normal path through request.
 // If main path fails, function returned by catcher handles the resulting error.
-func catcher_for(a func(w http.ResponseWriter, r *http.Request) error) func(w http.ResponseWriter, r *http.Request) {
+func catch_errors_for(a func(w http.ResponseWriter, r *http.Request) error) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := a(w, r); err != nil {
 			w.Write([]byte("FAIL:" + err.Error()))
@@ -174,8 +189,8 @@ func must_not(err error) {
 	if err == nil {
 		return
 	}
-	debug.PrintStack()
-	log.Fatal(err.Error())
+	//	log.Fatal(err.Error())
+	//	debug.PrintStack()
 }
 
 // say writes a string to io.Writer; not too nice
@@ -279,18 +294,6 @@ func info(w http.ResponseWriter, r *http.Request) {
 	say(w, "Headers:\n")
 	list_params(r.Header)
 	say(w, "Input:--["+string(incoming)+"]--\n")
-}
-
-// authorize checks that there is such user; not required for operation ***
-func authorize(w http.ResponseWriter, r *http.Request) {
-	u := user(r.URL.Query())
-	log.Printf("checking user from %v", r.URL.Query())
-	if u == nil {
-		say(w, "FAIL")
-		log.Printf("Authorization failed")
-		return
-	}
-	say(w, "OK")
 }
 
 // job is API call to start a job ***
@@ -470,13 +473,15 @@ func Serve(port, static string) {
 
 	http.HandleFunc("/info", info)
 	http.HandleFunc("/version", version)
-	http.HandleFunc("/authorize", authorize)
 	http.HandleFunc("/upload", upload)
 	http.HandleFunc("/download", download)
 	http.HandleFunc("/list", list)
 	http.HandleFunc("/delete", remove)
 	http.HandleFunc("/job", job)
 	http.HandleFunc("/progress", progress)
+
+	http.HandleFunc("/authorize", catch_errors_for(parse_inputs_for(TheCloud(), authorizing_worker)))
+
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		log.Panic(err.Error())
 	}

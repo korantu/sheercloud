@@ -79,7 +79,7 @@ func TestLogin(t *testing.T) {
 	switch false {
 	case good_result == "OK":
 		t.Error("Correct user")
-	case bad_result == "FAIL":
+	case strings.Contains(bad_result, "FAIL"):
 		t.Error("Wrong password")
 	case good_guy.Authorize() == "OK":
 		t.Error("Correct user")
