@@ -76,16 +76,29 @@ func TestLogin(t *testing.T) {
 	// Raw
 	good_result := string(Get("authorize?login=sheer/important&password=7890"))
 	bad_result := string(Get("authorize?login=sheer/important&password=789"))
-	switch false {
-	case good_result == "OK":
-		t.Error("Correct user")
-	case strings.Contains(bad_result, "FAIL"):
+	Log("Should be good: " + good_result)
+	Log("Should be bad: " + bad_result)
+
+	switch {
+	case good_result != "OK":
+		t.Error("Correct user was not authorized")
+	case !strings.Contains(bad_result, "FAIL"):
 		t.Error("Wrong password")
-	case good_guy.Authorize() == "OK":
-		t.Error("Correct user")
-	case strings.Contains(bad_guy.Authorize(), "FAIL"):
-		t.Error("Wrong user")
+	case good_guy.Authorize() != "OK":
+		t.Error("Correct user was not authorized")
+	case !strings.Contains(bad_guy.Authorize(), "FAIL"):
+		t.Error("Wrong user not failed")
 	}
+}
+
+func TestUploadDownload(t *testing.T) {
+	_, test_bytes := some_content()
+	t.Log(string(Post("upload?login=sheer/important&password=7890&file=numbers.txt", test_bytes)))
+	t.Log(string(Post("upload?login=sheer/abc&password=123&file=scene.txt", test_bytes)))
+	t.Log(string(Get("download?login=sheer/important&password=7890&file=numbers.txt")))
+	t.Log(string(Get("download?login=sheer/abc&password=123&file=scene.txt")))
+	t.Log(string(Post("upload?login=sheer/abc&password=123&file=scene.txt", test_bytes)))
+	//	t.Fail()
 }
 
 func TestFileTransfer(t *testing.T) {
@@ -94,18 +107,20 @@ func TestFileTransfer(t *testing.T) {
 	// Raw
 	uploaded := string(Post("upload?login=sheer/important&password=7890&file=numbers.txt", test_bytes))
 	downloaded := string(Get("download?login=sheer/important&password=7890&file=numbers.txt"))
-	t.Log(uploaded)
-	t.Log(downloaded)
-	switch false {
-	case uploaded == "OK":
+	bad_guy_uploaded := bad_guy.Upload("scene.txt", []byte("Act I"))
+	t.Log("Normal upload " + uploaded)
+	t.Log("Normal download " + downloaded)
+	t.Log("Bad guy attempted upload " + bad_guy_uploaded)
+	switch {
+	case uploaded != "OK":
 		t.Error("File upload")
-	case downloaded == test_string:
+	case downloaded != test_string:
 		t.Error("File download")
-	case strings.Contains(bad_guy.Upload("scene.txt", []byte("Act I")), "FAIL"):
+	case !strings.Contains(bad_guy_uploaded, "FAIL"):
 		t.Error("Upload by a bad guy")
-	case good_guy.Upload("scene.txt", test_bytes) == "OK":
+	case good_guy.Upload("scene.txt", test_bytes) != "OK":
 		t.Error("Upload")
-	case string(good_guy.Download("scene.txt")) == test_string:
+	case string(good_guy.Download("scene.txt")) != test_string:
 		t.Error("Download")
 	}
 }

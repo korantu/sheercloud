@@ -1,9 +1,8 @@
 package cloud
 
 import (
-	"crypto/md5"
-
 	"bytes"
+	"crypto/md5"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -13,7 +12,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
-	_ "runtime/debug"
+	"runtime/debug"
 	"strconv"
 	"strings"
 )
@@ -29,6 +28,15 @@ type CloudError struct {
 // Error is error interface for CloudError
 func (err *CloudError) Error() string {
 	return err.msg
+}
+
+func NewCloudError(why string) *CloudError {
+	log.Print("CloudError: " + why)
+	return &CloudError{why}
+}
+
+func Log(msg string) {
+	log.Print(msg)
 }
 
 /* Todo:
@@ -178,12 +186,19 @@ type RequestInfo struct {
 // worker processes the information
 type worker func(http.ResponseWriter, *http.Request, *RequestInfo) error
 
+// send_OK writes "OK" sign to the output
+func send_OK(some io.Writer) error {
+	some.Write([]byte("OK"))
+	return nil
+}
+
 // worker_authorizer just sends "OK", the rest of the ork is done for him.
 func worker_authorizer(w http.ResponseWriter, r *http.Request, info *RequestInfo) error {
 	if info.Who != "" {
-		w.Write([]byte("OK"))
+		return send_OK(w)
+	} else {
+		return &CloudError{"Authentication failed"}
 	}
-	return nil
 }
 
 //---> TodoFileHelpers
@@ -232,18 +247,28 @@ func get_md5_for_file(fpath string) (string, error) {
 
 // worker_uploader puts a file in the cloud
 func worker_uploader(w http.ResponseWriter, r *http.Request, info *RequestInfo) error {
+	//	Log("worker_uploader")
 	if len(info.Paths) < 1 {
 		return &CloudError{"Path to upload to is not provided"}
 	}
 	new_file := TheCloud().GetOsPath(info.Who, info.Paths[0])
 
-	if temp_file, err := make_temp_file(info.Data); err != nil {
-		return err
-	} else if err := os.Rename(temp_file, new_file); err != nil {
+	var err error
+	var temp_file string
+
+	if temp_file, err = make_temp_file(info.Data); err != nil {
 		return err
 	}
 
-	return nil
+	if err = os.MkdirAll(path.Dir(new_file), 0777); err != nil {
+		return err
+	}
+
+	if err = os.Rename(temp_file, new_file); err != nil {
+		return err
+	}
+
+	return send_OK(w)
 }
 
 // worker_deleter removes a file from the cloud
@@ -257,8 +282,7 @@ func worker_deleter(w http.ResponseWriter, r *http.Request, info *RequestInfo) e
 		return nil
 	}
 
-	w.Write([]byte("OK"))
-	return nil
+	return send_OK(w)
 }
 
 // worker_downloader download a file from the cloud
@@ -274,7 +298,7 @@ func worker_downloader(w http.ResponseWriter, r *http.Request, info *RequestInfo
 		w.Header().Set("Content-Length", strconv.FormatInt(int64(len(data)), 10))
 		w.Write(data)
 	}
-	return nil
+	return nil // don't print ok.
 }
 
 // worker_lister returns a list of checksum and mtimes files from cloud
@@ -291,6 +315,9 @@ func worker_lister(w http.ResponseWriter, r *http.Request, info *RequestInfo) er
 	var result string = ""
 
 	filepath.Walk(listing_place, func(where string, fi os.FileInfo, err error) error {
+		if fi.IsDir() {
+			return nil
+		}
 		md5 := ""
 		var md5err error
 		if md5, md5err = get_md5_for_file(where); err != nil {
@@ -310,9 +337,10 @@ func worker_lister(w http.ResponseWriter, r *http.Request, info *RequestInfo) er
 func parse_inputs_for(cfg *CloudConfig, a worker) func(http.ResponseWriter, *http.Request) error {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		// Reading
+		Log("Doing " + r.URL.String())
 		incoming, err := ioutil.ReadAll(r.Body) // Must read body first
 		if err != nil || r.ContentLength != int64(len(incoming)) {
-			return &CloudError{"Reading data: " + err.Error()}
+			return NewCloudError("Reading data: " + err.Error())
 		}
 
 		param := r.URL.Query()
@@ -322,13 +350,15 @@ func parse_inputs_for(cfg *CloudConfig, a worker) func(http.ResponseWriter, *htt
 		files := param["file"]
 
 		if len(login) == 0 || len(password) == 0 || cfg == nil {
-			return &CloudError{"Authentication information missing"}
+			return NewCloudError("Authentication information missing")
 		}
 
 		mbr := cfg.GetUser(login[0])
 		if mbr == nil || mbr.Password != password[0] {
-			return &CloudError{"Authentication failed"}
+			Log("Failed to resolve user for:" + login[0])
+			return NewCloudError("Authentication failed")
 		}
+		Log("User resolved sucessfully for:" + login[0])
 		return a(w, r, &RequestInfo{mbr.Login, files, incoming})
 	}
 }
@@ -363,8 +393,8 @@ func must_not(err error) {
 	if err == nil {
 		return
 	}
-	//	log.Fatal(err.Error())
-	//	debug.PrintStack()
+	debug.PrintStack()
+	log.Fatal(err.Error())
 }
 
 // say writes a string to io.Writer; not too nice
@@ -612,11 +642,20 @@ func Serve(port, static string) {
 	http.HandleFunc("/version", version)
 	http.HandleFunc("/authorize", catch_errors_for(parse_inputs_for(TheCloud(), worker_authorizer)))
 
+	var go_crazy = true
+
 	//---> TodoConversionInProgress
-	http.HandleFunc("/list", list)
-	http.HandleFunc("/download", download)
-	http.HandleFunc("/upload", upload)
-	http.HandleFunc("/delete", remove)
+	if !go_crazy {
+		http.HandleFunc("/list", list)
+		http.HandleFunc("/download", download)
+		http.HandleFunc("/upload", upload)
+		http.HandleFunc("/delete", remove)
+	} else {
+		http.HandleFunc("/list", catch_errors_for(parse_inputs_for(TheCloud(), worker_lister)))
+		http.HandleFunc("/download", catch_errors_for(parse_inputs_for(TheCloud(), worker_downloader)))
+		http.HandleFunc("/upload", catch_errors_for(parse_inputs_for(TheCloud(), worker_uploader)))
+		http.HandleFunc("/delete", catch_errors_for(parse_inputs_for(TheCloud(), worker_deleter)))
+	}
 
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		log.Panic(err.Error())
@@ -635,13 +674,19 @@ func body(resp *http.Response) []byte {
 
 func Get(point string) []byte {
 	resp, err := http.Get("http://localhost:8080/" + point)
-	must_not(err)
+	if err != nil {
+		Log("Get failed: " + err.Error())
+		return []byte{}
+	}
 	return body(resp)
 }
 
 func Post(point string, to_post []byte) []byte {
 	resp, err := http.Post("http://localhost:8080/"+point, "application/octet-stream", bytes.NewReader(to_post))
-	must_not(err)
+	if err != nil {
+		Log("Post for [" + string(to_post) + "] failed: " + err.Error())
+		return []byte{}
+	}
 	return body(resp)
 }
 
