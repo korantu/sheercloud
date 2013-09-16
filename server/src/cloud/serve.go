@@ -227,6 +227,11 @@ func make_temp_file(data []byte) (string, error) {
 	return name, nil
 }
 
+// slash replaces all slashes to the same Unix form
+func slash(from string) string {
+	return strings.Replace(from, "\\", "/", -1)
+}
+
 var md5_hasher = md5.New()
 
 // get_md5_for_data calculates string representation for given bytes
@@ -263,6 +268,8 @@ func worker_uploader(w http.ResponseWriter, r *http.Request, info *RequestInfo) 
 	if err = os.MkdirAll(path.Dir(new_file), 0777); err != nil {
 		return err
 	}
+
+	os.RemoveAll(new_file)
 
 	if err = os.Rename(temp_file, new_file); err != nil {
 		return err
@@ -323,7 +330,7 @@ func worker_lister(w http.ResponseWriter, r *http.Request, info *RequestInfo) er
 		if md5, md5err = get_md5_for_file(where); err != nil {
 			return md5err
 		}
-		user_path := strings.Replace(where, listing_place, asked, 1)
+		user_path := strings.Replace(slash(where), slash(listing_place), asked, 1)
 		mod_time := fi.ModTime().Unix()
 		result += fmt.Sprintf("%s\n%s\n%d\n", user_path, md5, mod_time)
 		return nil
