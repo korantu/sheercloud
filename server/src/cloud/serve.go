@@ -192,6 +192,12 @@ func send_OK(some io.Writer) error {
 	return nil
 }
 
+// crash is here to test
+func worker_crash(w http.ResponseWriter, _ *http.Request, _ *RequestInfo) error {
+	say(w, "bye-bye")
+	panic("going down to test how it looks like")
+}
+
 // worker_authorizer just sends "OK", the rest of the ork is done for him.
 func worker_authorizer(w http.ResponseWriter, r *http.Request, info *RequestInfo) error {
 	if info.Who != "" {
