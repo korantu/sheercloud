@@ -140,7 +140,7 @@ func TestFileList(t *testing.T) {
 	list := ParseIdList(got)
 	for _, to_check := range list {
 		if was_checked, ok := checked[to_check.File]; !ok || was_checked == true {
-			t.Error("List %v does not match reference %v", list, checked)
+			t.Errorf("List %v does not match reference %v", list, checked)
 		}
 		checked[to_check.File] = true
 	}
@@ -328,7 +328,7 @@ func TestStoreRemove(t *testing.T) {
 
 }
 
-func TestFileStore(t *testing.T) {
+func NotTestFileStore(t *testing.T) {
 	tg.create_files(t)
 	store := tg.get_store(t)
 	store.Sync()
