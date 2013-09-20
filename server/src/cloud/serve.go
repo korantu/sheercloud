@@ -62,12 +62,35 @@ type Meta struct {
 	by_name map[string]int
 }
 
+//---> TheCloudConfigurationStructure
 // CloudConfig keeps track of all the CairnSmith state
 type CloudConfig struct {
 	TheCompany Company
 	TheMembers []Member
 	TheRoot    string // Where files live.
 	meta       *Meta
+}
+
+// Serialization
+
+// Save stores an object to file.
+func Save(place string, what interface{}) error {
+	var data []byte
+	var err error
+	if data, err = json.MarshalIndent(what, "", " "); err != nil {
+		return err
+	}
+	return ioutil.WriteFile(place, data, 0666)
+}
+
+// Load read from file.
+func Load(place string, what interface{}) error {
+	var data []byte
+	var err error
+	if data, err = ioutil.ReadFile(place); err != nil {
+		return err
+	}
+	return json.Unmarshal(data, what)
 }
 
 // organize regenerates Meta-information, if needed
@@ -98,26 +121,6 @@ func (a *CloudConfig) GetOsPath(login, user_path string) string {
 	return path.Join(a.GetRoot(login), user_path)
 }
 
-// Save stores an object to file.
-func Save(place string, what interface{}) error {
-	var data []byte
-	var err error
-	if data, err = json.MarshalIndent(what, "", " "); err != nil {
-		return err
-	}
-	return ioutil.WriteFile(place, data, 0666)
-}
-
-// Load read from file.
-func Load(place string, what interface{}) error {
-	var data []byte
-	var err error
-	if data, err = ioutil.ReadFile(place); err != nil {
-		return err
-	}
-	return json.Unmarshal(data, what)
-}
-
 func default_configuration() *CloudConfig {
 	cfg := &CloudConfig{
 		Company{"Test Company Inc.", "company", "abc"},
@@ -139,17 +142,14 @@ func TheCloud() *CloudConfig {
 	return default_configuration()
 }
 
-//---> TodoRequestUniformity
-/*
-  Function who does the requests should have recieved everything completely ready.
-*/
-
 /* Simple handlers, no pre-processing needed */
 // version prints out a version
 func version(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(Version))
 }
 
+// info prints request information for debug purposes.
+// Can be used for forms as well.
 func info(w http.ResponseWriter, r *http.Request) {
 
 	list_params := func(in map[string][]string) {
@@ -640,22 +640,13 @@ func Serve(port, static string) {
 	//---> TodoUpdateHandlers
 	http.HandleFunc("/info", info)
 	http.HandleFunc("/version", version)
+
 	http.HandleFunc("/authorize", catch_errors_for(parse_inputs_for(TheCloud(), worker_authorizer)))
-
-	var go_crazy = true
-
-	//---> TodoConversionInProgress
-	if !go_crazy {
-		http.HandleFunc("/list", list)
-		http.HandleFunc("/download", download)
-		http.HandleFunc("/upload", upload)
-		http.HandleFunc("/delete", remove)
-	} else {
-		http.HandleFunc("/list", catch_errors_for(parse_inputs_for(TheCloud(), worker_lister)))
-		http.HandleFunc("/download", catch_errors_for(parse_inputs_for(TheCloud(), worker_downloader)))
-		http.HandleFunc("/upload", catch_errors_for(parse_inputs_for(TheCloud(), worker_uploader)))
-		http.HandleFunc("/delete", catch_errors_for(parse_inputs_for(TheCloud(), worker_deleter)))
-	}
+	http.HandleFunc("/list", catch_errors_for(parse_inputs_for(TheCloud(), worker_lister)))
+	http.HandleFunc("/download", catch_errors_for(parse_inputs_for(TheCloud(), worker_downloader)))
+	http.HandleFunc("/upload", catch_errors_for(parse_inputs_for(TheCloud(), worker_uploader)))
+	http.HandleFunc("/delete", catch_errors_for(parse_inputs_for(TheCloud(), worker_deleter)))
+	http.HandleFunc("/crash", catch_errors_for(parse_inputs_for(TheCloud(), worker_crash)))
 
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		log.Panic(err.Error())
