@@ -22,4 +22,8 @@ Existing verbs include:
 - [x] "/job"       : Starts rendering on a file.
 
 ## File locations
-Each user has its own folder for his projects. Same files, for example models, are done using hardlinks. Most likely the structure is the same as on the user's local machine, but it is TBD for now.
+Each user has its own folder for his projects. Same files, for example models, are done using hardlinks. The structure is the same as on the user's local machine.
+
+## Jobs 
+To start a rendering job, user uploads the .xml file with meta-info about the job, and calls /job with the xml file.
+Rendering result is written as follws: example.xml -> example.xml.png 
