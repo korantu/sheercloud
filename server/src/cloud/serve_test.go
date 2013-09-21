@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func TestTrivialMore(t *testing.T) {
+func TestTrivial(t *testing.T) {
 	t.Log("Nothing to see here, move along.")
 }
 
@@ -70,6 +70,24 @@ func TestMakeTempFile(t *testing.T) {
 	} else if string(contents) != test_string {
 		t.Fatal("Bytes were not written")
 	}
+}
+
+func TestCrash(t *testing.T) {
+	result := Get("/crash")
+	t.Log(string(result))
+}
+
+func TestGoPanic(t *testing.T) {
+	t.Log("Panicked")
+	func() {
+		defer func() {
+			if r := recover(); r != nil {
+				t.Logf("Okay, %v", r)
+			}
+		}()
+		panic("Boom!")
+	}()
+	t.Log("Not actually exploded")
 }
 
 func TestMd5Sum(t *testing.T) {

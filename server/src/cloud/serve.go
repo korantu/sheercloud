@@ -185,6 +185,16 @@ type RequestInfo struct {
 
 // worker processes the information
 type worker func(http.ResponseWriter, *http.Request, *RequestInfo) error
+type worker_simple func(http.ResponseWriter, *http.Request) error
+
+// worker_http makes a simple worker out of HandlerFunc
+func worker_http(a http.HandlerFunc) worker_simple {
+	wrk := func(w http.ResponseWriter, r *http.Request) error {
+		a(w, r)
+		return nil
+	}
+	return wrk
+}
 
 // send_OK writes "OK" sign to the output
 func send_OK(some io.Writer) error {
@@ -193,7 +203,7 @@ func send_OK(some io.Writer) error {
 }
 
 // crash is here to test
-func worker_crash(w http.ResponseWriter, _ *http.Request, _ *RequestInfo) error {
+func worker_crash(w http.ResponseWriter, _ *http.Request) error {
 	say(w, "bye-bye")
 	panic("going down to test how it looks like")
 }
@@ -208,7 +218,6 @@ func worker_authorizer(w http.ResponseWriter, r *http.Request, info *RequestInfo
 }
 
 //---> TodoFileHelpers
-// Not yet sure which
 func make_temp_file(data []byte) (string, error) {
 	var file *os.File
 	var err error
@@ -347,7 +356,7 @@ func worker_lister(w http.ResponseWriter, r *http.Request, info *RequestInfo) er
 }
 
 // parse_inputs_for generates a function which deals with input stuff, leaving worker only with actual logic
-func parse_inputs_for(cfg *CloudConfig, a worker) func(http.ResponseWriter, *http.Request) error {
+func parse_inputs_for(a worker) func(http.ResponseWriter, *http.Request) error {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		// Reading
 		Log("Doing " + r.URL.String())
@@ -361,6 +370,8 @@ func parse_inputs_for(cfg *CloudConfig, a worker) func(http.ResponseWriter, *htt
 		login := param["login"]
 		password := param["password"]
 		files := param["file"]
+
+		cfg := TheCloud()
 
 		if len(login) == 0 || len(password) == 0 || cfg == nil {
 			return NewCloudError("Authentication information missing")
@@ -380,6 +391,13 @@ func parse_inputs_for(cfg *CloudConfig, a worker) func(http.ResponseWriter, *htt
 // If main path fails, function returned by catcher handles the resulting error.
 func catch_errors_for(a func(w http.ResponseWriter, r *http.Request) error) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+		defer func() { // In case things go wrong
+			if r := recover(); r != nil {
+				problem := fmt.Sprintf("FAIL:panic:%v", r)
+				w.Write([]byte(problem))
+			}
+		}()
+
 		if err := a(w, r); err != nil {
 			w.Write([]byte("FAIL:" + err.Error()))
 		}
@@ -639,6 +657,8 @@ func fail(w http.ResponseWriter, r *http.Request) error {
 
 // Serve starts all the API entry points
 func Serve(port, static string) {
+
+	// To remove, likely
 	http.Handle("/ui/", http.StripPrefix("/ui/", http.FileServer(http.Dir(static))))
 	http.HandleFunc("/error", catcher(fail))
 
@@ -646,20 +666,22 @@ func Serve(port, static string) {
 	http.HandleFunc("/api/users", catcher(api_users))
 	http.HandleFunc("/api/adduser", catcher(api_adduser))
 
-	//---> TodoUnUpdatedHandlers
-	http.HandleFunc("/job", job)
-	http.HandleFunc("/progress", progress)
+	actions := map[string]worker_simple{
+		"/authorize": parse_inputs_for(worker_authorizer),
+		"/list":      parse_inputs_for(worker_lister),
+		"/download":  parse_inputs_for(worker_downloader),
+		"/upload":    parse_inputs_for(worker_uploader),
+		"/delete":    parse_inputs_for(worker_deleter),
+		"/info":      worker_http(info),
+		"/version":   worker_http(version),
+		"/job":       worker_http(job),
+		"/progress":  worker_http(progress),
+		"/crash":     worker_crash,
+	}
 
-	//---> TodoUpdateHandlers
-	http.HandleFunc("/info", info)
-	http.HandleFunc("/version", version)
-
-	http.HandleFunc("/authorize", catch_errors_for(parse_inputs_for(TheCloud(), worker_authorizer)))
-	http.HandleFunc("/list", catch_errors_for(parse_inputs_for(TheCloud(), worker_lister)))
-	http.HandleFunc("/download", catch_errors_for(parse_inputs_for(TheCloud(), worker_downloader)))
-	http.HandleFunc("/upload", catch_errors_for(parse_inputs_for(TheCloud(), worker_uploader)))
-	http.HandleFunc("/delete", catch_errors_for(parse_inputs_for(TheCloud(), worker_deleter)))
-	http.HandleFunc("/crash", catch_errors_for(parse_inputs_for(TheCloud(), worker_crash)))
+	for url, action := range actions {
+		http.HandleFunc(url, catch_errors_for(action))
+	}
 
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		log.Panic(err.Error())
