@@ -1,2 +1,20 @@
-TAGS: ./server/src/cloud/serve_test.go ./server/src/cloud/files.go ./server/src/cloud/fs_test.go ./server/src/cloud/main_test.go ./server/src/cloud/version.go ./server/src/cloud/entities.go ./server/src/cloud/api.go ./server/src/cloud/serve.go ./server/src/cloud/cloud_test.go ./server/src/cloud/job.go ./server/src/cloud/users.go ./server/src/cloud/api_test.go ./server/src/cloud/doc.go ./server/src/cloud/fs.go ./server/src/cloud/config.go ./server/src/tool/main.go
+FILES= \
+	./server/src/cloud/serve_test.go  \
+	./server/src/cloud/files.go  \
+	./server/src/cloud/main_test.go  \
+	./server/src/cloud/version.go  \
+	./server/src/cloud/entities.go  \
+	./server/src/cloud/api.go  \
+	./server/src/cloud/serve.go  \
+	./server/src/cloud/cloud_test.go  \
+	./server/src/cloud/job.go  \
+	./server/src/cloud/users.go  \
+	./server/src/cloud/api_test.go  \
+	./server/src/cloud/doc.go  \
+	./server/src/cloud/fs.go  \
+	./server/src/cloud/config.go  \
+	./server/src/tool/main.go
+
+# Generate tags for go files:
+TAGS: ${FILES}
 		rm TAGS; find . -name "*.go" | xargs etags -a -r '/^\/\/---> +\([a-zA-Z]+\)/' -r '/^type \([a-zA-Z_]+\)/' -r '/^func \([a-zA-Z_]+\)/' -r '/^func ([^)]+) \([a-zA-Z_]+\)/'
