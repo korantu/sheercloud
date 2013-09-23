@@ -1,6 +1,10 @@
 * Updates
  Tracker
  [[file+emacs:../README.md]]
+* Resources
+template: http://golang.org/pkg/html/template/
+* Tasks
+** 
 * Plan
 User operations
 Render starting

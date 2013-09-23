@@ -5,6 +5,7 @@ import (
 	"crypto/md5"
 	"encoding/json"
 	"fmt"
+	_ "html/template"
 	"io"
 	"io/ioutil"
 	"log"
