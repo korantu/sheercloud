@@ -19,7 +19,7 @@ import (
 )
 
 // Errors
-//---> TodoErrors Make errors capture traces. (And probably log themselves too?)
+//---> PlaceErrors Make errors capture traces. (And probably log themselves too?)
 
 // CloudError handles errors in the couds
 type CloudError struct {
@@ -44,7 +44,7 @@ func Log(msg string) {
 Create config strucutre.
 */
 
-//---> TodoNewCloudConfiguration
+//---> PlaceCloudConfiguration
 
 // Company specifies global company data, such as admin password,
 // payment facilities, etc.
@@ -63,7 +63,7 @@ type Meta struct {
 	by_name map[string]int
 }
 
-//---> TheCloudConfigurationStructure
+//---> PlaceCloudConfigurationStruct
 // CloudConfig keeps track of all the CairnSmith state
 type CloudConfig struct {
 	TheCompany Company
@@ -218,7 +218,7 @@ func worker_authorizer(w http.ResponseWriter, r *http.Request, info *RequestInfo
 	}
 }
 
-//---> TodoFileHelpers
+//---> PlaceFileHelpers
 func make_temp_file(data []byte) (string, error) {
 	var file *os.File
 	var err error
@@ -241,6 +241,18 @@ func make_temp_file(data []byte) (string, error) {
 	}
 
 	return name, nil
+}
+
+// must_be_file returns nil if it is a proper file, and error otherwise.
+func must_be_file(a_path string) error {
+	if what, err := os.Stat(a_path); err != nil {
+		return err
+	} else {
+		if what.IsDir() {
+			return &CloudError{"A normal file expected:" + a_path}
+		}
+	}
+	return nil
 }
 
 // slash replaces all slashes to the same Unix form
@@ -551,6 +563,57 @@ func progress(w http.ResponseWriter, r *http.Request) {
 		say(w, fmt.Sprintf("OK:PROGRESS"))
 	}
 
+}
+
+//---> PlaceJobs
+
+// worker_jober puts a mark in the cloud to say that the job can be picked up for processing
+func worker_jober(w http.ResponseWriter, r *http.Request, info *RequestInfo) error {
+	if len(info.Paths) < 1 {
+		return &CloudError{"Path to scene to be processed is not provided"}
+	}
+
+	scene_file := TheCloud().GetOsPath(info.Who, info.Paths[0])
+
+	if err := must_be_file(scene_file); err != nil {
+		return err
+	}
+
+	job_file := scene_file + ".job"
+
+	if _, err := os.Stat(job_file); err == nil {
+		return &CloudError{"Job seems to be already submitted"}
+	}
+
+	if err := ioutil.WriteFile(job_file, []byte("."), 0666); err != nil {
+		return err
+	}
+
+	return send_OK(w)
+}
+
+// worker_uploader puts a file in the cloud
+func worker_progresser(w http.ResponseWriter, r *http.Request, info *RequestInfo) error {
+	if len(info.Paths) < 1 {
+		return &CloudError{"Path to scene to be processed is not provided"}
+	}
+
+	scene_file := TheCloud().GetOsPath(info.Who, info.Paths[0])
+
+	if err := must_be_file(scene_file); err != nil {
+		return err
+	}
+
+	progress_file := scene_file + ".jobout"
+
+	if data, err := ioutil.ReadFile(progress_file); err != nil {
+		return err
+	} else {
+		w.Write(data)
+		w.Write([]byte("\n\n"))
+	}
+
+	return send_OK(w)
 }
 
 // fail is an always-failing call, for testing relevant functions ***
