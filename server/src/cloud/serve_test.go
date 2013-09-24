@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"strings"
 	"testing"
 	"time"
 )
@@ -147,23 +148,24 @@ func TestBadFileParameter(t *testing.T) {
 	}
 }
 
-func TestJobsMore(t *testing.T) {
-	id := DoJob("scene.txt")
-	if r, err := JobDone(id); err != nil || *r {
-		t.Error("Should not be done yet:", err)
-	}
-	time.Sleep(time.Second + 20*time.Millisecond)
-	if r, err := JobDone(id); err != nil || !*r {
-		t.Error("Should be done already:", err)
-	}
-	if _, err := JobDone("notreally"); err == nil {
-		t.Error("Error is not reported for unknown id")
-	}
+func TestJobStart(t *testing.T) {
+	scene_file := "scene_wow.txt"
+	t.Log("Testing jobs")
+	t.Log(good_guy.Delete(scene_file))
+	t.Log(good_guy.Delete(scene_file + JOB_SUFFIX))
+	time.Sleep(2 * time.Second)
+	good_guy.Upload(scene_file, []byte("123")) // A scene file
+	started, not_there := good_guy.JobStart(scene_file), good_guy.JobStart("not"+scene_file)
+	key := string(good_guy.Download(scene_file + JOB_SUFFIX))
 
-	if id_a, id_b := DoJob("scene.txt"), DoJob("scene.txt"); id_a == id_b {
-		t.Error("Impossible:", id_a, " and ", id_b)
+	switch {
+	case strings.Contains(started, "FAIL"):
+		t.Error(started)
+	case !strings.Contains(not_there, "FAIL"):
+		t.Error(not_there)
+	case strings.Contains(key, "FAIL"):
+		t.Error(key)
 	}
-
 }
 
 func TestApi(t *testing.T) {

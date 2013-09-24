@@ -18,6 +18,10 @@ import (
 	"strings"
 )
 
+//---> PlaceConsts
+const JOB_SUFFIX = ".job"
+const JOB_OUTPUT_SUFFIX = ".jobout"
+
 // Errors
 //---> PlaceErrors Make errors capture traces. (And probably log themselves too?)
 
@@ -314,7 +318,7 @@ func worker_deleter(w http.ResponseWriter, r *http.Request, info *RequestInfo) e
 	doomed_file := TheCloud().GetOsPath(info.Who, info.Paths[0])
 
 	if err := os.RemoveAll(doomed_file); err != nil {
-		return nil
+		return err
 	}
 
 	return send_OK(w)
@@ -579,7 +583,7 @@ func worker_jober(w http.ResponseWriter, r *http.Request, info *RequestInfo) err
 		return err
 	}
 
-	job_file := scene_file + ".job"
+	job_file := scene_file + JOB_SUFFIX
 
 	if _, err := os.Stat(job_file); err == nil {
 		return &CloudError{"Job seems to be already submitted"}
@@ -604,7 +608,7 @@ func worker_progresser(w http.ResponseWriter, r *http.Request, info *RequestInfo
 		return err
 	}
 
-	progress_file := scene_file + ".jobout"
+	progress_file := scene_file + JOB_OUTPUT_SUFFIX
 
 	if data, err := ioutil.ReadFile(progress_file); err != nil {
 		return err
@@ -640,11 +644,15 @@ func Serve(port, static string) {
 		"/download":  parse_inputs_for(worker_downloader),
 		"/upload":    parse_inputs_for(worker_uploader),
 		"/delete":    parse_inputs_for(worker_deleter),
-		"/info":      worker_http(info),
-		"/version":   worker_http(version),
-		"/job":       worker_http(job),
-		"/progress":  worker_http(progress),
-		"/crash":     worker_crash,
+
+		"/jobstart":  parse_inputs_for(worker_jober),
+		"/jobresult": parse_inputs_for(worker_progresser),
+
+		"/info":    worker_http(info),
+		"/version": worker_http(version),
+		//	"/job":      worker_http(job),
+		//	"/progress": worker_http(progress),
+		"/crash": worker_crash,
 	}
 
 	for url, action := range actions {
@@ -734,4 +742,14 @@ func (i Identity) Job(remote string) string {
 func (i Identity) Progress(id JobID) string {
 	log.Print("Getting reslut of job " + id)
 	return string(Get("progress?login=" + i.Login + "&password=" + i.Password + "&id=" + string(id)))
+}
+
+func (i Identity) JobStart(remote string) string {
+	log.Print("Starting processing " + remote)
+	return string(Post("jobstart?login="+i.Login+"&password="+i.Password+"&file="+remote, []byte{}))
+}
+
+func (i Identity) JobResult(remote string) string {
+	log.Print("Getting reslut of a job ")
+	return string(Post("jobresult?login="+i.Login+"&password="+i.Password+"&file="+remote, []byte{}))
 }

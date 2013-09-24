@@ -186,8 +186,10 @@ func TestFileListInterface(t *testing.T) {
 
 func TestFileDelete(t *testing.T) {
 	switch false {
-	case good_guy.Upload("to_remove/scene.txt", []byte("Act I")) == "OK":
+	case good_guy.Upload("to_remove/scene.txt", []byte("Act")) == "OK":
 		t.Error("Upload temporary")
+	case string(good_guy.Download("to_remove/scene.txt")) == "Act":
+		t.Error("Not really uploaded")
 	case good_guy.Delete("to_remove/scene.txt") == "OK":
 		t.Error("Deletion")
 	case good_guy.Delete("to_remove/not_scene.txt") == "OK":
@@ -354,53 +356,4 @@ func NotTestFileStore(t *testing.T) {
 	if expected, got := 1, len(files); expected != got {
 		t.Errorf("Matched %d instead of %d; %v|%v", got, expected, files, ids)
 	}
-}
-
-func TestJobs(t *testing.T) {
-	started := string(Post("job?login=sheer/important&password=7890&file=scene.txt", []byte{}))
-	if strings.Contains(started, "FAIL") {
-		t.Error(started)
-	}
-	id := JobID(started[3:])
-
-	done_so_far := string(Get("progress?login=sheer/important&password=7890&id=" + string(id)))
-	if strings.Contains(started, "FAIL") {
-		t.Error(started)
-	}
-
-	if done_so_far[3:] != "PROGRESS" {
-		t.Error(done_so_far)
-	}
-
-	time.Sleep(time.Second + 100*time.Millisecond)
-	done_so_far = string(Get("progress?login=sheer/important&password=7890&id=" + string(id)))
-	if done_so_far[3:] != "DONE" {
-		t.Error(done_so_far)
-	}
-
-}
-
-// TODO: can be simpler
-func TestJobsSimple(t *testing.T) {
-	started := good_guy.Job("scene.txt")
-	if strings.Contains(started, "FAIL") {
-		t.Error(started)
-	}
-	id := JobID(started[3:])
-
-	done_so_far := good_guy.Progress(id)
-	if strings.Contains(started, "FAIL") {
-		t.Error(started)
-	}
-
-	if done_so_far[3:] != "PROGRESS" {
-		t.Error(done_so_far)
-	}
-
-	time.Sleep(time.Second + 100*time.Millisecond)
-
-	if done_so_far = good_guy.Progress(id); done_so_far[3:] != "DONE" {
-		t.Error(done_so_far)
-	}
-
 }
