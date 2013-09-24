@@ -20,7 +20,7 @@ sub doRender {
     my $filename = "$_";
     $filename =~ s/.job$//g;
     print "Script handling $filename\n";
-    print `perl $script $filename`
+    print `perl $script $filename > $filename.jobout 2>&1`
 }
 
 sub eachFile {
