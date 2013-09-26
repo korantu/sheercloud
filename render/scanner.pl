@@ -20,7 +20,7 @@ sub doRender {
     my $filename = "$_";
     $filename =~ s/.job$//g;
     print "Script handling $filename\n";
-    print `perl $script $filename > $filename.jobout 2>&1`
+    system("perl $script $filename > $filename.jobout 2>&1");
 }
 
 sub eachFile {
@@ -47,23 +47,3 @@ sub scan() {
 }
 
 scan();
-
-__END__
-=head1 NAME
-sample - Using Getopt::Long and Pod::Usage
-=head1 SYNOPSIS
-sample [options] [file ...]
-Options:
--help brief help message
--man full documentation
-=head1 OPTIONS
-=over 8
-=item B<-help>
-Print a brief help message and exits.
-=item B<-man>
-Prints the manual page and exits.
-=back
-=head1 DESCRIPTION
-B<This program> will read the given input file(s) and do something
-useful with the contents thereof.
-=cut

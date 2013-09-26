@@ -3,14 +3,31 @@ use warnings;
 use Carp;
 
 use Data::Dumper;
+use File::Find;
+
 
 my $osg = $ARGV[0];
 my $lux = $ARGV[1];
+my $store = $ARGV[2];
 
-die "Input and output should be provided" unless $osg and $lux;
+-d $store or die "Please specify where to look for data";
+$osg and $lux or die "Input and output should be provided";
 
 open( my $IN, "<", $osg ) or die "Cannot open input: $!";
 open( my $OUT, ">", $lux ) or die "Cannot open output: $!";
+
+my $content = {};
+find( \&wanted, $store);
+
+sub wanted {
+    my $name = "$File::Find::name";
+    $name =~ /([^\/\\]*$)/;
+    $content->{$1} = $name;
+    return;
+}
+
+print Dumper($content);
+
 
 # Logging
 sub kdllog {
@@ -88,7 +105,7 @@ sub entry {
 	$cursor = "$name";
     }
 
-    while( my $line = <> ) {
+    while( my $line = <$IN> ) {
 	chomp $line;
 	$line =~ s/^\s+//;
 	$line =~ s/\s+$//;
@@ -97,7 +114,8 @@ sub entry {
 
 	if ( $cursor eq "Image" and $line =~ /^FileName\s"([^"]+)/) {
 	    my $fullpath = "$1";
-	    $context->{ $cursor } = ( $fullpath =~ /([^\\\/]+)$/ ? $1 : $fullpath) ;
+	    my $base = ( $fullpath =~ /([^\\\/]+)$/ ? $1 : $fullpath);
+	    $context->{ $cursor } = $content->{$base} or die "$fullpath image is not found";
 	}
 
 	if ( $name eq "Array" ) {
