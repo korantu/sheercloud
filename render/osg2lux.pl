@@ -4,16 +4,24 @@ use Carp;
 
 use Data::Dumper;
 
+my $osg = $ARGV[0];
+my $lux = $ARGV[1];
+
+die "Input and output should be provided" unless $osg and $lux;
+
+open( my $IN, "<", $osg ) or die "Cannot open input: $!";
+open( my $OUT, ">", $lux ) or die "Cannot open output: $!";
+
 # Logging
 sub kdllog {
     my $msg = shift;
-    print STDERR "  ---  ", $msg, "\n"
+    print "  ---  ", $msg, "\n";
 }
 
 # Output
 sub kdlout {
     my $msg = shift;
-    print $msg
+    print $OUT $msg;
 }
 
 # Get a reasonable name for an OSG section
