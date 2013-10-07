@@ -32,7 +32,7 @@ print Dumper($content);
 # Logging
 sub kdllog {
     my $msg = shift;
-    print "  ---  ", $msg, "\n";
+#    print "  ---  ", $msg, "\n";
 }
 
 # Output

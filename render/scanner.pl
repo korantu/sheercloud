@@ -7,8 +7,8 @@ my $script = "worker.pl";
 my $root = ".";
 
 my $HELP =<<HELP;
--script <full path script to run for each job>;
--root <where to scan>
+--script <full path script to run for each job>;
+--root <where to scan>
 HELP
 
 GetOptions ("script=s" => \$script,
@@ -39,7 +39,7 @@ sub eachFile {
 
 sub scan() {
     -d $root or die "Scan place is not a directory";
-    print "Starting scan...\n";
+    print "Starting scan in [$root]...\n";
     while ( 2 ) {
 	sleep 2;
 	find (\&eachFile, $root);
