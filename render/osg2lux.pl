@@ -28,7 +28,6 @@ sub wanted {
 
 print Dumper($content);
 
-
 # Logging
 sub kdllog {
     my $msg = shift;
