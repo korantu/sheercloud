@@ -31,3 +31,7 @@ cloud.test
 # emacs
 *#*
 tool
+
+#idea
+server/out/*
+server/store/*
