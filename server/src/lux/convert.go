@@ -1,11 +1,11 @@
-package lux;
+package lux
 
 type Point [4]float32
 
 type Matrix[16]float32
 
 type Camera struct {
-	Eye, Up, Center Point
+	Eye,  Up,  Center Point
 }
 
 /* <RenderingData>
@@ -59,14 +59,23 @@ type Camera struct {
 </RenderingData>*/
 
 type RenderingData struct {
-  Scene string
-  Models struct {
+	Scene string
+	Models struct {
 	LibraryItem []struct {
+	Transform           string
+	Path                string
+	LibraryItemSubGeode []struct {
+	Material struct {
+	Shininess string "xml:shininess,attr"
+}
+}
+}
+}
+	RenderingSettings struct {
 
-    }
-  }
+}
 }
 
 func ToBeTested() string {
-   return "Done"
+	return "Done"
 }

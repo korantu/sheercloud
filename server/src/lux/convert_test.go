@@ -6,16 +6,6 @@ import (
 	"encoding/xml"
 )
 
-var testxml string = `<Outer>
-<Inner>
-<Camera>2</Camera>
-<Light>
-  <Light>A</Light>
-  <Light>B</Light>
-</Light>
-</Inner>
-</Outer>`
-
 var testconfig string = `<RenderingData><Scene>C:/Users/Sheer Temp 1/Cairnsmith/sheer/abc/Projects/testProj - Copy/Designer/testProj_design_1.osgt</Scene>
 <Models>
  <LibraryItem>
@@ -69,8 +59,21 @@ func TestTrivial(t * testing.T) {
 	t.Log("Okay, lah.");
 }
 
+var testxml string = `<Outer>
+<Inner>
+<Camera x="12"></Camera>
+<Light>
+  <Light>A</Light>
+  <Light>B</Light>
+</Light>
+</Inner>
+</Outer>`
+
 type testxmldata struct { Inner struct {
-	Camera string
+	Camera struct {
+		A int `xml:"x,attr"`
+	}
+
 	Light struct {
 	Light []string} }
 };
@@ -84,5 +87,4 @@ func TestXml(t * testing.T) {
 		t.Fail()
 	}
 	t.Logf("Cfg: %v", q)
-
 }
