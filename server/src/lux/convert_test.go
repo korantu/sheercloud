@@ -4,6 +4,7 @@ import (
 	"testing"
 	"bytes"
 	"encoding/xml"
+	"strings"
 )
 
 var testconfig string = `<RenderingData><Scene>C:/Users/Sheer Temp 1/Cairnsmith/sheer/abc/Projects/testProj - Copy/Designer/testProj_design_1.osgt</Scene>
@@ -91,5 +92,13 @@ func TestXml(t * testing.T) {
 
 func TestConfigurationLoad(t * testing.T){
 	a := bytes.NewBuffer([]byte(testconfig))
-
+	var rd * RenderingData
+	var err error
+	if rd, err = readConfiguration(a); err != nil {
+		t.Log(err.Error())
+		t.Fail()
+	}
+	if ! strings.Contains(rd.Scene, "testProj_design_1.osgt" ) {
+		t.Errorf("Scene name not retrieved correctly in %v", rd)
+	}
 }

@@ -2,6 +2,8 @@ package lux
 
 import (
 	"io"
+	// "cloud"
+	"encoding/xml"
 )
 
 type Point [4]float32
@@ -9,7 +11,7 @@ type Point [4]float32
 type Matrix[16]float32
 
 type Camera struct {
-	Eye,     Up,     Center Point
+	Eye,      Up,      Center Point
 }
 
 /* <RenderingData>
@@ -87,8 +89,8 @@ type RenderingData struct {
 }}}}
 	RenderingSettings struct {
 	Camera struct {
-	CameraType               string `xml:",attr"`
-	Eye,   Center,   Up      XMLPosition
+	CameraType                 string `xml:",attr"`
+	Eye,    Center,    Up      XMLPosition
 	CameraDisplaySettings struct {
 	FOV            int `xml:"fov,attr"`
 	Resolution_X   int `xml:",attr"`
@@ -99,15 +101,20 @@ type RenderingData struct {
 }
 	Lights struct {
 	Lights []struct {
-	Position           XMLPosition
-	Diffuse,  Specular XMLShaderParam
+	Position            XMLPosition
+	Diffuse,   Specular XMLShaderParam
 }
 }
 }
 }
 
-func readConfiguration( some io.Reader ) (res * RenderingData, err error) {
-	 return nil, err
+func readConfiguration(some io.Reader) (res * RenderingData, err error) {
+	d := xml.NewDecoder(some)
+	out := RenderingData{}
+	if err := d.Decode(&out); err != nil {
+		return nil, err
+	}
+	return &out, nil
 }
 
 func ToBeTested() string {
