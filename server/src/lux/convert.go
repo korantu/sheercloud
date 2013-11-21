@@ -2,16 +2,22 @@ package lux
 
 import (
 	"io"
-	// "cloud"
 	"encoding/xml"
+	//	"bufio"
+	"strings"
+	//	"log"
+	//	"fmt"
+	"bufio"
 )
+
+// Configuration
 
 type Point [4]float32
 
 type Matrix[16]float32
 
 type Camera struct {
-	Eye,      Up,      Center Point
+	Eye,           Up,           Center Point
 }
 
 /* <RenderingData>
@@ -89,8 +95,8 @@ type RenderingData struct {
 }}}}
 	RenderingSettings struct {
 	Camera struct {
-	CameraType                 string `xml:",attr"`
-	Eye,    Center,    Up      XMLPosition
+	CameraType                           string `xml:",attr"`
+	Eye,         Center,         Up      XMLPosition
 	CameraDisplaySettings struct {
 	FOV            int `xml:"fov,attr"`
 	Resolution_X   int `xml:",attr"`
@@ -101,8 +107,8 @@ type RenderingData struct {
 }
 	Lights struct {
 	Lights []struct {
-	Position            XMLPosition
-	Diffuse,   Specular XMLShaderParam
+	Position                 XMLPosition
+	Diffuse,        Specular XMLShaderParam
 }
 }
 }
@@ -115,6 +121,98 @@ func readConfiguration(some io.Reader) (res * RenderingData, err error) {
 		return nil, err
 	}
 	return &out, nil
+}
+
+// OSGT reading
+
+/*
+                  VertexData {
+                    Array TRUE ArrayID 24 Vec3fArray 4 {
+                      531.011 -266 300
+                      530.989 -286 300
+                      530.989 -286 0
+                      531.011 -266 0
+                    }
+                    Indices FALSE
+                    Binding BIND_PER_VERTEX
+                    Normalize 0
+                  }
+
+ */
+
+
+type OSGTEntry struct {
+	Key string
+	Child * OSGT
+}
+
+type OSGT struct {
+	List []OSGTEntry
+}
+
+func NewOSGT() * OSGT {
+	return &OSGT{[]OSGTEntry{}}
+}
+
+func (an * OSGT) Print() string {
+	return an.print_indent("")
+}
+
+func (an *OSGT) Find(pattern string) []*OSGT{
+	res := []*OSGT{}
+	for _, item := range an.List {
+		if item.Child != nil {
+			if strings.Contains(item.Key, pattern){
+				res = append(res, item.Child)
+			}  else {
+				res = append(res, item.Child.Find(pattern) ...)
+			}
+		}
+	}
+	return res
+}
+
+func (an * OSGT) print_indent(indent string) string {
+	out := ""
+	for _, more := range (an.List) {
+		out += indent + "[" + more.Key + "]\n";
+		if more.Child != nil {
+			out += more.Child.print_indent(indent + "  ")
+		}
+	}
+	return out
+}
+
+func readOSGT(some io.Reader) (*OSGT, error) {
+	scnr := bufio.NewScanner(some)
+	return scanOSGT(scnr)
+}
+
+func scanOSGT(some * bufio.Scanner) (*OSGT, error) {
+
+	out := NewOSGT()
+	for some.Scan() {
+		a_line := some.Text()
+		if err := some.Err(); err != nil {
+			return nil, err // Return whatever we have
+		}
+		a_line = strings.Trim(a_line, " \n\t")
+		if strings.Contains(a_line, "}") {
+			return out, nil
+		}
+		var depth * OSGT = nil;
+		if strings.Contains(a_line, "{") {
+			a_line = strings.Replace(a_line, "{", "", 1)
+			a_line = strings.Trim(a_line, " \n\t") // Getting rid of extra space
+			inside, err := scanOSGT(some)
+			if err != nil {
+				return nil, err
+			}
+			depth = inside;
+		}
+		out.List = append(out.List, OSGTEntry{a_line, depth})
+	}
+	return out, nil
 }
 
 func ToBeTested() string {

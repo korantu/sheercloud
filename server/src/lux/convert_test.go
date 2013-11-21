@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"encoding/xml"
 	"strings"
+	"os"
 )
 
 var testconfig string = `<RenderingData><Scene>C:/Users/Sheer Temp 1/Cairnsmith/sheer/abc/Projects/testProj - Copy/Designer/testProj_design_1.osgt</Scene>
@@ -72,12 +73,12 @@ var testxml string = `<Outer>
 
 type testxmldata struct { Inner struct {
 	Camera struct {
-		A int `xml:"x,attr"`
-	}
+	A int `xml:"x,attr"`
+}
 
 	Light struct {
 	Light []string} }
-};
+}
 
 func TestXml(t * testing.T) {
 	a := bytes.NewBuffer([]byte(testxml))
@@ -90,7 +91,7 @@ func TestXml(t * testing.T) {
 	t.Logf("Cfg: %v", q)
 }
 
-func TestConfigurationLoad(t * testing.T){
+func TestConfigurationLoad(t * testing.T) {
 	a := bytes.NewBuffer([]byte(testconfig))
 	var rd * RenderingData
 	var err error
@@ -98,7 +99,7 @@ func TestConfigurationLoad(t * testing.T){
 		t.Log(err.Error())
 		t.Fail()
 	}
-	if ! strings.Contains(rd.Scene, "testProj_design_1.osgt" ) {
+	if !strings.Contains(rd.Scene, "testProj_design_1.osgt") {
 		t.Errorf("Scene name not retrieved correctly in %v", rd)
 	}
 	if len(rd.Models.LibraryItem) != 3 {
@@ -106,3 +107,60 @@ func TestConfigurationLoad(t * testing.T){
 	}
 	t.Logf("Obtained:%v\n", rd)
 }
+
+var testosgt = `                  VertexData {
+                    Array TRUE ArrayID 24 Vec3fArray 4 {
+                      531.011 -266 300
+                      530.989 -286 300
+                      530.989 -286 0
+                      531.011 -266 0
+                    }
+                    Indices FALSE
+                    Binding BIND_PER_VERTEX
+                    Normalize 0
+                  }
+`
+
+func TestOSGTLoad(t * testing.T) {
+	a := bytes.NewBuffer([]byte(testosgt))
+	var rd * OSGT
+	var err error
+	if rd, err = readOSGT(a); err != nil {
+		t.Log(err.Error())
+		t.Fail()
+	}
+	t.Logf("Got:\n%s", rd.Print())
+	//t.Logf("Raw:\n%v", *rd)
+}
+
+func TestOSGTLoadAll(t * testing.T){
+	t.Log(os.Getwd())
+	f, err := os.Open("../../../render/reference/testProj_design_1.osgt")
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+	var rd * OSGT
+	if rd, err = readOSGT(f); err != nil {
+		t.Log(err.Error())
+		t.Fail()
+	}
+	//t.Logf("Got:\n%s", rd.Print())
+
+	list := rd.Find("Geode")
+
+	if len(list) == 0 {
+		t.Error("There supposed to be geodes in the scene")
+	}
+	t.Logf("Found %d geodes", len(list))
+	t.Logf("For example:\n%s", list[0].Print())
+
+	for _, each := range list {
+		if vtx := each.Find("VertexData"); len(vtx) == 1 {
+			t.Logf("Vdata:\n%s",vtx[0].Print())
+		} else {
+			t.Log("Must contain VertexData")
+		}
+	}
+
+}
+
