@@ -88,3 +88,8 @@ func TestXml(t * testing.T) {
 	}
 	t.Logf("Cfg: %v", q)
 }
+
+func TestConfigurationLoad(t * testing.T){
+	a := bytes.NewBuffer([]byte(testconfig))
+
+}

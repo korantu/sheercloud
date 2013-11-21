@@ -1,5 +1,9 @@
 package lux
 
+import (
+	"io"
+)
+
 type Point [4]float32
 
 type Matrix[16]float32
@@ -100,6 +104,10 @@ type RenderingData struct {
 }
 }
 }
+}
+
+func readConfiguration( some io.Reader ) (res * RenderingData, err error) {
+	 return nil, err
 }
 
 func ToBeTested() string {
