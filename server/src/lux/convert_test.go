@@ -161,6 +161,5 @@ func TestOSGTLoadAll(t * testing.T){
 			t.Log("Must contain VertexData")
 		}
 	}
-
 }
 
