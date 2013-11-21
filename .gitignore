@@ -35,3 +35,7 @@ tool
 #idea
 server/out/*
 server/store/*
+
+#test artefacts
+server/src/lux/luxout.png
+server/src/lux/example.lsx
