@@ -101,4 +101,8 @@ func TestConfigurationLoad(t * testing.T){
 	if ! strings.Contains(rd.Scene, "testProj_design_1.osgt" ) {
 		t.Errorf("Scene name not retrieved correctly in %v", rd)
 	}
+	if len(rd.Models.LibraryItem) != 3 {
+		t.Errorf("3 Models expected in %v", rd)
+	}
+	t.Logf("Obtained:%v\n", rd)
 }
