@@ -1,11 +1,15 @@
 package lux
 
+import (
+	"io"
+)
+
 type Point [4]float32
 
 type Matrix[16]float32
 
 type Camera struct {
-	Eye,  Up,  Center Point
+	Eye,     Up,     Center Point
 }
 
 /* <RenderingData>
@@ -58,6 +62,19 @@ type Camera struct {
 </RenderingSettings>
 </RenderingData>*/
 
+type XMLPosition struct {
+	X float32 `xml:"x,attr"`
+	Y float32 `xml:"y,attr"`
+	Z float32 `xml:"z,attr"`
+}
+
+type XMLShaderParam struct {
+	G float32 `xml:"g,attr"`
+	R float32 `xml:"r,attr"`
+	A float32 `xml:"a,attr"`
+	B float32 `xml:"b,attr"`
+}
+
 type RenderingData struct {
 	Scene string
 	Models struct {
@@ -67,13 +84,30 @@ type RenderingData struct {
 	LibraryItemSubGeode []struct {
 	Material struct {
 	Shininess string "xml:shininess,attr"
-}
-}
-}
-}
+}}}}
 	RenderingSettings struct {
-
+	Camera struct {
+	CameraType               string `xml:",attr"`
+	Eye,   Center,   Up      XMLPosition
+	CameraDisplaySettings struct {
+	FOV            int `xml:"fov,attr"`
+	Resolution_X   int `xml:",attr"`
+	Resolution_Y   int `xml:",attr"`
+	AspectRatio_X  float32 `xml:",attr"`
+	AspectRatio_Y  float32 `xml:",attr"`
 }
+}
+	Lights struct {
+	Lights []struct {
+	Position           XMLPosition
+	Diffuse,  Specular XMLShaderParam
+}
+}
+}
+}
+
+func readConfiguration( some io.Reader ) (res * RenderingData, err error) {
+	 return nil, err
 }
 
 func ToBeTested() string {
