@@ -1,0 +1,47 @@
+Usage: luxconsole [options] file
+
+Generic options:
+  -v [ --version ]      Print version string
+  -h [ --help ]         Produce help message
+
+Standalone / Master node options:
+  -r [ --resume ]               Resume from FLM
+  -R [ --overrideresume ] arg   Resume from specified FLM
+  -o [ --output ] arg           Output base filename
+  -f [ --fixedseed ]            Disable random seed mode
+  -e [ --minepsilon ] arg (=-1) Set minimum epsilon
+  -E [ --maxepsilon ] arg (=-1) Set maximum epsilon
+  -L [ --list-file ] arg        Specify queue list files
+  -b [ --bindump ]              Dump binary RGB framebuffer to stdout when 
+                                finished
+
+Master node options:
+  -u [ --useserver ] arg             Specify the address of a slave node to use
+                                     (May be used multiple times)
+  -i [ --serverinterval ] arg (=180) Specify the number of seconds between 
+                                     update requests to slave nodes
+  --resetserver arg                  Specify the address of a slave node to 
+                                     reset
+                                     (May be used multiple times)
+
+Slave node options:
+  -s [ --server ]                       Run as a slave node
+  -p [ --serverport ] arg (=18018)      Specify the tcp port to listen on
+  -W [ --serverwriteflm ]               Write film to disk before transmitting
+  -c [ --cachedir ] arg (=C:\Users\6C57~1\AppData\Local\Temp\luxrender\cache)
+                                        Specify the cache directory to use
+
+Configuration options:
+  -V [ --verbose ]                      Increase output verbosity (show DEBUG 
+                                        messages)
+  -q [ --quiet ]                        Reduce output verbosity (hide INFO 
+                                        messages)
+  -x [ --very-quiet ]                   Reduce output verbosity even more (hide
+                                        WARNING messages)
+  -C [ --configfile ] arg (=luxconsole.cfg)
+                                        Specify the configuration file to use
+  -l [ --logconsole ]                   Copy the log to the console
+  -d [ --debug ]                        Enable debug mode
+  -t [ --threads ] arg                  Specify the number of threads to run in
+                                        parallel
+  -P [ --password ] arg                 Specify the reset password
