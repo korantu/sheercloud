@@ -1,0 +1,2728 @@
+#Ascii Object 
+#Version 97 
+#Generator OpenSceneGraph 3.1.5 
+
+osg::Group {
+  UniqueID 1 
+  Name "Root_Node" 
+  NodeMask 0x1 
+  StateSet TRUE {
+    osg::StateSet {
+      UniqueID 2 
+      DataVariance STATIC 
+      ModeList 3 {
+        GL_LIGHTING ON 
+        GL_LIGHT0 ON 
+        GL_LIGHT1 ON 
+      }
+    }
+  }
+  Children 8 {
+    ::CS3DCompositeWall {
+      UniqueID 3 
+      Name "Composite_Wall" 
+      Children 1 {
+        ::CS3DWall {
+          UniqueID 4 
+          Name "3D_Wall" 
+          Children 6 {
+            osg::Geode {
+              UniqueID 5 
+              Name "Wall_Surface_Geode" 
+              Drawables 1 {
+                osg::Geometry {
+                  UniqueID 6 
+                  Name "Left" 
+                  DataVariance STATIC 
+                  StateSet TRUE {
+                    osg::StateSet {
+                      UniqueID 7 
+                      DataVariance STATIC 
+                      TextureModeList 1 {
+                        Data 1 {
+                          GL_TEXTURE_2D ON 
+                        }
+                      }
+                      TextureAttributeList 1 {
+                        Data 1 {
+                          osg::Texture2D {
+                            UniqueID 8 
+                            WRAP_S REPEAT 
+                            WRAP_T REPEAT 
+                            WRAP_R CLAMP 
+                            MIN_FILTER LINEAR_MIPMAP_LINEAR 
+                            MAG_FILTER LINEAR 
+                            Image TRUE {
+                              ClassName osg::Image 
+                              UniqueID 9 
+                              FileName "C:/Work/Cairnsmith13/CairnSmith/x64/Debug/../../CairnSmith/Resources/WallTexture4.tga" 
+                              WriteHint 0 2 
+                              DataVariance STATIC 
+                            }
+                            TextureWidth 256 
+                            TextureHeight 256 
+                          }
+                          Value OFF 
+                        }
+                      }
+                    }
+                  }
+                  PrimitiveSetList 1 {
+                    DrawArrays GL_QUADS 0 0 4 
+                    
+                  }
+                  VertexData {
+                    Array TRUE ArrayID 1 Vec3fArray 4 {
+                      543 -275.979 300 
+                      523 -276.021 300 
+                      523 -276.021 0 
+                      543 -275.979 0 
+                    }
+                    Indices FALSE 
+                    Binding BIND_PER_VERTEX 
+                    Normalize 0 
+                  }
+                  NormalData {
+                    Array TRUE ArrayID 2 Vec3fArray 1 {
+                      0.0020874 -0.999998 0 
+                    }
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  ColorData {
+                    Array TRUE ArrayID 3 Vec4fArray 1 {
+                      0.98 0.98 0.98 1 
+                    }
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  TexCoordData 1 {
+                    Data {
+                      Array TRUE ArrayID 4 Vec2fArray 4 {
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -8.63204e+008 
+                        -4.31602e+008 -4.31602e+008 
+                      }
+                      Indices FALSE 
+                      Binding BIND_PER_VERTEX 
+                      Normalize 0 
+                    }
+                  }
+                }
+              }
+            }
+            osg::Geode {
+              UniqueID 10 
+              Name "Wall_Surface_Geode" 
+              Drawables 1 {
+                osg::Geometry {
+                  UniqueID 11 
+                  Name "Right" 
+                  DataVariance STATIC 
+                  StateSet TRUE {
+                    osg::StateSet {
+                      UniqueID 12 
+                      DataVariance STATIC 
+                      TextureModeList 1 {
+                        Data 1 {
+                          GL_TEXTURE_2D ON 
+                        }
+                      }
+                      TextureAttributeList 1 {
+                        Data 1 {
+                          osg::Texture2D {
+                            UniqueID 13 
+                            WRAP_S REPEAT 
+                            WRAP_T REPEAT 
+                            WRAP_R CLAMP 
+                            MIN_FILTER LINEAR_MIPMAP_LINEAR 
+                            MAG_FILTER LINEAR 
+                            Image TRUE {
+                              ClassName osg::Image 
+                              UniqueID 14 
+                              FileName "C:/Work/Cairnsmith13/CairnSmith/x64/Debug/../../CairnSmith/Resources/WallTexture4.tga" 
+                              WriteHint 0 2 
+                              DataVariance STATIC 
+                            }
+                            TextureWidth 256 
+                            TextureHeight 256 
+                          }
+                          Value OFF 
+                        }
+                      }
+                    }
+                  }
+                  PrimitiveSetList 1 {
+                    DrawArrays GL_QUADS 0 0 4 
+                    
+                  }
+                  VertexData {
+                    Array TRUE ArrayID 5 Vec3fArray 4 {
+                      522 202.979 300 
+                      542 203.021 300 
+                      542 203.021 0 
+                      522 202.979 0 
+                    }
+                    Indices FALSE 
+                    Binding BIND_PER_VERTEX 
+                    Normalize 0 
+                  }
+                  NormalData {
+                    Array TRUE ArrayID 6 Vec3fArray 1 {
+                      -0.0020874 0.999998 0 
+                    }
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  ColorData {
+                    Array TRUE ArrayID 3 
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  TexCoordData 1 {
+                    Data {
+                      Array TRUE ArrayID 7 Vec2fArray 4 {
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -8.63204e+008 
+                        -4.31602e+008 -4.31602e+008 
+                      }
+                      Indices FALSE 
+                      Binding BIND_PER_VERTEX 
+                      Normalize 0 
+                    }
+                  }
+                }
+              }
+            }
+            osg::Geode {
+              UniqueID 15 
+              Name "Wall_Surface_Geode" 
+              Drawables 1 {
+                osg::Geometry {
+                  UniqueID 16 
+                  Name "Back" 
+                  DataVariance STATIC 
+                  StateSet TRUE {
+                    osg::StateSet {
+                      UniqueID 17 
+                      DataVariance STATIC 
+                      TextureModeList 1 {
+                        Data 1 {
+                          GL_TEXTURE_2D ON 
+                        }
+                      }
+                      TextureAttributeList 1 {
+                        Data 1 {
+                          osg::Texture2D {
+                            UniqueID 18 
+                            WRAP_S REPEAT 
+                            WRAP_T REPEAT 
+                            WRAP_R CLAMP 
+                            MIN_FILTER LINEAR_MIPMAP_LINEAR 
+                            MAG_FILTER LINEAR 
+                            Image TRUE {
+                              ClassName osg::Image 
+                              UniqueID 19 
+                              FileName "C:/Users/Sheer Temp 1/Cairnsmith/sheer/abc/CSLibrairies/Materials/wall_red.tga" 
+                              WriteHint 0 2 
+                              DataVariance STATIC 
+                            }
+                            TextureWidth 128 
+                            TextureHeight 128 
+                          }
+                          Value OFF 
+                        }
+                      }
+                    }
+                  }
+                  PrimitiveSetList 1 {
+                    DrawArrays GL_QUADS 0 0 4 
+                    
+                  }
+                  VertexData {
+                    Array TRUE ArrayID 8 Vec3fArray 4 {
+                      522 202.979 300 
+                      522 202.979 0 
+                      523 -276.021 0 
+                      523 -276.021 300 
+                    }
+                    Indices FALSE 
+                    Binding BIND_PER_VERTEX 
+                    Normalize 0 
+                  }
+                  NormalData {
+                    Array TRUE ArrayID 9 Vec3fArray 1 {
+                      -0.999998 -0.0020873 -0 
+                    }
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  ColorData {
+                    Array TRUE ArrayID 3 
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  TexCoordData 1 {
+                    Data {
+                      Array TRUE ArrayID 10 Vec2fArray 4 {
+                        23.95 15 
+                        23.95 0 
+                        0 0 
+                        0 15 
+                      }
+                      Indices FALSE 
+                      Binding BIND_PER_VERTEX 
+                      Normalize 0 
+                    }
+                  }
+                }
+              }
+            }
+            osg::Geode {
+              UniqueID 20 
+              Name "Wall_Surface_Geode" 
+              Drawables 1 {
+                osg::Geometry {
+                  UniqueID 21 
+                  Name "Top" 
+                  DataVariance STATIC 
+                  StateSet TRUE {
+                    osg::StateSet {
+                      UniqueID 22 
+                      DataVariance STATIC 
+                      TextureModeList 1 {
+                        Data 1 {
+                          GL_TEXTURE_2D ON 
+                        }
+                      }
+                      TextureAttributeList 1 {
+                        Data 1 {
+                          osg::Texture2D {
+                            UniqueID 23 
+                            WRAP_S REPEAT 
+                            WRAP_T REPEAT 
+                            WRAP_R CLAMP 
+                            MIN_FILTER LINEAR_MIPMAP_LINEAR 
+                            MAG_FILTER LINEAR 
+                            Image TRUE {
+                              ClassName osg::Image 
+                              UniqueID 24 
+                              FileName "C:/Work/Cairnsmith13/CairnSmith/x64/Debug/../../CairnSmith/Resources/WallTexture4.tga" 
+                              WriteHint 0 2 
+                              DataVariance STATIC 
+                            }
+                            TextureWidth 256 
+                            TextureHeight 256 
+                          }
+                          Value OFF 
+                        }
+                      }
+                    }
+                  }
+                  PrimitiveSetList 1 {
+                    DrawArrays GL_QUADS 0 0 4 
+                    
+                  }
+                  VertexData {
+                    Array TRUE ArrayID 11 Vec3fArray 4 {
+                      522 202.979 300 
+                      523 -276.021 300 
+                      543 -275.979 300 
+                      542 203.021 300 
+                    }
+                    Indices FALSE 
+                    Binding BIND_PER_VERTEX 
+                    Normalize 0 
+                  }
+                  NormalData {
+                    Array TRUE ArrayID 12 Vec3fArray 1 {
+                      0 0 1 
+                    }
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  ColorData {
+                    Array TRUE ArrayID 3 
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  TexCoordData 1 {
+                    Data {
+                      Array TRUE ArrayID 13 Vec2fArray 4 {
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -8.63204e+008 
+                        -4.31602e+008 -4.31602e+008 
+                      }
+                      Indices FALSE 
+                      Binding BIND_PER_VERTEX 
+                      Normalize 0 
+                    }
+                  }
+                }
+              }
+            }
+            osg::Geode {
+              UniqueID 25 
+              Name "Wall_Surface_Geode" 
+              Drawables 1 {
+                osg::Geometry {
+                  UniqueID 26 
+                  Name "Front" 
+                  DataVariance STATIC 
+                  StateSet TRUE {
+                    osg::StateSet {
+                      UniqueID 27 
+                      DataVariance STATIC 
+                      TextureModeList 1 {
+                        Data 1 {
+                          GL_TEXTURE_2D ON 
+                        }
+                      }
+                      TextureAttributeList 1 {
+                        Data 1 {
+                          osg::Texture2D {
+                            UniqueID 28 
+                            WRAP_S REPEAT 
+                            WRAP_T REPEAT 
+                            WRAP_R CLAMP 
+                            MIN_FILTER LINEAR_MIPMAP_LINEAR 
+                            MAG_FILTER LINEAR 
+                            Image TRUE {
+                              ClassName osg::Image 
+                              UniqueID 29 
+                              FileName "C:/Users/Sheer Temp 1/Cairnsmith/sheer/abc/CSLibrairies/Materials/WallTexture4.tga" 
+                              WriteHint 0 2 
+                              DataVariance STATIC 
+                            }
+                            TextureWidth 512 
+                            TextureHeight 512 
+                          }
+                          Value OFF 
+                        }
+                      }
+                    }
+                  }
+                  PrimitiveSetList 1 {
+                    DrawArrays GL_QUADS 0 0 4 
+                    
+                  }
+                  VertexData {
+                    Array TRUE ArrayID 14 Vec3fArray 4 {
+                      542 203.021 300 
+                      542 203.021 0 
+                      543 -275.979 0 
+                      543 -275.979 300 
+                    }
+                    Indices FALSE 
+                    Binding BIND_PER_VERTEX 
+                    Normalize 0 
+                  }
+                  NormalData {
+                    Array TRUE ArrayID 15 Vec3fArray 1 {
+                      0.999998 0.00208742 0 
+                    }
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  ColorData {
+                    Array TRUE ArrayID 3 
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  TexCoordData 1 {
+                    Data {
+                      Array TRUE ArrayID 16 Vec2fArray 4 {
+                        23.95 15 
+                        23.95 0 
+                        0 0 
+                        0 15 
+                      }
+                      Indices FALSE 
+                      Binding BIND_PER_VERTEX 
+                      Normalize 0 
+                    }
+                  }
+                }
+              }
+            }
+            osg::Geode {
+              UniqueID 30 
+              Name "Wall_Surface_Geode" 
+              Drawables 1 {
+                osg::Geometry {
+                  UniqueID 31 
+                  Name "Bottom" 
+                  DataVariance STATIC 
+                  StateSet TRUE {
+                    osg::StateSet {
+                      UniqueID 32 
+                      DataVariance STATIC 
+                      TextureModeList 1 {
+                        Data 1 {
+                          GL_TEXTURE_2D ON 
+                        }
+                      }
+                      TextureAttributeList 1 {
+                        Data 1 {
+                          osg::Texture2D {
+                            UniqueID 33 
+                            WRAP_S REPEAT 
+                            WRAP_T REPEAT 
+                            WRAP_R CLAMP 
+                            MIN_FILTER LINEAR_MIPMAP_LINEAR 
+                            MAG_FILTER LINEAR 
+                            Image TRUE {
+                              ClassName osg::Image 
+                              UniqueID 34 
+                              FileName "C:/Work/Cairnsmith13/CairnSmith/x64/Debug/../../CairnSmith/Resources/WallTexture4.tga" 
+                              WriteHint 0 2 
+                              DataVariance STATIC 
+                            }
+                            TextureWidth 256 
+                            TextureHeight 256 
+                          }
+                          Value OFF 
+                        }
+                      }
+                    }
+                  }
+                  PrimitiveSetList 1 {
+                    DrawArrays GL_QUADS 0 0 4 
+                    
+                  }
+                  VertexData {
+                    Array TRUE ArrayID 17 Vec3fArray 4 {
+                      523 -276.021 0 
+                      543 -275.979 0 
+                      542 203.021 0 
+                      522 202.979 0 
+                    }
+                    Indices FALSE 
+                    Binding BIND_PER_VERTEX 
+                    Normalize 0 
+                  }
+                  NormalData {
+                    Array TRUE ArrayID 18 Vec3fArray 1 {
+                      0 0 -1 
+                    }
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  ColorData {
+                    Array TRUE ArrayID 3 
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  TexCoordData 1 {
+                    Data {
+                      Array TRUE ArrayID 19 Vec2fArray 4 {
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -8.63204e+008 
+                        -4.31602e+008 -4.31602e+008 
+                      }
+                      Indices FALSE 
+                      Binding BIND_PER_VERTEX 
+                      Normalize 0 
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    ::CS3DCompositeWall {
+      UniqueID 35 
+      Name "Composite_Wall" 
+      Children 1 {
+        ::CS3DWall {
+          UniqueID 36 
+          Name "3D_Wall" 
+          Children 6 {
+            osg::Geode {
+              UniqueID 37 
+              Name "Wall_Surface_Geode" 
+              Drawables 1 {
+                osg::Geometry {
+                  UniqueID 38 
+                  Name "Left" 
+                  DataVariance STATIC 
+                  StateSet TRUE {
+                    osg::StateSet {
+                      UniqueID 39 
+                      DataVariance STATIC 
+                      TextureModeList 1 {
+                        Data 1 {
+                          GL_TEXTURE_2D ON 
+                        }
+                      }
+                      TextureAttributeList 1 {
+                        Data 1 {
+                          osg::Texture2D {
+                            UniqueID 40 
+                            WRAP_S REPEAT 
+                            WRAP_T REPEAT 
+                            WRAP_R CLAMP 
+                            MIN_FILTER LINEAR_MIPMAP_LINEAR 
+                            MAG_FILTER LINEAR 
+                            Image TRUE {
+                              ClassName osg::Image 
+                              UniqueID 41 
+                              FileName "C:/Work/Cairnsmith13/CairnSmith/x64/Debug/../../CairnSmith/Resources/WallTexture4.tga" 
+                              WriteHint 0 2 
+                              DataVariance STATIC 
+                            }
+                            TextureWidth 256 
+                            TextureHeight 256 
+                          }
+                          Value OFF 
+                        }
+                      }
+                    }
+                  }
+                  PrimitiveSetList 1 {
+                    DrawArrays GL_QUADS 0 0 4 
+                    
+                  }
+                  VertexData {
+                    Array TRUE ArrayID 20 Vec3fArray 4 {
+                      -397.011 -285 300 
+                      -396.989 -265 300 
+                      -396.989 -265 0 
+                      -397.011 -285 0 
+                    }
+                    Indices FALSE 
+                    Binding BIND_PER_VERTEX 
+                    Normalize 0 
+                  }
+                  NormalData {
+                    Array TRUE ArrayID 21 Vec3fArray 1 {
+                      -0.999999 0.00107727 0 
+                    }
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  ColorData {
+                    Array TRUE ArrayID 22 Vec4fArray 1 {
+                      0.98 0.98 0.98 1 
+                    }
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  TexCoordData 1 {
+                    Data {
+                      Array TRUE ArrayID 23 Vec2fArray 4 {
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -8.63204e+008 
+                        -4.31602e+008 -4.31602e+008 
+                      }
+                      Indices FALSE 
+                      Binding BIND_PER_VERTEX 
+                      Normalize 0 
+                    }
+                  }
+                }
+              }
+            }
+            osg::Geode {
+              UniqueID 42 
+              Name "Wall_Surface_Geode" 
+              Drawables 1 {
+                osg::Geometry {
+                  UniqueID 43 
+                  Name "Right" 
+                  DataVariance STATIC 
+                  StateSet TRUE {
+                    osg::StateSet {
+                      UniqueID 44 
+                      DataVariance STATIC 
+                      TextureModeList 1 {
+                        Data 1 {
+                          GL_TEXTURE_2D ON 
+                        }
+                      }
+                      TextureAttributeList 1 {
+                        Data 1 {
+                          osg::Texture2D {
+                            UniqueID 45 
+                            WRAP_S REPEAT 
+                            WRAP_T REPEAT 
+                            WRAP_R CLAMP 
+                            MIN_FILTER LINEAR_MIPMAP_LINEAR 
+                            MAG_FILTER LINEAR 
+                            Image TRUE {
+                              ClassName osg::Image 
+                              UniqueID 46 
+                              FileName "C:/Work/Cairnsmith13/CairnSmith/x64/Debug/../../CairnSmith/Resources/WallTexture4.tga" 
+                              WriteHint 0 2 
+                              DataVariance STATIC 
+                            }
+                            TextureWidth 256 
+                            TextureHeight 256 
+                          }
+                          Value OFF 
+                        }
+                      }
+                    }
+                  }
+                  PrimitiveSetList 1 {
+                    DrawArrays GL_QUADS 0 0 4 
+                    
+                  }
+                  VertexData {
+                    Array TRUE ArrayID 24 Vec3fArray 4 {
+                      531.011 -266 300 
+                      530.989 -286 300 
+                      530.989 -286 0 
+                      531.011 -266 0 
+                    }
+                    Indices FALSE 
+                    Binding BIND_PER_VERTEX 
+                    Normalize 0 
+                  }
+                  NormalData {
+                    Array TRUE ArrayID 25 Vec3fArray 1 {
+                      0.999999 -0.00107727 0 
+                    }
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  ColorData {
+                    Array TRUE ArrayID 22 
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  TexCoordData 1 {
+                    Data {
+                      Array TRUE ArrayID 26 Vec2fArray 4 {
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -8.63204e+008 
+                        -4.31602e+008 -4.31602e+008 
+                      }
+                      Indices FALSE 
+                      Binding BIND_PER_VERTEX 
+                      Normalize 0 
+                    }
+                  }
+                }
+              }
+            }
+            osg::Geode {
+              UniqueID 47 
+              Name "Wall_Surface_Geode" 
+              Drawables 1 {
+                osg::Geometry {
+                  UniqueID 48 
+                  Name "Back" 
+                  DataVariance STATIC 
+                  StateSet TRUE {
+                    osg::StateSet {
+                      UniqueID 49 
+                      DataVariance STATIC 
+                      TextureModeList 1 {
+                        Data 1 {
+                          GL_TEXTURE_2D ON 
+                        }
+                      }
+                      TextureAttributeList 1 {
+                        Data 1 {
+                          osg::Texture2D {
+                            UniqueID 50 
+                            WRAP_S REPEAT 
+                            WRAP_T REPEAT 
+                            WRAP_R CLAMP 
+                            MIN_FILTER LINEAR_MIPMAP_LINEAR 
+                            MAG_FILTER LINEAR 
+                            Image TRUE {
+                              ClassName osg::Image 
+                              UniqueID 51 
+                              FileName "C:/Users/Sheer Temp 1/Cairnsmith/sheer/abc/CSLibrairies/Materials/Vatrushka-01.tga" 
+                              WriteHint 0 2 
+                              DataVariance STATIC 
+                            }
+                            TextureWidth 1024 
+                            TextureHeight 1024 
+                          }
+                          Value OFF 
+                        }
+                      }
+                    }
+                  }
+                  PrimitiveSetList 1 {
+                    DrawArrays GL_QUADS 0 0 4 
+                    
+                  }
+                  VertexData {
+                    Array TRUE ArrayID 27 Vec3fArray 4 {
+                      531.011 -266 300 
+                      531.011 -266 0 
+                      -396.989 -265 0 
+                      -396.989 -265 300 
+                    }
+                    Indices FALSE 
+                    Binding BIND_PER_VERTEX 
+                    Normalize 0 
+                  }
+                  NormalData {
+                    Array TRUE ArrayID 28 Vec3fArray 1 {
+                      0.00107759 0.999999 0 
+                    }
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  ColorData {
+                    Array TRUE ArrayID 22 
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  TexCoordData 1 {
+                    Data {
+                      Array TRUE ArrayID 29 Vec2fArray 4 {
+                        46.4 15 
+                        46.4 0 
+                        0 0 
+                        0 15 
+                      }
+                      Indices FALSE 
+                      Binding BIND_PER_VERTEX 
+                      Normalize 0 
+                    }
+                  }
+                }
+              }
+            }
+            osg::Geode {
+              UniqueID 52 
+              Name "Wall_Surface_Geode" 
+              Drawables 1 {
+                osg::Geometry {
+                  UniqueID 53 
+                  Name "Top" 
+                  DataVariance STATIC 
+                  StateSet TRUE {
+                    osg::StateSet {
+                      UniqueID 54 
+                      DataVariance STATIC 
+                      TextureModeList 1 {
+                        Data 1 {
+                          GL_TEXTURE_2D ON 
+                        }
+                      }
+                      TextureAttributeList 1 {
+                        Data 1 {
+                          osg::Texture2D {
+                            UniqueID 55 
+                            WRAP_S REPEAT 
+                            WRAP_T REPEAT 
+                            WRAP_R CLAMP 
+                            MIN_FILTER LINEAR_MIPMAP_LINEAR 
+                            MAG_FILTER LINEAR 
+                            Image TRUE {
+                              ClassName osg::Image 
+                              UniqueID 56 
+                              FileName "C:/Work/Cairnsmith13/CairnSmith/x64/Debug/../../CairnSmith/Resources/WallTexture4.tga" 
+                              WriteHint 0 2 
+                              DataVariance STATIC 
+                            }
+                            TextureWidth 256 
+                            TextureHeight 256 
+                          }
+                          Value OFF 
+                        }
+                      }
+                    }
+                  }
+                  PrimitiveSetList 1 {
+                    DrawArrays GL_QUADS 0 0 4 
+                    
+                  }
+                  VertexData {
+                    Array TRUE ArrayID 30 Vec3fArray 4 {
+                      531.011 -266 300 
+                      -396.989 -265 300 
+                      -397.011 -285 300 
+                      530.989 -286 300 
+                    }
+                    Indices FALSE 
+                    Binding BIND_PER_VERTEX 
+                    Normalize 0 
+                  }
+                  NormalData {
+                    Array TRUE ArrayID 31 Vec3fArray 1 {
+                      0 0 1 
+                    }
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  ColorData {
+                    Array TRUE ArrayID 22 
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  TexCoordData 1 {
+                    Data {
+                      Array TRUE ArrayID 32 Vec2fArray 4 {
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -8.63204e+008 
+                        -4.31602e+008 -4.31602e+008 
+                      }
+                      Indices FALSE 
+                      Binding BIND_PER_VERTEX 
+                      Normalize 0 
+                    }
+                  }
+                }
+              }
+            }
+            osg::Geode {
+              UniqueID 57 
+              Name "Wall_Surface_Geode" 
+              Drawables 1 {
+                osg::Geometry {
+                  UniqueID 58 
+                  Name "Front" 
+                  DataVariance STATIC 
+                  StateSet TRUE {
+                    osg::StateSet {
+                      UniqueID 59 
+                      DataVariance STATIC 
+                      TextureModeList 1 {
+                        Data 1 {
+                          GL_TEXTURE_2D ON 
+                        }
+                      }
+                      TextureAttributeList 1 {
+                        Data 1 {
+                          osg::Texture2D {
+                            UniqueID 60 
+                            WRAP_S REPEAT 
+                            WRAP_T REPEAT 
+                            WRAP_R CLAMP 
+                            MIN_FILTER LINEAR_MIPMAP_LINEAR 
+                            MAG_FILTER LINEAR 
+                            Image TRUE {
+                              ClassName osg::Image 
+                              UniqueID 61 
+                              FileName "C:/Users/Sheer Temp 1/Cairnsmith/sheer/abc/CSLibrairies/Materials/WallTexture4.tga" 
+                              WriteHint 0 2 
+                              DataVariance STATIC 
+                            }
+                            TextureWidth 512 
+                            TextureHeight 512 
+                          }
+                          Value OFF 
+                        }
+                      }
+                    }
+                  }
+                  PrimitiveSetList 1 {
+                    DrawArrays GL_QUADS 0 0 4 
+                    
+                  }
+                  VertexData {
+                    Array TRUE ArrayID 33 Vec3fArray 4 {
+                      530.989 -286 300 
+                      530.989 -286 0 
+                      -397.011 -285 0 
+                      -397.011 -285 300 
+                    }
+                    Indices FALSE 
+                    Binding BIND_PER_VERTEX 
+                    Normalize 0 
+                  }
+                  NormalData {
+                    Array TRUE ArrayID 34 Vec3fArray 1 {
+                      -0.00107759 -0.999999 -0 
+                    }
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  ColorData {
+                    Array TRUE ArrayID 22 
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  TexCoordData 1 {
+                    Data {
+                      Array TRUE ArrayID 35 Vec2fArray 4 {
+                        46.4 15 
+                        46.4 0 
+                        0 0 
+                        0 15 
+                      }
+                      Indices FALSE 
+                      Binding BIND_PER_VERTEX 
+                      Normalize 0 
+                    }
+                  }
+                }
+              }
+            }
+            osg::Geode {
+              UniqueID 62 
+              Name "Wall_Surface_Geode" 
+              Drawables 1 {
+                osg::Geometry {
+                  UniqueID 63 
+                  Name "Bottom" 
+                  DataVariance STATIC 
+                  StateSet TRUE {
+                    osg::StateSet {
+                      UniqueID 64 
+                      DataVariance STATIC 
+                      TextureModeList 1 {
+                        Data 1 {
+                          GL_TEXTURE_2D ON 
+                        }
+                      }
+                      TextureAttributeList 1 {
+                        Data 1 {
+                          osg::Texture2D {
+                            UniqueID 65 
+                            WRAP_S REPEAT 
+                            WRAP_T REPEAT 
+                            WRAP_R CLAMP 
+                            MIN_FILTER LINEAR_MIPMAP_LINEAR 
+                            MAG_FILTER LINEAR 
+                            Image TRUE {
+                              ClassName osg::Image 
+                              UniqueID 66 
+                              FileName "C:/Work/Cairnsmith13/CairnSmith/x64/Debug/../../CairnSmith/Resources/WallTexture4.tga" 
+                              WriteHint 0 2 
+                              DataVariance STATIC 
+                            }
+                            TextureWidth 256 
+                            TextureHeight 256 
+                          }
+                          Value OFF 
+                        }
+                      }
+                    }
+                  }
+                  PrimitiveSetList 1 {
+                    DrawArrays GL_QUADS 0 0 4 
+                    
+                  }
+                  VertexData {
+                    Array TRUE ArrayID 36 Vec3fArray 4 {
+                      -396.989 -265 0 
+                      -397.011 -285 0 
+                      530.989 -286 0 
+                      531.011 -266 0 
+                    }
+                    Indices FALSE 
+                    Binding BIND_PER_VERTEX 
+                    Normalize 0 
+                  }
+                  NormalData {
+                    Array TRUE ArrayID 37 Vec3fArray 1 {
+                      0 -0 -1 
+                    }
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  ColorData {
+                    Array TRUE ArrayID 22 
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  TexCoordData 1 {
+                    Data {
+                      Array TRUE ArrayID 38 Vec2fArray 4 {
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -8.63204e+008 
+                        -4.31602e+008 -4.31602e+008 
+                      }
+                      Indices FALSE 
+                      Binding BIND_PER_VERTEX 
+                      Normalize 0 
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    ::CS3DCompositeWall {
+      UniqueID 67 
+      Name "Composite_Wall" 
+      Children 1 {
+        ::CS3DWall {
+          UniqueID 68 
+          Name "3D_Wall" 
+          Children 6 {
+            osg::Geode {
+              UniqueID 69 
+              Name "Wall_Surface_Geode" 
+              Drawables 1 {
+                osg::Geometry {
+                  UniqueID 70 
+                  Name "Left" 
+                  DataVariance STATIC 
+                  StateSet TRUE {
+                    osg::StateSet {
+                      UniqueID 71 
+                      DataVariance STATIC 
+                      TextureModeList 1 {
+                        Data 1 {
+                          GL_TEXTURE_2D ON 
+                        }
+                      }
+                      TextureAttributeList 1 {
+                        Data 1 {
+                          osg::Texture2D {
+                            UniqueID 72 
+                            WRAP_S REPEAT 
+                            WRAP_T REPEAT 
+                            WRAP_R CLAMP 
+                            MIN_FILTER LINEAR_MIPMAP_LINEAR 
+                            MAG_FILTER LINEAR 
+                            Image TRUE {
+                              ClassName osg::Image 
+                              UniqueID 73 
+                              FileName "C:/Work/Cairnsmith13/CairnSmith/x64/Debug/../../CairnSmith/Resources/WallTexture4.tga" 
+                              WriteHint 0 2 
+                              DataVariance STATIC 
+                            }
+                            TextureWidth 256 
+                            TextureHeight 256 
+                          }
+                          Value OFF 
+                        }
+                      }
+                    }
+                  }
+                  PrimitiveSetList 1 {
+                    DrawArrays GL_QUADS 0 0 4 
+                    
+                  }
+                  VertexData {
+                    Array TRUE ArrayID 39 Vec3fArray 4 {
+                      -404 203.083 300 
+                      -384 202.917 300 
+                      -384 202.917 0 
+                      -404 203.083 0 
+                    }
+                    Indices FALSE 
+                    Binding BIND_PER_VERTEX 
+                    Normalize 0 
+                  }
+                  NormalData {
+                    Array TRUE ArrayID 40 Vec3fArray 1 {
+                      0.00833282 0.999965 0 
+                    }
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  ColorData {
+                    Array TRUE ArrayID 41 Vec4fArray 1 {
+                      0.98 0.98 0.98 1 
+                    }
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  TexCoordData 1 {
+                    Data {
+                      Array TRUE ArrayID 42 Vec2fArray 4 {
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -8.63204e+008 
+                        -4.31602e+008 -4.31602e+008 
+                      }
+                      Indices FALSE 
+                      Binding BIND_PER_VERTEX 
+                      Normalize 0 
+                    }
+                  }
+                }
+              }
+            }
+            osg::Geode {
+              UniqueID 74 
+              Name "Wall_Surface_Geode" 
+              Drawables 1 {
+                osg::Geometry {
+                  UniqueID 75 
+                  Name "Right" 
+                  DataVariance STATIC 
+                  StateSet TRUE {
+                    osg::StateSet {
+                      UniqueID 76 
+                      DataVariance STATIC 
+                      TextureModeList 1 {
+                        Data 1 {
+                          GL_TEXTURE_2D ON 
+                        }
+                      }
+                      TextureAttributeList 1 {
+                        Data 1 {
+                          osg::Texture2D {
+                            UniqueID 77 
+                            WRAP_S REPEAT 
+                            WRAP_T REPEAT 
+                            WRAP_R CLAMP 
+                            MIN_FILTER LINEAR_MIPMAP_LINEAR 
+                            MAG_FILTER LINEAR 
+                            Image TRUE {
+                              ClassName osg::Image 
+                              UniqueID 78 
+                              FileName "C:/Work/Cairnsmith13/CairnSmith/x64/Debug/../../CairnSmith/Resources/WallTexture4.tga" 
+                              WriteHint 0 2 
+                              DataVariance STATIC 
+                            }
+                            TextureWidth 256 
+                            TextureHeight 256 
+                          }
+                          Value OFF 
+                        }
+                      }
+                    }
+                  }
+                  PrimitiveSetList 1 {
+                    DrawArrays GL_QUADS 0 0 4 
+                    
+                  }
+                  VertexData {
+                    Array TRUE ArrayID 43 Vec3fArray 4 {
+                      -388 -277.083 300 
+                      -408 -276.917 300 
+                      -408 -276.917 0 
+                      -388 -277.083 0 
+                    }
+                    Indices FALSE 
+                    Binding BIND_PER_VERTEX 
+                    Normalize 0 
+                  }
+                  NormalData {
+                    Array TRUE ArrayID 44 Vec3fArray 1 {
+                      -0.00833283 -0.999965 0 
+                    }
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  ColorData {
+                    Array TRUE ArrayID 41 
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  TexCoordData 1 {
+                    Data {
+                      Array TRUE ArrayID 45 Vec2fArray 4 {
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -8.63204e+008 
+                        -4.31602e+008 -4.31602e+008 
+                      }
+                      Indices FALSE 
+                      Binding BIND_PER_VERTEX 
+                      Normalize 0 
+                    }
+                  }
+                }
+              }
+            }
+            osg::Geode {
+              UniqueID 79 
+              Name "Wall_Surface_Geode" 
+              Drawables 1 {
+                osg::Geometry {
+                  UniqueID 80 
+                  Name "Back" 
+                  DataVariance STATIC 
+                  StateSet TRUE {
+                    osg::StateSet {
+                      UniqueID 81 
+                      DataVariance STATIC 
+                      TextureModeList 1 {
+                        Data 1 {
+                          GL_TEXTURE_2D ON 
+                        }
+                      }
+                      TextureAttributeList 1 {
+                        Data 1 {
+                          osg::Texture2D {
+                            UniqueID 82 
+                            WRAP_S REPEAT 
+                            WRAP_T REPEAT 
+                            WRAP_R CLAMP 
+                            MIN_FILTER LINEAR_MIPMAP_LINEAR 
+                            MAG_FILTER LINEAR 
+                            Image TRUE {
+                              ClassName osg::Image 
+                              UniqueID 83 
+                              FileName "C:/Users/Sheer Temp 1/Cairnsmith/sheer/abc/CSLibrairies/Materials/wall_red.tga" 
+                              WriteHint 0 2 
+                              DataVariance STATIC 
+                            }
+                            TextureWidth 128 
+                            TextureHeight 128 
+                          }
+                          Value OFF 
+                        }
+                      }
+                    }
+                  }
+                  PrimitiveSetList 1 {
+                    DrawArrays GL_QUADS 0 0 4 
+                    
+                  }
+                  VertexData {
+                    Array TRUE ArrayID 46 Vec3fArray 4 {
+                      -388 -277.083 300 
+                      -388 -277.083 0 
+                      -384 202.917 0 
+                      -384 202.917 300 
+                    }
+                    Indices FALSE 
+                    Binding BIND_PER_VERTEX 
+                    Normalize 0 
+                  }
+                  NormalData {
+                    Array TRUE ArrayID 47 Vec3fArray 1 {
+                      0.999965 -0.00833311 0 
+                    }
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  ColorData {
+                    Array TRUE ArrayID 41 
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  TexCoordData 1 {
+                    Data {
+                      Array TRUE ArrayID 48 Vec2fArray 4 {
+                        24 15 
+                        24 0 
+                        0 0 
+                        0 15 
+                      }
+                      Indices FALSE 
+                      Binding BIND_PER_VERTEX 
+                      Normalize 0 
+                    }
+                  }
+                }
+              }
+            }
+            osg::Geode {
+              UniqueID 84 
+              Name "Wall_Surface_Geode" 
+              Drawables 1 {
+                osg::Geometry {
+                  UniqueID 85 
+                  Name "Top" 
+                  DataVariance STATIC 
+                  StateSet TRUE {
+                    osg::StateSet {
+                      UniqueID 86 
+                      DataVariance STATIC 
+                      TextureModeList 1 {
+                        Data 1 {
+                          GL_TEXTURE_2D ON 
+                        }
+                      }
+                      TextureAttributeList 1 {
+                        Data 1 {
+                          osg::Texture2D {
+                            UniqueID 87 
+                            WRAP_S REPEAT 
+                            WRAP_T REPEAT 
+                            WRAP_R CLAMP 
+                            MIN_FILTER LINEAR_MIPMAP_LINEAR 
+                            MAG_FILTER LINEAR 
+                            Image TRUE {
+                              ClassName osg::Image 
+                              UniqueID 88 
+                              FileName "C:/Work/Cairnsmith13/CairnSmith/x64/Debug/../../CairnSmith/Resources/WallTexture4.tga" 
+                              WriteHint 0 2 
+                              DataVariance STATIC 
+                            }
+                            TextureWidth 256 
+                            TextureHeight 256 
+                          }
+                          Value OFF 
+                        }
+                      }
+                    }
+                  }
+                  PrimitiveSetList 1 {
+                    DrawArrays GL_QUADS 0 0 4 
+                    
+                  }
+                  VertexData {
+                    Array TRUE ArrayID 49 Vec3fArray 4 {
+                      -388 -277.083 300 
+                      -384 202.917 300 
+                      -404 203.083 300 
+                      -408 -276.917 300 
+                    }
+                    Indices FALSE 
+                    Binding BIND_PER_VERTEX 
+                    Normalize 0 
+                  }
+                  NormalData {
+                    Array TRUE ArrayID 50 Vec3fArray 1 {
+                      0 -0 1 
+                    }
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  ColorData {
+                    Array TRUE ArrayID 41 
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  TexCoordData 1 {
+                    Data {
+                      Array TRUE ArrayID 51 Vec2fArray 4 {
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -8.63204e+008 
+                        -4.31602e+008 -4.31602e+008 
+                      }
+                      Indices FALSE 
+                      Binding BIND_PER_VERTEX 
+                      Normalize 0 
+                    }
+                  }
+                }
+              }
+            }
+            osg::Geode {
+              UniqueID 89 
+              Name "Wall_Surface_Geode" 
+              Drawables 1 {
+                osg::Geometry {
+                  UniqueID 90 
+                  Name "Front" 
+                  DataVariance STATIC 
+                  StateSet TRUE {
+                    osg::StateSet {
+                      UniqueID 91 
+                      DataVariance STATIC 
+                      TextureModeList 1 {
+                        Data 1 {
+                          GL_TEXTURE_2D ON 
+                        }
+                      }
+                      TextureAttributeList 1 {
+                        Data 1 {
+                          osg::Texture2D {
+                            UniqueID 92 
+                            WRAP_S REPEAT 
+                            WRAP_T REPEAT 
+                            WRAP_R CLAMP 
+                            MIN_FILTER LINEAR_MIPMAP_LINEAR 
+                            MAG_FILTER LINEAR 
+                            Image TRUE {
+                              ClassName osg::Image 
+                              UniqueID 93 
+                              FileName "C:/Users/Sheer Temp 1/Cairnsmith/sheer/abc/CSLibrairies/Materials/WallTexture4.tga" 
+                              WriteHint 0 2 
+                              DataVariance STATIC 
+                            }
+                            TextureWidth 512 
+                            TextureHeight 512 
+                          }
+                          Value OFF 
+                        }
+                      }
+                    }
+                  }
+                  PrimitiveSetList 1 {
+                    DrawArrays GL_QUADS 0 0 4 
+                    
+                  }
+                  VertexData {
+                    Array TRUE ArrayID 52 Vec3fArray 4 {
+                      -408 -276.917 300 
+                      -408 -276.917 0 
+                      -404 203.083 0 
+                      -404 203.083 300 
+                    }
+                    Indices FALSE 
+                    Binding BIND_PER_VERTEX 
+                    Normalize 0 
+                  }
+                  NormalData {
+                    Array TRUE ArrayID 53 Vec3fArray 1 {
+                      -0.999965 0.00833304 0 
+                    }
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  ColorData {
+                    Array TRUE ArrayID 41 
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  TexCoordData 1 {
+                    Data {
+                      Array TRUE ArrayID 54 Vec2fArray 4 {
+                        24 15 
+                        24 0 
+                        0 0 
+                        0 15 
+                      }
+                      Indices FALSE 
+                      Binding BIND_PER_VERTEX 
+                      Normalize 0 
+                    }
+                  }
+                }
+              }
+            }
+            osg::Geode {
+              UniqueID 94 
+              Name "Wall_Surface_Geode" 
+              Drawables 1 {
+                osg::Geometry {
+                  UniqueID 95 
+                  Name "Bottom" 
+                  DataVariance STATIC 
+                  StateSet TRUE {
+                    osg::StateSet {
+                      UniqueID 96 
+                      DataVariance STATIC 
+                      TextureModeList 1 {
+                        Data 1 {
+                          GL_TEXTURE_2D ON 
+                        }
+                      }
+                      TextureAttributeList 1 {
+                        Data 1 {
+                          osg::Texture2D {
+                            UniqueID 97 
+                            WRAP_S REPEAT 
+                            WRAP_T REPEAT 
+                            WRAP_R CLAMP 
+                            MIN_FILTER LINEAR_MIPMAP_LINEAR 
+                            MAG_FILTER LINEAR 
+                            Image TRUE {
+                              ClassName osg::Image 
+                              UniqueID 98 
+                              FileName "C:/Work/Cairnsmith13/CairnSmith/x64/Debug/../../CairnSmith/Resources/WallTexture4.tga" 
+                              WriteHint 0 2 
+                              DataVariance STATIC 
+                            }
+                            TextureWidth 256 
+                            TextureHeight 256 
+                          }
+                          Value OFF 
+                        }
+                      }
+                    }
+                  }
+                  PrimitiveSetList 1 {
+                    DrawArrays GL_QUADS 0 0 4 
+                    
+                  }
+                  VertexData {
+                    Array TRUE ArrayID 55 Vec3fArray 4 {
+                      -384 202.917 0 
+                      -404 203.083 0 
+                      -408 -276.917 0 
+                      -388 -277.083 0 
+                    }
+                    Indices FALSE 
+                    Binding BIND_PER_VERTEX 
+                    Normalize 0 
+                  }
+                  NormalData {
+                    Array TRUE ArrayID 56 Vec3fArray 1 {
+                      -0 0 -1 
+                    }
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  ColorData {
+                    Array TRUE ArrayID 41 
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  TexCoordData 1 {
+                    Data {
+                      Array TRUE ArrayID 57 Vec2fArray 4 {
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -8.63204e+008 
+                        -4.31602e+008 -4.31602e+008 
+                      }
+                      Indices FALSE 
+                      Binding BIND_PER_VERTEX 
+                      Normalize 0 
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    ::CS3DCompositeWall {
+      UniqueID 99 
+      Name "Composite_Wall" 
+      Children 1 {
+        ::CS3DWall {
+          UniqueID 100 
+          Name "3D_Wall" 
+          Children 6 {
+            osg::Geode {
+              UniqueID 101 
+              Name "Wall_Surface_Geode" 
+              Drawables 1 {
+                osg::Geometry {
+                  UniqueID 102 
+                  Name "Left" 
+                  DataVariance STATIC 
+                  StateSet TRUE {
+                    osg::StateSet {
+                      UniqueID 103 
+                      DataVariance STATIC 
+                      TextureModeList 1 {
+                        Data 1 {
+                          GL_TEXTURE_2D ON 
+                        }
+                      }
+                      TextureAttributeList 1 {
+                        Data 1 {
+                          osg::Texture2D {
+                            UniqueID 104 
+                            WRAP_S REPEAT 
+                            WRAP_T REPEAT 
+                            WRAP_R CLAMP 
+                            MIN_FILTER LINEAR_MIPMAP_LINEAR 
+                            MAG_FILTER LINEAR 
+                            Image TRUE {
+                              ClassName osg::Image 
+                              UniqueID 105 
+                              FileName "C:/Work/Cairnsmith13/CairnSmith/x64/Debug/../../CairnSmith/Resources/WallTexture4.tga" 
+                              WriteHint 0 2 
+                              DataVariance STATIC 
+                            }
+                            TextureWidth 256 
+                            TextureHeight 256 
+                          }
+                          Value OFF 
+                        }
+                      }
+                    }
+                  }
+                  PrimitiveSetList 1 {
+                    DrawArrays GL_QUADS 0 0 4 
+                    
+                  }
+                  VertexData {
+                    Array TRUE ArrayID 58 Vec3fArray 4 {
+                      -395.022 195 300 
+                      -394.978 215 300 
+                      -394.978 215 0 
+                      -395.022 195 0 
+                    }
+                    Indices FALSE 
+                    Binding BIND_PER_VERTEX 
+                    Normalize 0 
+                  }
+                  NormalData {
+                    Array TRUE ArrayID 59 Vec3fArray 1 {
+                      -0.999998 0.00215759 0 
+                    }
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  ColorData {
+                    Array TRUE ArrayID 60 Vec4fArray 1 {
+                      0.98 0.98 0.98 1 
+                    }
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  TexCoordData 1 {
+                    Data {
+                      Array TRUE ArrayID 61 Vec2fArray 4 {
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -8.63204e+008 
+                        -4.31602e+008 -4.31602e+008 
+                      }
+                      Indices FALSE 
+                      Binding BIND_PER_VERTEX 
+                      Normalize 0 
+                    }
+                  }
+                }
+              }
+            }
+            osg::Geode {
+              UniqueID 106 
+              Name "Wall_Surface_Geode" 
+              Drawables 1 {
+                osg::Geometry {
+                  UniqueID 107 
+                  Name "Right" 
+                  DataVariance STATIC 
+                  StateSet TRUE {
+                    osg::StateSet {
+                      UniqueID 108 
+                      DataVariance STATIC 
+                      TextureModeList 1 {
+                        Data 1 {
+                          GL_TEXTURE_2D ON 
+                        }
+                      }
+                      TextureAttributeList 1 {
+                        Data 1 {
+                          osg::Texture2D {
+                            UniqueID 109 
+                            WRAP_S REPEAT 
+                            WRAP_T REPEAT 
+                            WRAP_R CLAMP 
+                            MIN_FILTER LINEAR_MIPMAP_LINEAR 
+                            MAG_FILTER LINEAR 
+                            Image TRUE {
+                              ClassName osg::Image 
+                              UniqueID 110 
+                              FileName "C:/Work/Cairnsmith13/CairnSmith/x64/Debug/../../CairnSmith/Resources/WallTexture4.tga" 
+                              WriteHint 0 2 
+                              DataVariance STATIC 
+                            }
+                            TextureWidth 256 
+                            TextureHeight 256 
+                          }
+                          Value OFF 
+                        }
+                      }
+                    }
+                  }
+                  PrimitiveSetList 1 {
+                    DrawArrays GL_QUADS 0 0 4 
+                    
+                  }
+                  VertexData {
+                    Array TRUE ArrayID 62 Vec3fArray 4 {
+                      532.022 213 300 
+                      531.978 193 300 
+                      531.978 193 0 
+                      532.022 213 0 
+                    }
+                    Indices FALSE 
+                    Binding BIND_PER_VERTEX 
+                    Normalize 0 
+                  }
+                  NormalData {
+                    Array TRUE ArrayID 63 Vec3fArray 1 {
+                      0.999998 -0.00215759 0 
+                    }
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  ColorData {
+                    Array TRUE ArrayID 60 
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  TexCoordData 1 {
+                    Data {
+                      Array TRUE ArrayID 64 Vec2fArray 4 {
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -8.63204e+008 
+                        -4.31602e+008 -4.31602e+008 
+                      }
+                      Indices FALSE 
+                      Binding BIND_PER_VERTEX 
+                      Normalize 0 
+                    }
+                  }
+                }
+              }
+            }
+            osg::Geode {
+              UniqueID 111 
+              Name "Wall_Surface_Geode" 
+              Drawables 1 {
+                osg::Geometry {
+                  UniqueID 112 
+                  Name "Back" 
+                  DataVariance STATIC 
+                  StateSet TRUE {
+                    osg::StateSet {
+                      UniqueID 113 
+                      DataVariance STATIC 
+                      TextureModeList 1 {
+                        Data 1 {
+                          GL_TEXTURE_2D ON 
+                        }
+                      }
+                      TextureAttributeList 1 {
+                        Data 1 {
+                          osg::Texture2D {
+                            UniqueID 114 
+                            WRAP_S REPEAT 
+                            WRAP_T REPEAT 
+                            WRAP_R CLAMP 
+                            MIN_FILTER LINEAR_MIPMAP_LINEAR 
+                            MAG_FILTER LINEAR 
+                            Image TRUE {
+                              ClassName osg::Image 
+                              UniqueID 115 
+                              FileName "C:/Users/Sheer Temp 1/Cairnsmith/sheer/abc/CSLibrairies/Materials/WallTexture4.tga" 
+                              WriteHint 0 2 
+                              DataVariance STATIC 
+                            }
+                            TextureWidth 512 
+                            TextureHeight 512 
+                          }
+                          Value OFF 
+                        }
+                      }
+                    }
+                  }
+                  PrimitiveSetList 1 {
+                    DrawArrays GL_QUADS 0 0 4 
+                    
+                  }
+                  VertexData {
+                    Array TRUE ArrayID 65 Vec3fArray 4 {
+                      532.022 213 300 
+                      532.022 213 0 
+                      -394.978 215 0 
+                      -394.978 215 300 
+                    }
+                    Indices FALSE 
+                    Binding BIND_PER_VERTEX 
+                    Normalize 0 
+                  }
+                  NormalData {
+                    Array TRUE ArrayID 66 Vec3fArray 1 {
+                      0.00215749 0.999998 0 
+                    }
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  ColorData {
+                    Array TRUE ArrayID 60 
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  TexCoordData 1 {
+                    Data {
+                      Array TRUE ArrayID 67 Vec2fArray 4 {
+                        46.35 15 
+                        46.35 0 
+                        0 0 
+                        0 15 
+                      }
+                      Indices FALSE 
+                      Binding BIND_PER_VERTEX 
+                      Normalize 0 
+                    }
+                  }
+                }
+              }
+            }
+            osg::Geode {
+              UniqueID 116 
+              Name "Wall_Surface_Geode" 
+              Drawables 1 {
+                osg::Geometry {
+                  UniqueID 117 
+                  Name "Top" 
+                  DataVariance STATIC 
+                  StateSet TRUE {
+                    osg::StateSet {
+                      UniqueID 118 
+                      DataVariance STATIC 
+                      TextureModeList 1 {
+                        Data 1 {
+                          GL_TEXTURE_2D ON 
+                        }
+                      }
+                      TextureAttributeList 1 {
+                        Data 1 {
+                          osg::Texture2D {
+                            UniqueID 119 
+                            WRAP_S REPEAT 
+                            WRAP_T REPEAT 
+                            WRAP_R CLAMP 
+                            MIN_FILTER LINEAR_MIPMAP_LINEAR 
+                            MAG_FILTER LINEAR 
+                            Image TRUE {
+                              ClassName osg::Image 
+                              UniqueID 120 
+                              FileName "C:/Work/Cairnsmith13/CairnSmith/x64/Debug/../../CairnSmith/Resources/WallTexture4.tga" 
+                              WriteHint 0 2 
+                              DataVariance STATIC 
+                            }
+                            TextureWidth 256 
+                            TextureHeight 256 
+                          }
+                          Value OFF 
+                        }
+                      }
+                    }
+                  }
+                  PrimitiveSetList 1 {
+                    DrawArrays GL_QUADS 0 0 4 
+                    
+                  }
+                  VertexData {
+                    Array TRUE ArrayID 68 Vec3fArray 4 {
+                      532.022 213 300 
+                      -394.978 215 300 
+                      -395.022 195 300 
+                      531.978 193 300 
+                    }
+                    Indices FALSE 
+                    Binding BIND_PER_VERTEX 
+                    Normalize 0 
+                  }
+                  NormalData {
+                    Array TRUE ArrayID 69 Vec3fArray 1 {
+                      0 0 1 
+                    }
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  ColorData {
+                    Array TRUE ArrayID 60 
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  TexCoordData 1 {
+                    Data {
+                      Array TRUE ArrayID 70 Vec2fArray 4 {
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -8.63204e+008 
+                        -4.31602e+008 -4.31602e+008 
+                      }
+                      Indices FALSE 
+                      Binding BIND_PER_VERTEX 
+                      Normalize 0 
+                    }
+                  }
+                }
+              }
+            }
+            osg::Geode {
+              UniqueID 121 
+              Name "Wall_Surface_Geode" 
+              Drawables 1 {
+                osg::Geometry {
+                  UniqueID 122 
+                  Name "Front" 
+                  DataVariance STATIC 
+                  StateSet TRUE {
+                    osg::StateSet {
+                      UniqueID 123 
+                      DataVariance STATIC 
+                      TextureModeList 1 {
+                        Data 1 {
+                          GL_TEXTURE_2D ON 
+                        }
+                      }
+                      TextureAttributeList 1 {
+                        Data 1 {
+                          osg::Texture2D {
+                            UniqueID 124 
+                            WRAP_S REPEAT 
+                            WRAP_T REPEAT 
+                            WRAP_R CLAMP 
+                            MIN_FILTER LINEAR_MIPMAP_LINEAR 
+                            MAG_FILTER LINEAR 
+                            Image TRUE {
+                              ClassName osg::Image 
+                              UniqueID 125 
+                              FileName "C:/Users/Sheer Temp 1/Cairnsmith/sheer/abc/CSLibrairies/Materials/Vatrushka-01.tga" 
+                              WriteHint 0 2 
+                              DataVariance STATIC 
+                            }
+                            TextureWidth 1024 
+                            TextureHeight 1024 
+                          }
+                          Value OFF 
+                        }
+                      }
+                    }
+                  }
+                  PrimitiveSetList 1 {
+                    DrawArrays GL_QUADS 0 0 4 
+                    
+                  }
+                  VertexData {
+                    Array TRUE ArrayID 71 Vec3fArray 4 {
+                      531.978 193 300 
+                      531.978 193 0 
+                      -395.022 195 0 
+                      -395.022 195 300 
+                    }
+                    Indices FALSE 
+                    Binding BIND_PER_VERTEX 
+                    Normalize 0 
+                  }
+                  NormalData {
+                    Array TRUE ArrayID 72 Vec3fArray 1 {
+                      -0.00215749 -0.999998 -0 
+                    }
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  ColorData {
+                    Array TRUE ArrayID 60 
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  TexCoordData 1 {
+                    Data {
+                      Array TRUE ArrayID 73 Vec2fArray 4 {
+                        46.35 15 
+                        46.35 0 
+                        0 0 
+                        0 15 
+                      }
+                      Indices FALSE 
+                      Binding BIND_PER_VERTEX 
+                      Normalize 0 
+                    }
+                  }
+                }
+              }
+            }
+            osg::Geode {
+              UniqueID 126 
+              Name "Wall_Surface_Geode" 
+              Drawables 1 {
+                osg::Geometry {
+                  UniqueID 127 
+                  Name "Bottom" 
+                  DataVariance STATIC 
+                  StateSet TRUE {
+                    osg::StateSet {
+                      UniqueID 128 
+                      DataVariance STATIC 
+                      TextureModeList 1 {
+                        Data 1 {
+                          GL_TEXTURE_2D ON 
+                        }
+                      }
+                      TextureAttributeList 1 {
+                        Data 1 {
+                          osg::Texture2D {
+                            UniqueID 129 
+                            WRAP_S REPEAT 
+                            WRAP_T REPEAT 
+                            WRAP_R CLAMP 
+                            MIN_FILTER LINEAR_MIPMAP_LINEAR 
+                            MAG_FILTER LINEAR 
+                            Image TRUE {
+                              ClassName osg::Image 
+                              UniqueID 130 
+                              FileName "C:/Work/Cairnsmith13/CairnSmith/x64/Debug/../../CairnSmith/Resources/WallTexture4.tga" 
+                              WriteHint 0 2 
+                              DataVariance STATIC 
+                            }
+                            TextureWidth 256 
+                            TextureHeight 256 
+                          }
+                          Value OFF 
+                        }
+                      }
+                    }
+                  }
+                  PrimitiveSetList 1 {
+                    DrawArrays GL_QUADS 0 0 4 
+                    
+                  }
+                  VertexData {
+                    Array TRUE ArrayID 74 Vec3fArray 4 {
+                      -394.978 215 0 
+                      -395.022 195 0 
+                      531.978 193 0 
+                      532.022 213 0 
+                    }
+                    Indices FALSE 
+                    Binding BIND_PER_VERTEX 
+                    Normalize 0 
+                  }
+                  NormalData {
+                    Array TRUE ArrayID 75 Vec3fArray 1 {
+                      0 -0 -1 
+                    }
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  ColorData {
+                    Array TRUE ArrayID 60 
+                    Indices FALSE 
+                    Binding BIND_OVERALL 
+                    Normalize 0 
+                  }
+                  TexCoordData 1 {
+                    Data {
+                      Array TRUE ArrayID 76 Vec2fArray 4 {
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -4.31602e+008 
+                        -4.31602e+008 -8.63204e+008 
+                        -4.31602e+008 -4.31602e+008 
+                      }
+                      Indices FALSE 
+                      Binding BIND_PER_VERTEX 
+                      Normalize 0 
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    ::CS3DFloor {
+      UniqueID 131 
+      Name "3D_Floor" 
+      Children 4 {
+        osg::Geode {
+          UniqueID 132 
+          Drawables 1 {
+            osg::Geometry {
+              UniqueID 133 
+              DataVariance STATIC 
+              StateSet TRUE {
+                osg::StateSet {
+                  UniqueID 134 
+                  DataVariance STATIC 
+                  TextureModeList 1 {
+                    Data 1 {
+                      GL_TEXTURE_2D ON 
+                    }
+                  }
+                  TextureAttributeList 1 {
+                    Data 1 {
+                      osg::Texture2D {
+                        UniqueID 135 
+                        WRAP_S REPEAT 
+                        WRAP_T REPEAT 
+                        WRAP_R CLAMP 
+                        MIN_FILTER LINEAR_MIPMAP_LINEAR 
+                        MAG_FILTER LINEAR 
+                        Image TRUE {
+                          ClassName osg::Image 
+                          UniqueID 136 
+                          FileName "C:/Work/Cairnsmith13/CairnSmith/x64/Debug/../../CairnSmith/Resources/FloorTexture3.tga" 
+                          WriteHint 0 2 
+                          DataVariance STATIC 
+                        }
+                        TextureWidth 1024 
+                        TextureHeight 1024 
+                      }
+                      Value OFF 
+                    }
+                  }
+                }
+              }
+              PrimitiveSetList 2 {
+                DrawElementsUByte GL_TRIANGLE_FAN 0 6 {
+                  6 7 2 3 
+                  4 5 
+                }
+                DrawElementsUByte GL_TRIANGLE_FAN 0 4 {
+                  7 0 1 2 
+                }
+                
+              }
+              VertexData {
+                Array TRUE ArrayID 77 Vec3fArray 8 {
+                  -397 -275 0 
+                  -143 -277 0 
+                  -138 4 0 
+                  214 3 0 
+                  219 -275 0 
+                  533 -276 0 
+                  532 203 0 
+                  -395 205 0 
+                }
+                Indices FALSE 
+                Binding BIND_PER_VERTEX 
+                Normalize 0 
+              }
+              NormalData {
+                Array TRUE ArrayID 78 Vec3fArray 1 {
+                  0 0 1 
+                }
+                Indices FALSE 
+                Binding BIND_OVERALL 
+                Normalize 0 
+              }
+              TexCoordData 1 {
+                Data {
+                  Array TRUE ArrayID 79 Vec2fArray 8 {
+                    0 0.1 
+                    12.7 0 
+                    12.95 14.05 
+                    30.55 14 
+                    30.8 0.1 
+                    46.5 0.05 
+                    46.45 24 
+                    0.1 24.1 
+                  }
+                  Indices FALSE 
+                  Binding BIND_PER_VERTEX 
+                  Normalize 0 
+                }
+              }
+            }
+          }
+        }
+        osg::PositionAttitudeTransform {
+          UniqueID 137 
+          Name "Library_Item_PAT" 
+          Children 1 {
+            ::CS3DLibraryItem {
+              UniqueID 138 
+              Name "Library_Item_Group" 
+              Children 2 {
+                osg::MatrixTransform {
+                  UniqueID 139 
+                  Name "Library_Item_Selection" 
+                  Children 2 {
+                    osg::ProxyNode {
+                      UniqueID 140 
+                      Name "Library_Item_Proxy" 
+                      FileNames 1 {
+                        "C:/Users/Sheer Temp 1/Cairnsmith/sheer/abc/CSLibrairies/Models/Chair.obj" 
+                      }
+                      Children 0 
+                      CenterMode USER_DEFINED_CENTER 
+                      UserCenter 0 0 0 -1 
+                    }
+                    osg::MatrixTransform {
+                      UniqueID 141 
+                      UpdateCallback TRUE {
+                        osg::NodeCallback {
+                          UniqueID 142 
+                        }
+                      }
+                      NodeMask 0 
+                      StateSet TRUE {
+                        osg::StateSet {
+                          UniqueID 143 
+                          DataVariance STATIC 
+                          ModeList 1 {
+                            GL_LIGHTING OFF 
+                          }
+                          AttributeList 1 {
+                            osg::PolygonMode {
+                              UniqueID 144 
+                              Mode UseFrontAndBack TRUE 
+                              Front LINE 
+                              Back LINE 
+                            }
+                            Value OFF 
+                          }
+                        }
+                      }
+                      Children 1 {
+                        osg::Geode {
+                          UniqueID 145 
+                          Drawables 1 {
+                            osg::ShapeDrawable {
+                              UniqueID 146 
+                              DataVariance STATIC 
+                              Shape TRUE {
+                                osg::Box {
+                                  UniqueID 147 
+                                  HalfLengths 0.5 0.5 0.5 
+                                }
+                              }
+                              Color 1 1 1 1 
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+                osgManipulator::Translate2DDragger {
+                  UniqueID 148 
+                  Name "Library_Item_Dragger" 
+                  NodeMask 0 
+                  StateSet TRUE {
+                    osg::StateSet {
+                      UniqueID 149 
+                      DataVariance DYNAMIC 
+                      AttributeList 1 {
+                        osg::Material {
+                          UniqueID 150 
+                          DataVariance DYNAMIC 
+                          Ambient TRUE Front 0.2 0.2 0.2 1 Back 0.2 0.2 0.2 1 
+                          Diffuse TRUE Front 0 1 0 1 Back 0 1 0 1 
+                          Specular TRUE Front 0 0 0 1 Back 0 0 0 1 
+                          Emission TRUE Front 0 0 0 1 Back 0 0 0 1 
+                          Shininess TRUE Front 0 Back 0 
+                        }
+                        Value OFF 
+                      }
+                    }
+                  }
+                  Matrix {
+                    111.821 0 0 0 
+                    0 111.821 0 0 
+                    0 0 111.821 0 
+                    25.2699 -17.299 11.935 1 
+                  }
+                  
+                  TransformUpdating 1 {
+                    DraggerTransformCallback {
+                      osg::MatrixTransform {
+                        UniqueID 139 
+                      }
+                    }
+                  }
+                  DefaultGeometry TRUE 
+                  Color 0 1 0 1 
+                  PickColor 1 1 0 1 
+                }
+              }
+            }
+          }
+          Position 368.645 -32.3973 69.1851 
+          Scale 1 1 1 
+        }
+        osg::PositionAttitudeTransform {
+          UniqueID 151 
+          Name "Library_Item_PAT" 
+          Children 1 {
+            ::CS3DLibraryItem {
+              UniqueID 152 
+              Name "Library_Item_Group" 
+              Children 2 {
+                osg::MatrixTransform {
+                  UniqueID 153 
+                  Name "Library_Item_Selection" 
+                  Children 2 {
+                    osg::ProxyNode {
+                      UniqueID 154 
+                      Name "Library_Item_Proxy" 
+                      FileNames 1 {
+                        "C:/Users/Sheer Temp 1/Cairnsmith/sheer/abc/CSLibrairies/Models/Coffe-Table.obj" 
+                      }
+                      Children 0 
+                      CenterMode USER_DEFINED_CENTER 
+                      UserCenter 0 0 0 -1 
+                    }
+                    osg::MatrixTransform {
+                      UniqueID 155 
+                      UpdateCallback TRUE {
+                        osg::NodeCallback {
+                          UniqueID 156 
+                        }
+                      }
+                      NodeMask 0 
+                      StateSet TRUE {
+                        osg::StateSet {
+                          UniqueID 157 
+                          DataVariance STATIC 
+                          ModeList 1 {
+                            GL_LIGHTING OFF 
+                          }
+                          AttributeList 1 {
+                            osg::PolygonMode {
+                              UniqueID 158 
+                              Mode UseFrontAndBack TRUE 
+                              Front LINE 
+                              Back LINE 
+                            }
+                            Value OFF 
+                          }
+                        }
+                      }
+                      Children 1 {
+                        osg::Geode {
+                          UniqueID 159 
+                          Drawables 1 {
+                            osg::ShapeDrawable {
+                              UniqueID 160 
+                              DataVariance STATIC 
+                              Shape TRUE {
+                                osg::Box {
+                                  UniqueID 161 
+                                  HalfLengths 0.5 0.5 0.5 
+                                }
+                              }
+                              Color 1 1 1 1 
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+                osgManipulator::Translate2DDragger {
+                  UniqueID 162 
+                  Name "Library_Item_Dragger" 
+                  NodeMask 0 
+                  StateSet TRUE {
+                    osg::StateSet {
+                      UniqueID 163 
+                      DataVariance DYNAMIC 
+                      AttributeList 1 {
+                        osg::Material {
+                          UniqueID 164 
+                          DataVariance DYNAMIC 
+                          Ambient TRUE Front 0.2 0.2 0.2 1 Back 0.2 0.2 0.2 1 
+                          Diffuse TRUE Front 0 1 0 1 Back 0 1 0 1 
+                          Specular TRUE Front 0 0 0 1 Back 0 0 0 1 
+                          Emission TRUE Front 0 0 0 1 Back 0 0 0 1 
+                          Shininess TRUE Front 0 Back 0 
+                        }
+                        Value OFF 
+                      }
+                    }
+                  }
+                  Matrix {
+                    162.78 0 0 0 
+                    0 162.78 0 0 
+                    0 0 162.78 0 
+                    0.344013 0.264481 19.2833 1 
+                  }
+                  
+                  TransformUpdating 1 {
+                    DraggerTransformCallback {
+                      osg::MatrixTransform {
+                        UniqueID 153 
+                      }
+                    }
+                  }
+                  DefaultGeometry TRUE 
+                  Color 0 1 0 1 
+                  PickColor 1 1 0 1 
+                }
+              }
+            }
+          }
+          Position 282.763 144.454 35.0989 
+          Scale 1 1 1 
+        }
+        osg::PositionAttitudeTransform {
+          UniqueID 165 
+          Name "Library_Item_PAT" 
+          Children 1 {
+            ::CS3DLibraryItem {
+              UniqueID 166 
+              Name "Library_Item_Group" 
+              Children 2 {
+                osg::MatrixTransform {
+                  UniqueID 167 
+                  Name "Library_Item_Selection" 
+                  Children 2 {
+                    osg::ProxyNode {
+                      UniqueID 168 
+                      Name "Library_Item_Proxy" 
+                      FileNames 1 {
+                        "C:/Users/Sheer Temp 1/Cairnsmith/sheer/abc/CSLibrairies/Models/Swivel_Chair.obj" 
+                      }
+                      Children 0 
+                      CenterMode USER_DEFINED_CENTER 
+                      UserCenter 0 0 0 -1 
+                    }
+                    osg::MatrixTransform {
+                      UniqueID 169 
+                      UpdateCallback TRUE {
+                        osg::NodeCallback {
+                          UniqueID 170 
+                        }
+                      }
+                      NodeMask 0 
+                      StateSet TRUE {
+                        osg::StateSet {
+                          UniqueID 171 
+                          DataVariance STATIC 
+                          ModeList 1 {
+                            GL_LIGHTING OFF 
+                          }
+                          AttributeList 1 {
+                            osg::PolygonMode {
+                              UniqueID 172 
+                              Mode UseFrontAndBack TRUE 
+                              Front LINE 
+                              Back LINE 
+                            }
+                            Value OFF 
+                          }
+                        }
+                      }
+                      Children 1 {
+                        osg::Geode {
+                          UniqueID 173 
+                          Drawables 1 {
+                            osg::ShapeDrawable {
+                              UniqueID 174 
+                              DataVariance STATIC 
+                              Shape TRUE {
+                                osg::Box {
+                                  UniqueID 175 
+                                  HalfLengths 0.5 0.5 0.5 
+                                }
+                              }
+                              Color 1 1 1 1 
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+                osgManipulator::Translate2DDragger {
+                  UniqueID 176 
+                  Name "Library_Item_Dragger" 
+                  NodeMask 0 
+                  StateSet TRUE {
+                    osg::StateSet {
+                      UniqueID 177 
+                      DataVariance DYNAMIC 
+                      AttributeList 1 {
+                        osg::Material {
+                          UniqueID 178 
+                          DataVariance DYNAMIC 
+                          Ambient TRUE Front 0.2 0.2 0.2 1 Back 0.2 0.2 0.2 1 
+                          Diffuse TRUE Front 0 1 0 1 Back 0 1 0 1 
+                          Specular TRUE Front 0 0 0 1 Back 0 0 0 1 
+                          Emission TRUE Front 0 0 0 1 Back 0 0 0 1 
+                          Shininess TRUE Front 0 Back 0 
+                        }
+                        Value OFF 
+                      }
+                    }
+                  }
+                  Matrix {
+                    109.974 0 0 0 
+                    0 109.974 0 0 
+                    0 0 109.974 0 
+                    0.461399 -3.89265 33.6295 1 
+                  }
+                  
+                  TransformUpdating 1 {
+                    DraggerTransformCallback {
+                      osg::MatrixTransform {
+                        UniqueID 167 
+                      }
+                    }
+                  }
+                  DefaultGeometry TRUE 
+                  Color 0 1 0 1 
+                  PickColor 1 1 0 1 
+                }
+              }
+            }
+          }
+          Position -268.839 -81.8807 88.0165 
+          Scale 1 1 1 
+        }
+      }
+    }
+    osg::PositionAttitudeTransform {
+      UniqueID 179 
+      Name "Light_Item_PAT" 
+      NodeMask 0x2 
+      Children 1 {
+        osg::LightSource {
+          UniqueID 180 
+          CullingActive FALSE 
+          StateSet TRUE {
+            osg::StateSet {
+              UniqueID 181 
+              DataVariance STATIC 
+              ModeList 1 {
+                GL_LIGHT1 ON 
+              }
+            }
+          }
+          Children 1 {
+            osg::Geode {
+              UniqueID 182 
+              StateSet TRUE {
+                osg::StateSet {
+                  UniqueID 183 
+                  DataVariance STATIC 
+                  AttributeList 1 {
+                    osg::Material {
+                      UniqueID 184 
+                      Ambient TRUE Front 0.2 0.2 0.2 1 Back 0.2 0.2 0.2 1 
+                      Diffuse FALSE Front 0 0 0 1 Back 0.8 0.8 0.8 1 
+                      Specular TRUE Front 0 0 0 1 Back 0 0 0 1 
+                      Emission FALSE Front 1 0.8 0.8 1 Back 0 0 0 1 
+                      Shininess TRUE Front 0 Back 0 
+                    }
+                    Value OFF 
+                  }
+                }
+              }
+              Drawables 1 {
+                osg::ShapeDrawable {
+                  UniqueID 185 
+                  DataVariance STATIC 
+                  Shape TRUE {
+                    osg::Sphere {
+                      UniqueID 186 
+                      Radius 20 
+                    }
+                  }
+                  Color 1 1 1 1 
+                  TessellationHints TRUE {
+                    osg::TessellationHints {
+                      UniqueID 187 
+                      DetailRatio 0.5 
+                    }
+                  }
+                }
+              }
+            }
+          }
+          Light TRUE {
+            osg::Light {
+              UniqueID 188 
+              LightNum 1 
+              Ambient 0.05 0.05 0.05 1 
+              Diffuse 1 0.5 0.5 1 
+              Specular 1 1 1 1 
+              Position 692.013 156.559 433.625 1 
+              Direction 0 0 -1 
+            }
+          }
+        }
+      }
+      Position 692.013 156.559 433.625 
+      Scale 1 1 1 
+    }
+    osg::PositionAttitudeTransform {
+      UniqueID 179 
+    }
+    osg::PositionAttitudeTransform {
+      UniqueID 189 
+      Name "Camera_Item_PAT" 
+      NodeMask 0x2 
+      Children 1 {
+        osgManipulator::CompositeDragger {
+          UniqueID 190 
+          StateSet TRUE {
+            osg::StateSet {
+              UniqueID 191 
+              DataVariance DYNAMIC 
+              ModeList 1 {
+                GL_RESCALE_NORMAL ON 
+              }
+            }
+          }
+          Matrix {
+            0.5 0 0 0 
+            0 0.5 0 0 
+            0 0 0.5 0 
+            0 0 0 1 
+          }
+          
+          HandleEvents TRUE 
+          TransformUpdating 1 {
+            DraggerCallback {
+            }
+          }
+          DefaultGeometry TRUE 
+          Draggers 2 {
+            osgManipulator::TrackballDragger {
+              UniqueID 192 
+              Name "TrackballDragger" 
+              StateSet TRUE {
+                osg::StateSet {
+                  UniqueID 193 
+                  DataVariance DYNAMIC 
+                }
+              }
+              DefaultGeometry TRUE 
+            }
+            osgManipulator::TranslateAxisDragger {
+              UniqueID 194 
+              Name "TranslateAxisDragger" 
+              StateSet TRUE {
+                osg::StateSet {
+                  UniqueID 195 
+                  DataVariance DYNAMIC 
+                }
+              }
+              Matrix {
+                1.5 0 0 0 
+                0 1.5 0 0 
+                0 0 1.5 0 
+                0 0 0 1 
+              }
+              
+              DefaultGeometry TRUE 
+            }
+          }
+        }
+      }
+      Position 195.327 531.847 499.432 
+      Attitude 0.855516 -0.314198 0 0.411549 
+      Scale 1 1 1 
+    }
+  }
+}
