@@ -193,6 +193,7 @@ func scanOSGT(some * bufio.Scanner) (*OSGT, error) {
 	out := NewOSGT()
 	for some.Scan() {
 		a_line := some.Text()
+
 		if err := some.Err(); err != nil {
 			return nil, err // Return whatever we have
 		}

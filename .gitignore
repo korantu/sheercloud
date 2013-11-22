@@ -39,3 +39,4 @@ server/store/*
 #test artefacts
 server/src/lux/luxout.png
 server/src/lux/example.lsx
+server/src/lux/example.stdout

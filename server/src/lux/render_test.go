@@ -57,7 +57,7 @@ func TestLuxTest(t * testing.T) {
 }
 
 func TestDoRender(t * testing.T) {
-	in, out := "example.lsx", "luxout.png"
+	in, out := "example.lsx", "example.stdout"
 	os.Remove(in); os.Remove(out)
 	ioutil.WriteFile(in, []byte(scene), 0666)
 	err := DoRender(in, out)
