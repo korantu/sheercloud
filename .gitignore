@@ -35,6 +35,8 @@ tool
 #idea
 server/out/*
 server/store/*
+server/.idea/misc.xml
+server/.idea/workspace.xml
 
 #test artefacts
 server/src/lux/luxout.png
