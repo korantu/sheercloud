@@ -62,8 +62,7 @@ func (store *FileStore) populateFromDisk(location string) (err error) {
 func NewFileStore(where string) (result *FileStore, err error) {
 	if fi, err := os.Stat(where); err == nil {
 		if !fi.IsDir() {
-			failed := CloudError("Storage place " + where + " should be a directory")
-			return nil, &failed
+			return nil, &CloudError{"Storage place " + where + " should be a directory"}
 		}
 	} else {
 		os.MkdirAll(where, 0777)
@@ -150,7 +149,7 @@ func (store *FileStore) GetContent(where CloudPath) (content []byte, err error) 
 		return
 	}
 	if info.IsDir() {
-		return nil, NewCloudError("FAIL: Unable to download directory")
+		return nil, &CloudError{"FAIL: Unable to download directory"}
 	}
 
 	content, err = ioutil.ReadFile(full_name)

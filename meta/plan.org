@@ -1,0 +1,13 @@
+* Updates
+ Tracker
+ [[file+emacs:../README.md]]
+* Resources
+template: http://golang.org/pkg/html/template/
+* Tasks
+** Requrements:
+Start whatever task is found.
+Make sure user cannot start tasks at will, has to be checked.
+* Plan
+User operations
+Render starting: just scan the damn thing already, and forward whatever found into a channel.
+Once found, rename.

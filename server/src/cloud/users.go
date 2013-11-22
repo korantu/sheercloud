@@ -20,6 +20,14 @@ func NumberOfUsers() int {
 	return len(by_login)
 }
 
+func ListUsers() []string {
+	result := []string{}
+	for login, _ := range by_login {
+		result = append(result, login)
+	}
+	return result
+}
+
 // ResetUsers removes all existing users
 func ResetUsers() {
 	by_login = make(map[string]User)
@@ -56,9 +64,10 @@ func GetUser(login, password string) *User {
 }
 
 var test_guys = Users{
-	User{Login: "abc", Password: "123", Name: "Me"},
-	User{Login: "asd", Password: "456", Name: "Him"},
-	User{Login: "important", Password: "7890", Name: "Big CEO"},
+	User{Login: "sheer", Password: "all", Name: "Sheer Industries"},
+	User{Login: "sheer/abc", Password: "123", Name: "Me"},
+	User{Login: "sheer/asd", Password: "456", Name: "Him"},
+	User{Login: "sheer/important", Password: "7890", Name: "Big CEO"},
 }
 
 func DumpUsers() (result Users) {

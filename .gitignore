@@ -8,6 +8,7 @@
 *.lai
 *.so
 *.dll
+*.exe
 *.dylib
 
 # Qt-es
@@ -25,7 +26,16 @@ clientlib/clientlib
 # Misc
 TAGS
 cloud_test.test
+cloud.test
 
 # emacs
 *#*
 tool
+
+#idea
+server/out/*
+server/store/*
+
+#test artefacts
+server/src/lux/luxout.png
+server/src/lux/example.lsx

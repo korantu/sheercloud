@@ -38,8 +38,6 @@ func DoJob(file string) JobID {
 func JobDone(id JobID) (*Result, error) {
 	if r, ok := jobs[id]; ok {
 		return &r, nil
-	} else {
-		problem := CloudError("Unknown job")
-		return nil, &problem
 	}
+	return nil, &CloudError{"Unknown job"}
 }

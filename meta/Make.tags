@@ -1,0 +1,22 @@
+SERVER_ROOT=../server
+
+FILES= \
+	${SERVER_ROOT}/src/cloud/serve_test.go  \
+	${SERVER_ROOT}/src/cloud/files.go  \
+	${SERVER_ROOT}/src/cloud/main_test.go  \
+	${SERVER_ROOT}/src/cloud/version.go  \
+	${SERVER_ROOT}/src/cloud/entities.go  \
+	${SERVER_ROOT}/src/cloud/api.go  \
+	${SERVER_ROOT}/src/cloud/serve.go  \
+	${SERVER_ROOT}/src/cloud/cloud_test.go  \
+	${SERVER_ROOT}/src/cloud/job.go  \
+	${SERVER_ROOT}/src/cloud/users.go  \
+	${SERVER_ROOT}/src/cloud/api_test.go  \
+	${SERVER_ROOT}/src/cloud/doc.go  \
+	${SERVER_ROOT}/src/cloud/fs.go  \
+	${SERVER_ROOT}/src/cloud/config.go  \
+	${SERVER_ROOT}/src/tool/main.go
+
+# Generate tags for go files:
+TAGS: ${FILES}
+	[ -f TAGS ] && rm TAGS; find ${SERVER_ROOT} -name "*.go" | xargs etags -a -r '/^\/\/---> +\([a-zA-Z]+\)/' -r '/^type \([a-zA-Z_]+\)/' -r '/^func \([a-zA-Z_]+\)/' -r '/^func ([^)]+) \([a-zA-Z_]+\)/'
