@@ -133,8 +133,7 @@ func TestOSGTLoad(t * testing.T) {
 	//t.Logf("Raw:\n%v", *rd)
 }
 
-func TestOSGTLoadAll(t * testing.T){
-	t.Log(os.Getwd())
+func TestOSGTLoadAll(t * testing.T) {
 	f, err := os.Open("../../../render/reference/testProj_design_1.osgt")
 	if err != nil {
 		t.Fatal(err.Error())
@@ -156,10 +155,31 @@ func TestOSGTLoadAll(t * testing.T){
 
 	for _, each := range list {
 		if vtx := each.Find("VertexData"); len(vtx) == 1 {
-			t.Logf("Vdata:\n%s",vtx[0].Print())
+			t.Logf("Vdata:\n%s", vtx[0].Print())
 		} else {
 			t.Log("Must contain VertexData")
 		}
 	}
 }
 
+func TestOBJLoad(t * testing.T) {
+	f, err := os.Open("../../../render/reference/Chair.obj")
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+	rd, err := readOBJ(f)
+	if err != nil {
+		t.Log(err.Error())
+		t.Fail()
+	}
+
+	if rd == nil {
+		t.Fatal("Nothing is returned; should not happen without proper error")
+	}
+
+	// Checksum, sort of.
+	if len(rd.Geodes) != 6 || len(rd.UWs) != 860 || len(rd.Vertices) != 764 || len(rd.Normals) != 792 {
+		t.Fatalf("Expected; Geodes:6 UWs:860 Vertices:764 Normals:792; \n Got: Geodes:%d UWs:%d Vertices:%d Normals:%d",
+			len(rd.Geodes), len(rd.UWs), len(rd.Vertices), len(rd.Normals))
+	}
+}

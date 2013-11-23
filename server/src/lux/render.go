@@ -7,17 +7,16 @@ import (
 	//"cloud"
 	"os/exec"
 	"log"
-//	"io/ioutil"
+	//	"io/ioutil"
 	"io"
 	"os"
 )
 
 var LUX = "luxconsole"
 
-
 // Trivial render started
 // Image is going to the same folder as scene, named luxout.png
-func DoRender( scene, output  string) error{
+func DoRender(scene, output  string) error {
 	path, err := exec.LookPath(LUX);
 	if err != nil {
 		return err

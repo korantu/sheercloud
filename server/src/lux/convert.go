@@ -3,12 +3,13 @@ package lux
 import (
 	"io"
 	"encoding/xml"
-	//	"bufio"
-	"strings"
-	//	"log"
-	//	"fmt"
 	"bufio"
+	"fmt"
+	"strings"
+	"cloud"
 )
+
+var NotImplementedError = cloud.NewCloudError("Not implemented")
 
 // Configuration
 
@@ -17,7 +18,7 @@ type Point [4]float32
 type Matrix[16]float32
 
 type Camera struct {
-	Eye,           Up,           Center Point
+	Eye,             Up,             Center Point
 }
 
 /* <RenderingData>
@@ -95,8 +96,8 @@ type RenderingData struct {
 }}}}
 	RenderingSettings struct {
 	Camera struct {
-	CameraType                           string `xml:",attr"`
-	Eye,         Center,         Up      XMLPosition
+	CameraType                               string `xml:",attr"`
+	Eye,           Center,           Up      XMLPosition
 	CameraDisplaySettings struct {
 	FOV            int `xml:"fov,attr"`
 	Resolution_X   int `xml:",attr"`
@@ -107,8 +108,8 @@ type RenderingData struct {
 }
 	Lights struct {
 	Lights []struct {
-	Position                 XMLPosition
-	Diffuse,        Specular XMLShaderParam
+	Position                   XMLPosition
+	Diffuse,          Specular XMLShaderParam
 }
 }
 }
@@ -158,11 +159,11 @@ func (an * OSGT) Print() string {
 	return an.print_indent("")
 }
 
-func (an *OSGT) Find(pattern string) []*OSGT{
+func (an *OSGT) Find(pattern string) []*OSGT {
 	res := []*OSGT{}
 	for _, item := range an.List {
 		if item.Child != nil {
-			if strings.Contains(item.Key, pattern){
+			if strings.Contains(item.Key, pattern) {
 				res = append(res, item.Child)
 			}  else {
 				res = append(res, item.Child.Find(pattern) ...)
@@ -216,6 +217,80 @@ func scanOSGT(some * bufio.Scanner) (*OSGT, error) {
 	return out, nil
 }
 
+type OBJTriad [3]float32
+type OBJVector OBJTriad
+type OBJNormal OBJTriad
+type OBJUW OBJTriad
+
+type OBJFaceVertex struct {
+	V,  N,  T int
+}
+
+type OBJFace []OBJFaceVertex
+
+type OBJGeode struct {
+	Name  string
+	Faces []OBJFace
+}
+
+type OBJ struct {
+	Vertices []OBJVector
+	Normals  []OBJNormal
+	UWs      []OBJUW
+	Geodes   []OBJGeode
+}
+
+// UGLY!!! move parsing logic into respective parts of the scene
+func readOBJ(r io.Reader) (*OBJ, error) {
+	res := &OBJ{ []OBJVector{}, []OBJNormal{}, []OBJUW{}, []OBJGeode{}}
+	scnr := bufio.NewScanner(r)
+	the_geode := OBJGeode{"unnamed", []OBJFace{}}
+	got := ""
+
+	for scnr.Scan() {
+		got = scnr.Text()
+		switch {
+		case strings.HasPrefix(got, "v "):
+			an := OBJVector{}
+			fmt.Sscanf(got, "v %f %f %f", &an[0], &an[1], &an[2])
+			res.Vertices = append(res.Vertices, an)
+		case strings.HasPrefix(got, "vn "):
+			an := OBJNormal{}
+			fmt.Sscanf(got, "vn %f %f %f", &an[0], &an[1], &an[2])
+			res.Normals = append(res.Normals, an)
+		case strings.HasPrefix(got, "vt "):
+			an := OBJUW{}
+			fmt.Sscanf(got, "vt %f %f %f", &an[0], &an[1], &an[2])
+			res.UWs = append(res.UWs, an)
+		case strings.HasPrefix(got, "f "):
+			an := OBJFace{}
+			items := strings.Split(got, " ")
+			for _, item := range items {
+				if strings.Contains(item, "/") {
+					point := OBJFaceVertex{}
+					fmt.Sscanf(item, "%d/%d/%d", &point.V, &point.N, &point.T)
+					an = append(an, point)
+				}
+			}
+			the_geode.Faces = append(the_geode.Faces, an)
+		case strings.HasPrefix(got, "g "):
+			an := ""
+			fmt.Sscanf(got, "g %s", &an)
+			if len(the_geode.Faces) > 0 {
+				res.Geodes = append(res.Geodes, the_geode)
+			}
+			the_geode = OBJGeode{an, []OBJFace{}} // Name and use for further updates
+		}
+	}
+
+	if len(the_geode.Faces) > 0 {
+		res.Geodes = append(res.Geodes, the_geode)
+	}
+
+	return res, nil
+}
+
 func ToBeTested() string {
 	return "Done"
 }
+

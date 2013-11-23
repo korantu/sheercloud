@@ -7,9 +7,8 @@
  */
 package main
 
-import ("fmt"
-	"lux")
+import (
+)
 
 func not_main() {
-	fmt.Printf("Hello world! Lux version is %s", lux.LuxVersion)
 }
