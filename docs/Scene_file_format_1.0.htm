@@ -1,5 +1,5 @@
 
-<!-- saved from url=(0075)http://www.luxrender.net/wiki/Scene_file_format_1.0#Common_Light_Parameters -->
+<!-- saved from url=(0075)#Common_Light_Parameters -->
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr" class="client-chrome client-chrome-3 client-webkit client-win"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style type="text/css"></style><style type="text/css"></style><script type="text/javascript" async="" src="./Scene_file_format_1.0_files/ga.js"></script><script type="text/javascript" async="" src="./Scene_file_format_1.0_files/mixpanel-2.1.min.js"></script><style type="text/css" media="screen">#dddContent {visibility:hidden}</style><style type="text/css" media="screen">#easyInlineSwf {visibility:hidden}</style><script src="http://js.myinfotopia.com/trustBanner.min.js?2"></script></head><body class="mediawiki  ltr ns-0 ns-subject page-Scene_file_format_1_0"><div id="globalWrapper">
 
 
@@ -37,33 +37,8 @@
 	<img src="./Scene_file_format_1.0_files/luxrender-lenses-small.png" alt="Luxrender GPL Physically Based Renderer">
 </div>
 <div id="nav">
-<ul>
- <li><a href="http://www.luxrender.net/">Home</a></li>
- <li><a href="http://www.luxrender.net/forum">Forum</a></li>
- <li><a href="http://www.luxrender.net/gallery">Gallery</a></li>
- <li><a href="http://www.luxrender.net/wiki">Wiki</a></li>
- <li><a href="http://www.luxrender.net/page/lrmdb2">Materials Database</a></li>
- <li><a href="http://www.luxrender.net/luxmark">LuxMark Database</a></li>
- <li><a href="http://src.luxrender.net/" target="_blank">Source Code</a></li>
- <li><a href="http://www.luxrender.net/mantis" target="_blank">Bug Tracker</a></li>
-</ul>
 </div>
 
-<script type="text/javascript"> 
-	var _gaq = _gaq || [];
-	_gaq.push(['_setAccount', 'UA-18658268-1']);
-	_gaq.push(['_trackPageview']);
-	
-	(function() {
-		var ga = document.createElement('script');
-		ga.type = 'text/javascript';
-		ga.async = true;
-		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-		var s = document.getElementsByTagName('script')[0];
-		s.parentNode.insertBefore(ga, s);
-	})();
- 
-</script>
 
 <script type="text/javascript"> if (window.isMSIE55) fixalpha(); </script>
 <div class="portlet" id="p-navigation">
@@ -109,7 +84,7 @@
 	<h5>Views</h5>
 	<div class="pBody">
 		<ul>
-			 <li id="ca-nstab-main" class="selected"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0" title="View the content page [c]" accesskey="c">Page</a></li>
+			 <li id="ca-nstab-main" class="selected"><a href="" title="View the content page [c]" accesskey="c">Page</a></li>
 			 <li id="ca-talk" class="new"><a href="http://www.luxrender.net/wiki/index.php?title=Talk:Scene_file_format_1.0&action=edit&redlink=1" title="Discussion about the content page [t]" accesskey="t">Discussion</a></li>
 			 <li id="ca-viewsource"><a href="http://www.luxrender.net/wiki/index.php?title=Scene_file_format_1.0&action=edit" title="This page is protected.
 You can view its source [e]" accesskey="e">View source</a></li>
@@ -129,249 +104,249 @@ You can view its source [e]" accesskey="e">View source</a></li>
 			<div id="bodyContent">
 				<h3 id="siteSub">From LuxRender Wiki</h3>
 				<div id="contentSub"></div>
-												<div id="jump-to-nav">Jump to: <a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#column-one">navigation</a>, <a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#searchInput">search</a></div>				<!-- start content -->
-				<table id="toc" class="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2> <span class="toctoggle">[<a id="togglelink" class="internal" href="http://www.luxrender.net/wiki/Scene_file_format_1.0#">hide</a>]</span></div>
+												<div id="jump-to-nav">Jump to: <a href="#column-one">navigation</a>, <a href="#searchInput">search</a></div>				<!-- start content -->
+				<table id="toc" class="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2> <span class="toctoggle">[<a id="togglelink" class="internal" href="#">hide</a>]</span></div>
 <ul>
-<li class="toclevel-1 tocsection-1"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Introduction"><span class="tocnumber">1</span> <span class="toctext">Introduction</span></a></li>
-<li class="toclevel-1 tocsection-2"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Basics"><span class="tocnumber">2</span> <span class="toctext">Basics</span></a>
+<li class="toclevel-1 tocsection-1"><a href="#Introduction"><span class="tocnumber">1</span> <span class="toctext">Introduction</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="#Basics"><span class="tocnumber">2</span> <span class="toctext">Basics</span></a>
 <ul>
-<li class="toclevel-2 tocsection-3"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Coordinate_System"><span class="tocnumber">2.1</span> <span class="toctext">Coordinate System</span></a></li>
-<li class="toclevel-2 tocsection-4"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Basic_Structure"><span class="tocnumber">2.2</span> <span class="toctext">Basic Structure</span></a></li>
-<li class="toclevel-2 tocsection-5"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Global_vs_Scene_Specific_Information"><span class="tocnumber">2.3</span> <span class="toctext">Global vs Scene Specific Information</span></a>
+<li class="toclevel-2 tocsection-3"><a href="#Coordinate_System"><span class="tocnumber">2.1</span> <span class="toctext">Coordinate System</span></a></li>
+<li class="toclevel-2 tocsection-4"><a href="#Basic_Structure"><span class="tocnumber">2.2</span> <span class="toctext">Basic Structure</span></a></li>
+<li class="toclevel-2 tocsection-5"><a href="#Global_vs_Scene_Specific_Information"><span class="tocnumber">2.3</span> <span class="toctext">Global vs Scene Specific Information</span></a>
 <ul>
-<li class="toclevel-3 tocsection-6"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Global_information"><span class="tocnumber">2.3.1</span> <span class="toctext">Global information</span></a></li>
-<li class="toclevel-3 tocsection-7"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Scene_specific_information"><span class="tocnumber">2.3.2</span> <span class="toctext">Scene specific information</span></a></li>
-<li class="toclevel-3 tocsection-8"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Components_of_a_.lxs_file"><span class="tocnumber">2.3.3</span> <span class="toctext">Components of a .lxs file</span></a></li>
-<li class="toclevel-3 tocsection-9"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Importance_of_parameter_types"><span class="tocnumber">2.3.4</span> <span class="toctext">Importance of parameter types</span></a></li>
+<li class="toclevel-3 tocsection-6"><a href="#Global_information"><span class="tocnumber">2.3.1</span> <span class="toctext">Global information</span></a></li>
+<li class="toclevel-3 tocsection-7"><a href="#Scene_specific_information"><span class="tocnumber">2.3.2</span> <span class="toctext">Scene specific information</span></a></li>
+<li class="toclevel-3 tocsection-8"><a href="#Components_of_a_.lxs_file"><span class="tocnumber">2.3.3</span> <span class="toctext">Components of a .lxs file</span></a></li>
+<li class="toclevel-3 tocsection-9"><a href="#Importance_of_parameter_types"><span class="tocnumber">2.3.4</span> <span class="toctext">Importance of parameter types</span></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toclevel-1 tocsection-10"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Transformations"><span class="tocnumber">3</span> <span class="toctext">Transformations</span></a></li>
-<li class="toclevel-1 tocsection-11"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Motion_Blur"><span class="tocnumber">4</span> <span class="toctext">Motion Blur</span></a></li>
-<li class="toclevel-1 tocsection-12"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Attributes"><span class="tocnumber">5</span> <span class="toctext">Attributes</span></a>
+<li class="toclevel-1 tocsection-10"><a href="#Transformations"><span class="tocnumber">3</span> <span class="toctext">Transformations</span></a></li>
+<li class="toclevel-1 tocsection-11"><a href="#Motion_Blur"><span class="tocnumber">4</span> <span class="toctext">Motion Blur</span></a></li>
+<li class="toclevel-1 tocsection-12"><a href="#Attributes"><span class="tocnumber">5</span> <span class="toctext">Attributes</span></a>
 <ul>
-<li class="toclevel-2 tocsection-13"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Using_the_attributes"><span class="tocnumber">5.1</span> <span class="toctext">Using the attributes</span></a></li>
+<li class="toclevel-2 tocsection-13"><a href="#Using_the_attributes"><span class="tocnumber">5.1</span> <span class="toctext">Using the attributes</span></a></li>
 </ul>
 </li>
-<li class="toclevel-1 tocsection-14"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Identifiers"><span class="tocnumber">6</span> <span class="toctext">Identifiers</span></a>
+<li class="toclevel-1 tocsection-14"><a href="#Identifiers"><span class="tocnumber">6</span> <span class="toctext">Identifiers</span></a>
 <ul>
-<li class="toclevel-2 tocsection-15"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Camera"><span class="tocnumber">6.1</span> <span class="toctext">Camera</span></a>
+<li class="toclevel-2 tocsection-15"><a href="#Camera"><span class="tocnumber">6.1</span> <span class="toctext">Camera</span></a>
 <ul>
-<li class="toclevel-3 tocsection-16"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Common_Camera_Parameters"><span class="tocnumber">6.1.1</span> <span class="toctext">Common Camera Parameters</span></a></li>
-<li class="toclevel-3 tocsection-17"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Specific_Camera_Parameters"><span class="tocnumber">6.1.2</span> <span class="toctext">Specific Camera Parameters</span></a>
+<li class="toclevel-3 tocsection-16"><a href="#Common_Camera_Parameters"><span class="tocnumber">6.1.1</span> <span class="toctext">Common Camera Parameters</span></a></li>
+<li class="toclevel-3 tocsection-17"><a href="#Specific_Camera_Parameters"><span class="tocnumber">6.1.2</span> <span class="toctext">Specific Camera Parameters</span></a>
 <ul>
-<li class="toclevel-4 tocsection-18"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#perspective"><span class="tocnumber">6.1.2.1</span> <span class="toctext">perspective</span></a></li>
-<li class="toclevel-4 tocsection-19"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#realistic"><span class="tocnumber">6.1.2.2</span> <span class="toctext">realistic</span></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toclevel-2 tocsection-20"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Sampler"><span class="tocnumber">6.2</span> <span class="toctext">Sampler</span></a>
-<ul>
-<li class="toclevel-3 tocsection-21"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Noise-aware_sampling"><span class="tocnumber">6.2.1</span> <span class="toctext">Noise-aware sampling</span></a>
-<ul>
-<li class="toclevel-4 tocsection-22"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Parameters"><span class="tocnumber">6.2.1.1</span> <span class="toctext">Parameters</span></a></li>
-</ul>
-</li>
-<li class="toclevel-3 tocsection-23"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Sampler_Parameters"><span class="tocnumber">6.2.2</span> <span class="toctext">Sampler Parameters</span></a>
-<ul>
-<li class="toclevel-4 tocsection-24"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#random"><span class="tocnumber">6.2.2.1</span> <span class="toctext">random</span></a></li>
-<li class="toclevel-4 tocsection-25"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#lowdiscrepancy"><span class="tocnumber">6.2.2.2</span> <span class="toctext">lowdiscrepancy</span></a></li>
-<li class="toclevel-4 tocsection-26"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#metropolis"><span class="tocnumber">6.2.2.3</span> <span class="toctext">metropolis</span></a></li>
-<li class="toclevel-4 tocsection-27"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#erpt"><span class="tocnumber">6.2.2.4</span> <span class="toctext">erpt</span></a></li>
+<li class="toclevel-4 tocsection-18"><a href="#perspective"><span class="tocnumber">6.1.2.1</span> <span class="toctext">perspective</span></a></li>
+<li class="toclevel-4 tocsection-19"><a href="#realistic"><span class="tocnumber">6.1.2.2</span> <span class="toctext">realistic</span></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toclevel-2 tocsection-28"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Film"><span class="tocnumber">6.3</span> <span class="toctext">Film</span></a>
+<li class="toclevel-2 tocsection-20"><a href="#Sampler"><span class="tocnumber">6.2</span> <span class="toctext">Sampler</span></a>
 <ul>
-<li class="toclevel-3 tocsection-29"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Specific_Film_Parameters"><span class="tocnumber">6.3.1</span> <span class="toctext">Specific Film Parameters</span></a>
+<li class="toclevel-3 tocsection-21"><a href="#Noise-aware_sampling"><span class="tocnumber">6.2.1</span> <span class="toctext">Noise-aware sampling</span></a>
 <ul>
-<li class="toclevel-4 tocsection-30"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#fleximage"><span class="tocnumber">6.3.1.1</span> <span class="toctext">fleximage</span></a></li>
+<li class="toclevel-4 tocsection-22"><a href="#Parameters"><span class="tocnumber">6.2.1.1</span> <span class="toctext">Parameters</span></a></li>
 </ul>
 </li>
-<li class="toclevel-3 tocsection-31"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Tonemapper_Parameters"><span class="tocnumber">6.3.2</span> <span class="toctext">Tonemapper Parameters</span></a>
+<li class="toclevel-3 tocsection-23"><a href="#Sampler_Parameters"><span class="tocnumber">6.2.2</span> <span class="toctext">Sampler Parameters</span></a>
 <ul>
-<li class="toclevel-4 tocsection-32"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#reinhard"><span class="tocnumber">6.3.2.1</span> <span class="toctext">reinhard</span></a></li>
-<li class="toclevel-4 tocsection-33"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#linear"><span class="tocnumber">6.3.2.2</span> <span class="toctext">linear</span></a></li>
-<li class="toclevel-4 tocsection-34"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#contrast"><span class="tocnumber">6.3.2.3</span> <span class="toctext">contrast</span></a></li>
-<li class="toclevel-4 tocsection-35"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#maxwhite"><span class="tocnumber">6.3.2.4</span> <span class="toctext">maxwhite</span></a></li>
-<li class="toclevel-4 tocsection-36"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#autolinear"><span class="tocnumber">6.3.2.5</span> <span class="toctext">autolinear</span></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toclevel-2 tocsection-37"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Filter"><span class="tocnumber">6.4</span> <span class="toctext">Filter</span></a>
-<ul>
-<li class="toclevel-3 tocsection-38"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Filter_Parameters"><span class="tocnumber">6.4.1</span> <span class="toctext">Filter Parameters</span></a>
-<ul>
-<li class="toclevel-4 tocsection-39"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#box"><span class="tocnumber">6.4.1.1</span> <span class="toctext">box</span></a></li>
-<li class="toclevel-4 tocsection-40"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#triangle"><span class="tocnumber">6.4.1.2</span> <span class="toctext">triangle</span></a></li>
-<li class="toclevel-4 tocsection-41"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#gaussian"><span class="tocnumber">6.4.1.3</span> <span class="toctext">gaussian</span></a></li>
-<li class="toclevel-4 tocsection-42"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#mitchell"><span class="tocnumber">6.4.1.4</span> <span class="toctext">mitchell</span></a></li>
-<li class="toclevel-4 tocsection-43"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#sinc"><span class="tocnumber">6.4.1.5</span> <span class="toctext">sinc</span></a></li>
+<li class="toclevel-4 tocsection-24"><a href="#random"><span class="tocnumber">6.2.2.1</span> <span class="toctext">random</span></a></li>
+<li class="toclevel-4 tocsection-25"><a href="#lowdiscrepancy"><span class="tocnumber">6.2.2.2</span> <span class="toctext">lowdiscrepancy</span></a></li>
+<li class="toclevel-4 tocsection-26"><a href="#metropolis"><span class="tocnumber">6.2.2.3</span> <span class="toctext">metropolis</span></a></li>
+<li class="toclevel-4 tocsection-27"><a href="#erpt"><span class="tocnumber">6.2.2.4</span> <span class="toctext">erpt</span></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toclevel-2 tocsection-44"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Renderer"><span class="tocnumber">6.5</span> <span class="toctext">Renderer</span></a></li>
-<li class="toclevel-2 tocsection-45"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Surface_Integrator"><span class="tocnumber">6.6</span> <span class="toctext">Surface Integrator</span></a>
+<li class="toclevel-2 tocsection-28"><a href="#Film"><span class="tocnumber">6.3</span> <span class="toctext">Film</span></a>
 <ul>
-<li class="toclevel-3 tocsection-46"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Common_Parameters"><span class="tocnumber">6.6.1</span> <span class="toctext">Common Parameters</span></a></li>
-<li class="toclevel-3 tocsection-47"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Specific_Surface_Integrator_Parameters"><span class="tocnumber">6.6.2</span> <span class="toctext">Specific Surface Integrator Parameters</span></a>
+<li class="toclevel-3 tocsection-29"><a href="#Specific_Film_Parameters"><span class="tocnumber">6.3.1</span> <span class="toctext">Specific Film Parameters</span></a>
 <ul>
-<li class="toclevel-4 tocsection-48"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Bidirectional"><span class="tocnumber">6.6.2.1</span> <span class="toctext">Bidirectional</span></a></li>
-<li class="toclevel-4 tocsection-49"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Path"><span class="tocnumber">6.6.2.2</span> <span class="toctext">Path</span></a></li>
-<li class="toclevel-4 tocsection-50"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Direct"><span class="tocnumber">6.6.2.3</span> <span class="toctext">Direct</span></a></li>
-<li class="toclevel-4 tocsection-51"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#SPPM"><span class="tocnumber">6.6.2.4</span> <span class="toctext">SPPM</span></a></li>
+<li class="toclevel-4 tocsection-30"><a href="#fleximage"><span class="tocnumber">6.3.1.1</span> <span class="toctext">fleximage</span></a></li>
+</ul>
+</li>
+<li class="toclevel-3 tocsection-31"><a href="#Tonemapper_Parameters"><span class="tocnumber">6.3.2</span> <span class="toctext">Tonemapper Parameters</span></a>
+<ul>
+<li class="toclevel-4 tocsection-32"><a href="#reinhard"><span class="tocnumber">6.3.2.1</span> <span class="toctext">reinhard</span></a></li>
+<li class="toclevel-4 tocsection-33"><a href="#linear"><span class="tocnumber">6.3.2.2</span> <span class="toctext">linear</span></a></li>
+<li class="toclevel-4 tocsection-34"><a href="#contrast"><span class="tocnumber">6.3.2.3</span> <span class="toctext">contrast</span></a></li>
+<li class="toclevel-4 tocsection-35"><a href="#maxwhite"><span class="tocnumber">6.3.2.4</span> <span class="toctext">maxwhite</span></a></li>
+<li class="toclevel-4 tocsection-36"><a href="#autolinear"><span class="tocnumber">6.3.2.5</span> <span class="toctext">autolinear</span></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toclevel-2 tocsection-52"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Volume_Integrator"><span class="tocnumber">6.7</span> <span class="toctext">Volume Integrator</span></a>
+<li class="toclevel-2 tocsection-37"><a href="#Filter"><span class="tocnumber">6.4</span> <span class="toctext">Filter</span></a>
 <ul>
-<li class="toclevel-3 tocsection-53"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Common_Parameters_2"><span class="tocnumber">6.7.1</span> <span class="toctext">Common Parameters</span></a></li>
+<li class="toclevel-3 tocsection-38"><a href="#Filter_Parameters"><span class="tocnumber">6.4.1</span> <span class="toctext">Filter Parameters</span></a>
+<ul>
+<li class="toclevel-4 tocsection-39"><a href="#box"><span class="tocnumber">6.4.1.1</span> <span class="toctext">box</span></a></li>
+<li class="toclevel-4 tocsection-40"><a href="#triangle"><span class="tocnumber">6.4.1.2</span> <span class="toctext">triangle</span></a></li>
+<li class="toclevel-4 tocsection-41"><a href="#gaussian"><span class="tocnumber">6.4.1.3</span> <span class="toctext">gaussian</span></a></li>
+<li class="toclevel-4 tocsection-42"><a href="#mitchell"><span class="tocnumber">6.4.1.4</span> <span class="toctext">mitchell</span></a></li>
+<li class="toclevel-4 tocsection-43"><a href="#sinc"><span class="tocnumber">6.4.1.5</span> <span class="toctext">sinc</span></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toclevel-1 tocsection-54"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Scene_specific_information_2"><span class="tocnumber">7</span> <span class="toctext">Scene specific information</span></a>
+<li class="toclevel-2 tocsection-44"><a href="#Renderer"><span class="tocnumber">6.5</span> <span class="toctext">Renderer</span></a></li>
+<li class="toclevel-2 tocsection-45"><a href="#Surface_Integrator"><span class="tocnumber">6.6</span> <span class="toctext">Surface Integrator</span></a>
 <ul>
-<li class="toclevel-2 tocsection-55"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#A_Word_on_Colors_and_Gamma"><span class="tocnumber">7.1</span> <span class="toctext">A Word on Colors and Gamma</span></a></li>
-<li class="toclevel-2 tocsection-56"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Light"><span class="tocnumber">7.2</span> <span class="toctext">Light</span></a>
+<li class="toclevel-3 tocsection-46"><a href="#Common_Parameters"><span class="tocnumber">6.6.1</span> <span class="toctext">Common Parameters</span></a></li>
+<li class="toclevel-3 tocsection-47"><a href="#Specific_Surface_Integrator_Parameters"><span class="tocnumber">6.6.2</span> <span class="toctext">Specific Surface Integrator Parameters</span></a>
 <ul>
-<li class="toclevel-3 tocsection-57"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Examples"><span class="tocnumber">7.2.1</span> <span class="toctext">Examples</span></a></li>
+<li class="toclevel-4 tocsection-48"><a href="#Bidirectional"><span class="tocnumber">6.6.2.1</span> <span class="toctext">Bidirectional</span></a></li>
+<li class="toclevel-4 tocsection-49"><a href="#Path"><span class="tocnumber">6.6.2.2</span> <span class="toctext">Path</span></a></li>
+<li class="toclevel-4 tocsection-50"><a href="#Direct"><span class="tocnumber">6.6.2.3</span> <span class="toctext">Direct</span></a></li>
+<li class="toclevel-4 tocsection-51"><a href="#SPPM"><span class="tocnumber">6.6.2.4</span> <span class="toctext">SPPM</span></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toclevel-2 tocsection-52"><a href="#Volume_Integrator"><span class="tocnumber">6.7</span> <span class="toctext">Volume Integrator</span></a>
+<ul>
+<li class="toclevel-3 tocsection-53"><a href="#Common_Parameters_2"><span class="tocnumber">6.7.1</span> <span class="toctext">Common Parameters</span></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-54"><a href="#Scene_specific_information_2"><span class="tocnumber">7</span> <span class="toctext">Scene specific information</span></a>
+<ul>
+<li class="toclevel-2 tocsection-55"><a href="#A_Word_on_Colors_and_Gamma"><span class="tocnumber">7.1</span> <span class="toctext">A Word on Colors and Gamma</span></a></li>
+<li class="toclevel-2 tocsection-56"><a href="#Light"><span class="tocnumber">7.2</span> <span class="toctext">Light</span></a>
+<ul>
+<li class="toclevel-3 tocsection-57"><a href="#Examples"><span class="tocnumber">7.2.1</span> <span class="toctext">Examples</span></a></li>
 <li class="toclevel-3 tocsection-58"><a href="./Scene_file_format_1.0_files/Scene_file_format_1.0.htm"><span class="tocnumber">7.2.2</span> <span class="toctext">Common Light Parameters</span></a></li>
-<li class="toclevel-3 tocsection-59"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Specific_Light_Parameters"><span class="tocnumber">7.2.3</span> <span class="toctext">Specific Light Parameters</span></a>
+<li class="toclevel-3 tocsection-59"><a href="#Specific_Light_Parameters"><span class="tocnumber">7.2.3</span> <span class="toctext">Specific Light Parameters</span></a>
 <ul>
-<li class="toclevel-4 tocsection-60"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Area"><span class="tocnumber">7.2.3.1</span> <span class="toctext">Area</span></a></li>
-<li class="toclevel-4 tocsection-61"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Distant"><span class="tocnumber">7.2.3.2</span> <span class="toctext">Distant</span></a></li>
-<li class="toclevel-4 tocsection-62"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Goniometric"><span class="tocnumber">7.2.3.3</span> <span class="toctext">Goniometric</span></a></li>
-<li class="toclevel-4 tocsection-63"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Infinite"><span class="tocnumber">7.2.3.4</span> <span class="toctext">Infinite</span></a></li>
-<li class="toclevel-4 tocsection-64"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Point"><span class="tocnumber">7.2.3.5</span> <span class="toctext">Point</span></a></li>
-<li class="toclevel-4 tocsection-65"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Projection"><span class="tocnumber">7.2.3.6</span> <span class="toctext">Projection</span></a></li>
-<li class="toclevel-4 tocsection-66"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Sky"><span class="tocnumber">7.2.3.7</span> <span class="toctext">Sky</span></a></li>
-<li class="toclevel-4 tocsection-67"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Sky2"><span class="tocnumber">7.2.3.8</span> <span class="toctext">Sky2</span></a></li>
-<li class="toclevel-4 tocsection-68"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Spot"><span class="tocnumber">7.2.3.9</span> <span class="toctext">Spot</span></a></li>
-<li class="toclevel-4 tocsection-69"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Sun"><span class="tocnumber">7.2.3.10</span> <span class="toctext">Sun</span></a></li>
+<li class="toclevel-4 tocsection-60"><a href="#Area"><span class="tocnumber">7.2.3.1</span> <span class="toctext">Area</span></a></li>
+<li class="toclevel-4 tocsection-61"><a href="#Distant"><span class="tocnumber">7.2.3.2</span> <span class="toctext">Distant</span></a></li>
+<li class="toclevel-4 tocsection-62"><a href="#Goniometric"><span class="tocnumber">7.2.3.3</span> <span class="toctext">Goniometric</span></a></li>
+<li class="toclevel-4 tocsection-63"><a href="#Infinite"><span class="tocnumber">7.2.3.4</span> <span class="toctext">Infinite</span></a></li>
+<li class="toclevel-4 tocsection-64"><a href="#Point"><span class="tocnumber">7.2.3.5</span> <span class="toctext">Point</span></a></li>
+<li class="toclevel-4 tocsection-65"><a href="#Projection"><span class="tocnumber">7.2.3.6</span> <span class="toctext">Projection</span></a></li>
+<li class="toclevel-4 tocsection-66"><a href="#Sky"><span class="tocnumber">7.2.3.7</span> <span class="toctext">Sky</span></a></li>
+<li class="toclevel-4 tocsection-67"><a href="#Sky2"><span class="tocnumber">7.2.3.8</span> <span class="toctext">Sky2</span></a></li>
+<li class="toclevel-4 tocsection-68"><a href="#Spot"><span class="tocnumber">7.2.3.9</span> <span class="toctext">Spot</span></a></li>
+<li class="toclevel-4 tocsection-69"><a href="#Sun"><span class="tocnumber">7.2.3.10</span> <span class="toctext">Sun</span></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toclevel-2 tocsection-70"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Attaching_Materials.2C_Volumes.2C_and_Lights"><span class="tocnumber">7.3</span> <span class="toctext">Attaching Materials, Volumes, and Lights</span></a></li>
-<li class="toclevel-2 tocsection-71"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Shape"><span class="tocnumber">7.4</span> <span class="toctext">Shape</span></a>
+<li class="toclevel-2 tocsection-70"><a href="#Attaching_Materials.2C_Volumes.2C_and_Lights"><span class="tocnumber">7.3</span> <span class="toctext">Attaching Materials, Volumes, and Lights</span></a></li>
+<li class="toclevel-2 tocsection-71"><a href="#Shape"><span class="tocnumber">7.4</span> <span class="toctext">Shape</span></a>
 <ul>
-<li class="toclevel-3 tocsection-72"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Common_Shape_Parameters"><span class="tocnumber">7.4.1</span> <span class="toctext">Common Shape Parameters</span></a></li>
-<li class="toclevel-3 tocsection-73"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Common_Mesh_Shape_Parameters"><span class="tocnumber">7.4.2</span> <span class="toctext">Common Mesh Shape Parameters</span></a></li>
-<li class="toclevel-3 tocsection-74"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Specific_Shape_Parameters"><span class="tocnumber">7.4.3</span> <span class="toctext">Specific Shape Parameters</span></a>
+<li class="toclevel-3 tocsection-72"><a href="#Common_Shape_Parameters"><span class="tocnumber">7.4.1</span> <span class="toctext">Common Shape Parameters</span></a></li>
+<li class="toclevel-3 tocsection-73"><a href="#Common_Mesh_Shape_Parameters"><span class="tocnumber">7.4.2</span> <span class="toctext">Common Mesh Shape Parameters</span></a></li>
+<li class="toclevel-3 tocsection-74"><a href="#Specific_Shape_Parameters"><span class="tocnumber">7.4.3</span> <span class="toctext">Specific Shape Parameters</span></a>
 <ul>
-<li class="toclevel-4 tocsection-75"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Cone"><span class="tocnumber">7.4.3.1</span> <span class="toctext">Cone</span></a></li>
-<li class="toclevel-4 tocsection-76"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Cylinder"><span class="tocnumber">7.4.3.2</span> <span class="toctext">Cylinder</span></a></li>
-<li class="toclevel-4 tocsection-77"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Disk"><span class="tocnumber">7.4.3.3</span> <span class="toctext">Disk</span></a></li>
-<li class="toclevel-4 tocsection-78"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Height_Field"><span class="tocnumber">7.4.3.4</span> <span class="toctext">Height Field</span></a></li>
-<li class="toclevel-4 tocsection-79"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Hyperboloid"><span class="tocnumber">7.4.3.5</span> <span class="toctext">Hyperboloid</span></a></li>
-<li class="toclevel-4 tocsection-80"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Subdivision_Surfaces"><span class="tocnumber">7.4.3.6</span> <span class="toctext">Subdivision Surfaces</span></a></li>
-<li class="toclevel-4 tocsection-81"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Lens_Component"><span class="tocnumber">7.4.3.7</span> <span class="toctext">Lens Component</span></a></li>
-<li class="toclevel-4 tocsection-82"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#NURBS"><span class="tocnumber">7.4.3.8</span> <span class="toctext">NURBS</span></a></li>
-<li class="toclevel-4 tocsection-83"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Paraboloid"><span class="tocnumber">7.4.3.9</span> <span class="toctext">Paraboloid</span></a></li>
-<li class="toclevel-4 tocsection-84"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#PLY_Mesh_Loader"><span class="tocnumber">7.4.3.10</span> <span class="toctext">PLY Mesh Loader</span></a></li>
-<li class="toclevel-4 tocsection-85"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#STL_Mesh_Loader"><span class="tocnumber">7.4.3.11</span> <span class="toctext">STL Mesh Loader</span></a></li>
-<li class="toclevel-4 tocsection-86"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Sphere"><span class="tocnumber">7.4.3.12</span> <span class="toctext">Sphere</span></a></li>
-<li class="toclevel-4 tocsection-87"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Triangle_Mesh"><span class="tocnumber">7.4.3.13</span> <span class="toctext">Triangle Mesh</span></a></li>
-<li class="toclevel-4 tocsection-88"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Mesh"><span class="tocnumber">7.4.3.14</span> <span class="toctext">Mesh</span></a></li>
+<li class="toclevel-4 tocsection-75"><a href="#Cone"><span class="tocnumber">7.4.3.1</span> <span class="toctext">Cone</span></a></li>
+<li class="toclevel-4 tocsection-76"><a href="#Cylinder"><span class="tocnumber">7.4.3.2</span> <span class="toctext">Cylinder</span></a></li>
+<li class="toclevel-4 tocsection-77"><a href="#Disk"><span class="tocnumber">7.4.3.3</span> <span class="toctext">Disk</span></a></li>
+<li class="toclevel-4 tocsection-78"><a href="#Height_Field"><span class="tocnumber">7.4.3.4</span> <span class="toctext">Height Field</span></a></li>
+<li class="toclevel-4 tocsection-79"><a href="#Hyperboloid"><span class="tocnumber">7.4.3.5</span> <span class="toctext">Hyperboloid</span></a></li>
+<li class="toclevel-4 tocsection-80"><a href="#Subdivision_Surfaces"><span class="tocnumber">7.4.3.6</span> <span class="toctext">Subdivision Surfaces</span></a></li>
+<li class="toclevel-4 tocsection-81"><a href="#Lens_Component"><span class="tocnumber">7.4.3.7</span> <span class="toctext">Lens Component</span></a></li>
+<li class="toclevel-4 tocsection-82"><a href="#NURBS"><span class="tocnumber">7.4.3.8</span> <span class="toctext">NURBS</span></a></li>
+<li class="toclevel-4 tocsection-83"><a href="#Paraboloid"><span class="tocnumber">7.4.3.9</span> <span class="toctext">Paraboloid</span></a></li>
+<li class="toclevel-4 tocsection-84"><a href="#PLY_Mesh_Loader"><span class="tocnumber">7.4.3.10</span> <span class="toctext">PLY Mesh Loader</span></a></li>
+<li class="toclevel-4 tocsection-85"><a href="#STL_Mesh_Loader"><span class="tocnumber">7.4.3.11</span> <span class="toctext">STL Mesh Loader</span></a></li>
+<li class="toclevel-4 tocsection-86"><a href="#Sphere"><span class="tocnumber">7.4.3.12</span> <span class="toctext">Sphere</span></a></li>
+<li class="toclevel-4 tocsection-87"><a href="#Triangle_Mesh"><span class="tocnumber">7.4.3.13</span> <span class="toctext">Triangle Mesh</span></a></li>
+<li class="toclevel-4 tocsection-88"><a href="#Mesh"><span class="tocnumber">7.4.3.14</span> <span class="toctext">Mesh</span></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toclevel-2 tocsection-89"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Material"><span class="tocnumber">7.5</span> <span class="toctext">Material</span></a>
+<li class="toclevel-2 tocsection-89"><a href="#Material"><span class="tocnumber">7.5</span> <span class="toctext">Material</span></a>
 <ul>
-<li class="toclevel-3 tocsection-90"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Common_Material_Parameters"><span class="tocnumber">7.5.1</span> <span class="toctext">Common Material Parameters</span></a></li>
-<li class="toclevel-3 tocsection-91"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Integrator_Dependant_Parameters"><span class="tocnumber">7.5.2</span> <span class="toctext">Integrator Dependant Parameters</span></a></li>
-<li class="toclevel-3 tocsection-92"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Specific_Material_Parameters"><span class="tocnumber">7.5.3</span> <span class="toctext">Specific Material Parameters</span></a>
+<li class="toclevel-3 tocsection-90"><a href="#Common_Material_Parameters"><span class="tocnumber">7.5.1</span> <span class="toctext">Common Material Parameters</span></a></li>
+<li class="toclevel-3 tocsection-91"><a href="#Integrator_Dependant_Parameters"><span class="tocnumber">7.5.2</span> <span class="toctext">Integrator Dependant Parameters</span></a></li>
+<li class="toclevel-3 tocsection-92"><a href="#Specific_Material_Parameters"><span class="tocnumber">7.5.3</span> <span class="toctext">Specific Material Parameters</span></a>
 <ul>
-<li class="toclevel-4 tocsection-93"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Car_Paint"><span class="tocnumber">7.5.3.1</span> <span class="toctext">Car Paint</span></a></li>
-<li class="toclevel-4 tocsection-94"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Cloth"><span class="tocnumber">7.5.3.2</span> <span class="toctext">Cloth</span></a></li>
-<li class="toclevel-4 tocsection-95"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Glass"><span class="tocnumber">7.5.3.3</span> <span class="toctext">Glass</span></a></li>
-<li class="toclevel-4 tocsection-96"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Glass2"><span class="tocnumber">7.5.3.4</span> <span class="toctext">Glass2</span></a></li>
-<li class="toclevel-4 tocsection-97"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Glossy"><span class="tocnumber">7.5.3.5</span> <span class="toctext">Glossy</span></a></li>
-<li class="toclevel-4 tocsection-98"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Glossycoating"><span class="tocnumber">7.5.3.6</span> <span class="toctext">Glossycoating</span></a></li>
-<li class="toclevel-4 tocsection-99"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#GlossyTranslucent"><span class="tocnumber">7.5.3.7</span> <span class="toctext">GlossyTranslucent</span></a></li>
-<li class="toclevel-4 tocsection-100"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Layered"><span class="tocnumber">7.5.3.8</span> <span class="toctext">Layered</span></a></li>
-<li class="toclevel-4 tocsection-101"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Matte"><span class="tocnumber">7.5.3.9</span> <span class="toctext">Matte</span></a></li>
-<li class="toclevel-4 tocsection-102"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#MatteTranslucent"><span class="tocnumber">7.5.3.10</span> <span class="toctext">MatteTranslucent</span></a></li>
-<li class="toclevel-4 tocsection-103"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Metal"><span class="tocnumber">7.5.3.11</span> <span class="toctext">Metal</span></a></li>
-<li class="toclevel-4 tocsection-104"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Metal2"><span class="tocnumber">7.5.3.12</span> <span class="toctext">Metal2</span></a></li>
-<li class="toclevel-4 tocsection-105"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Mirror"><span class="tocnumber">7.5.3.13</span> <span class="toctext">Mirror</span></a></li>
-<li class="toclevel-4 tocsection-106"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Mix"><span class="tocnumber">7.5.3.14</span> <span class="toctext">Mix</span></a></li>
-<li class="toclevel-4 tocsection-107"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Null"><span class="tocnumber">7.5.3.15</span> <span class="toctext">Null</span></a></li>
-<li class="toclevel-4 tocsection-108"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Rough_Glass"><span class="tocnumber">7.5.3.16</span> <span class="toctext">Rough Glass</span></a></li>
-<li class="toclevel-4 tocsection-109"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Shiny_Metal"><span class="tocnumber">7.5.3.17</span> <span class="toctext">Shiny Metal</span></a></li>
-<li class="toclevel-4 tocsection-110"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Scatter"><span class="tocnumber">7.5.3.18</span> <span class="toctext">Scatter</span></a></li>
-<li class="toclevel-4 tocsection-111"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Velvet"><span class="tocnumber">7.5.3.19</span> <span class="toctext">Velvet</span></a></li>
+<li class="toclevel-4 tocsection-93"><a href="#Car_Paint"><span class="tocnumber">7.5.3.1</span> <span class="toctext">Car Paint</span></a></li>
+<li class="toclevel-4 tocsection-94"><a href="#Cloth"><span class="tocnumber">7.5.3.2</span> <span class="toctext">Cloth</span></a></li>
+<li class="toclevel-4 tocsection-95"><a href="#Glass"><span class="tocnumber">7.5.3.3</span> <span class="toctext">Glass</span></a></li>
+<li class="toclevel-4 tocsection-96"><a href="#Glass2"><span class="tocnumber">7.5.3.4</span> <span class="toctext">Glass2</span></a></li>
+<li class="toclevel-4 tocsection-97"><a href="#Glossy"><span class="tocnumber">7.5.3.5</span> <span class="toctext">Glossy</span></a></li>
+<li class="toclevel-4 tocsection-98"><a href="#Glossycoating"><span class="tocnumber">7.5.3.6</span> <span class="toctext">Glossycoating</span></a></li>
+<li class="toclevel-4 tocsection-99"><a href="#GlossyTranslucent"><span class="tocnumber">7.5.3.7</span> <span class="toctext">GlossyTranslucent</span></a></li>
+<li class="toclevel-4 tocsection-100"><a href="#Layered"><span class="tocnumber">7.5.3.8</span> <span class="toctext">Layered</span></a></li>
+<li class="toclevel-4 tocsection-101"><a href="#Matte"><span class="tocnumber">7.5.3.9</span> <span class="toctext">Matte</span></a></li>
+<li class="toclevel-4 tocsection-102"><a href="#MatteTranslucent"><span class="tocnumber">7.5.3.10</span> <span class="toctext">MatteTranslucent</span></a></li>
+<li class="toclevel-4 tocsection-103"><a href="#Metal"><span class="tocnumber">7.5.3.11</span> <span class="toctext">Metal</span></a></li>
+<li class="toclevel-4 tocsection-104"><a href="#Metal2"><span class="tocnumber">7.5.3.12</span> <span class="toctext">Metal2</span></a></li>
+<li class="toclevel-4 tocsection-105"><a href="#Mirror"><span class="tocnumber">7.5.3.13</span> <span class="toctext">Mirror</span></a></li>
+<li class="toclevel-4 tocsection-106"><a href="#Mix"><span class="tocnumber">7.5.3.14</span> <span class="toctext">Mix</span></a></li>
+<li class="toclevel-4 tocsection-107"><a href="#Null"><span class="tocnumber">7.5.3.15</span> <span class="toctext">Null</span></a></li>
+<li class="toclevel-4 tocsection-108"><a href="#Rough_Glass"><span class="tocnumber">7.5.3.16</span> <span class="toctext">Rough Glass</span></a></li>
+<li class="toclevel-4 tocsection-109"><a href="#Shiny_Metal"><span class="tocnumber">7.5.3.17</span> <span class="toctext">Shiny Metal</span></a></li>
+<li class="toclevel-4 tocsection-110"><a href="#Scatter"><span class="tocnumber">7.5.3.18</span> <span class="toctext">Scatter</span></a></li>
+<li class="toclevel-4 tocsection-111"><a href="#Velvet"><span class="tocnumber">7.5.3.19</span> <span class="toctext">Velvet</span></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toclevel-2 tocsection-112"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Texture"><span class="tocnumber">7.6</span> <span class="toctext">Texture</span></a>
+<li class="toclevel-2 tocsection-112"><a href="#Texture"><span class="tocnumber">7.6</span> <span class="toctext">Texture</span></a>
 <ul>
-<li class="toclevel-3 tocsection-113"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#General_Syntax"><span class="tocnumber">7.6.1</span> <span class="toctext">General Syntax</span></a></li>
-<li class="toclevel-3 tocsection-114"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Texture_Types"><span class="tocnumber">7.6.2</span> <span class="toctext">Texture Types</span></a></li>
-<li class="toclevel-3 tocsection-115"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Common_Texture_Parameters_.282D.29"><span class="tocnumber">7.6.3</span> <span class="toctext">Common Texture Parameters (2D)</span></a></li>
-<li class="toclevel-3 tocsection-116"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Common_Texture_Paramaters_.283D.29"><span class="tocnumber">7.6.4</span> <span class="toctext">Common Texture Paramaters (3D)</span></a></li>
-<li class="toclevel-3 tocsection-117"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Specific_Texture_Parameters"><span class="tocnumber">7.6.5</span> <span class="toctext">Specific Texture Parameters</span></a>
+<li class="toclevel-3 tocsection-113"><a href="#General_Syntax"><span class="tocnumber">7.6.1</span> <span class="toctext">General Syntax</span></a></li>
+<li class="toclevel-3 tocsection-114"><a href="#Texture_Types"><span class="tocnumber">7.6.2</span> <span class="toctext">Texture Types</span></a></li>
+<li class="toclevel-3 tocsection-115"><a href="#Common_Texture_Parameters_.282D.29"><span class="tocnumber">7.6.3</span> <span class="toctext">Common Texture Parameters (2D)</span></a></li>
+<li class="toclevel-3 tocsection-116"><a href="#Common_Texture_Paramaters_.283D.29"><span class="tocnumber">7.6.4</span> <span class="toctext">Common Texture Paramaters (3D)</span></a></li>
+<li class="toclevel-3 tocsection-117"><a href="#Specific_Texture_Parameters"><span class="tocnumber">7.6.5</span> <span class="toctext">Specific Texture Parameters</span></a>
 <ul>
-<li class="toclevel-4 tocsection-118"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#add"><span class="tocnumber">7.6.5.1</span> <span class="toctext">add</span></a></li>
-<li class="toclevel-4 tocsection-119"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#band"><span class="tocnumber">7.6.5.2</span> <span class="toctext">band</span></a></li>
-<li class="toclevel-4 tocsection-120"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#bilerp"><span class="tocnumber">7.6.5.3</span> <span class="toctext">bilerp</span></a></li>
-<li class="toclevel-4 tocsection-121"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#brick"><span class="tocnumber">7.6.5.4</span> <span class="toctext">brick</span></a></li>
-<li class="toclevel-4 tocsection-122"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#checkerboard"><span class="tocnumber">7.6.5.5</span> <span class="toctext">checkerboard</span></a></li>
-<li class="toclevel-4 tocsection-123"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#colordepth"><span class="tocnumber">7.6.5.6</span> <span class="toctext">colordepth</span></a></li>
-<li class="toclevel-4 tocsection-124"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#dots"><span class="tocnumber">7.6.5.7</span> <span class="toctext">dots</span></a></li>
-<li class="toclevel-4 tocsection-125"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#fbm"><span class="tocnumber">7.6.5.8</span> <span class="toctext">fbm</span></a></li>
-<li class="toclevel-4 tocsection-126"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#fresnelname"><span class="tocnumber">7.6.5.9</span> <span class="toctext">fresnelname</span></a></li>
-<li class="toclevel-4 tocsection-127"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#fresnelcolor"><span class="tocnumber">7.6.5.10</span> <span class="toctext">fresnelcolor</span></a></li>
-<li class="toclevel-4 tocsection-128"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#gaussian_2"><span class="tocnumber">7.6.5.11</span> <span class="toctext">gaussian</span></a></li>
-<li class="toclevel-4 tocsection-129"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#imagemap"><span class="tocnumber">7.6.5.12</span> <span class="toctext">imagemap</span></a></li>
-<li class="toclevel-4 tocsection-130"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#marble"><span class="tocnumber">7.6.5.13</span> <span class="toctext">marble</span></a></li>
-<li class="toclevel-4 tocsection-131"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#mix_2"><span class="tocnumber">7.6.5.14</span> <span class="toctext">mix</span></a></li>
-<li class="toclevel-4 tocsection-132"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#normalmap"><span class="tocnumber">7.6.5.15</span> <span class="toctext">normalmap</span></a></li>
-<li class="toclevel-4 tocsection-133"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#scale"><span class="tocnumber">7.6.5.16</span> <span class="toctext">scale</span></a></li>
-<li class="toclevel-4 tocsection-134"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#subtract"><span class="tocnumber">7.6.5.17</span> <span class="toctext">subtract</span></a></li>
-<li class="toclevel-4 tocsection-135"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#tabulateddata"><span class="tocnumber">7.6.5.18</span> <span class="toctext">tabulateddata</span></a></li>
-<li class="toclevel-4 tocsection-136"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#windy"><span class="tocnumber">7.6.5.19</span> <span class="toctext">windy</span></a></li>
-<li class="toclevel-4 tocsection-137"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#wrinkled"><span class="tocnumber">7.6.5.20</span> <span class="toctext">wrinkled</span></a></li>
+<li class="toclevel-4 tocsection-118"><a href="#add"><span class="tocnumber">7.6.5.1</span> <span class="toctext">add</span></a></li>
+<li class="toclevel-4 tocsection-119"><a href="#band"><span class="tocnumber">7.6.5.2</span> <span class="toctext">band</span></a></li>
+<li class="toclevel-4 tocsection-120"><a href="#bilerp"><span class="tocnumber">7.6.5.3</span> <span class="toctext">bilerp</span></a></li>
+<li class="toclevel-4 tocsection-121"><a href="#brick"><span class="tocnumber">7.6.5.4</span> <span class="toctext">brick</span></a></li>
+<li class="toclevel-4 tocsection-122"><a href="#checkerboard"><span class="tocnumber">7.6.5.5</span> <span class="toctext">checkerboard</span></a></li>
+<li class="toclevel-4 tocsection-123"><a href="#colordepth"><span class="tocnumber">7.6.5.6</span> <span class="toctext">colordepth</span></a></li>
+<li class="toclevel-4 tocsection-124"><a href="#dots"><span class="tocnumber">7.6.5.7</span> <span class="toctext">dots</span></a></li>
+<li class="toclevel-4 tocsection-125"><a href="#fbm"><span class="tocnumber">7.6.5.8</span> <span class="toctext">fbm</span></a></li>
+<li class="toclevel-4 tocsection-126"><a href="#fresnelname"><span class="tocnumber">7.6.5.9</span> <span class="toctext">fresnelname</span></a></li>
+<li class="toclevel-4 tocsection-127"><a href="#fresnelcolor"><span class="tocnumber">7.6.5.10</span> <span class="toctext">fresnelcolor</span></a></li>
+<li class="toclevel-4 tocsection-128"><a href="#gaussian_2"><span class="tocnumber">7.6.5.11</span> <span class="toctext">gaussian</span></a></li>
+<li class="toclevel-4 tocsection-129"><a href="#imagemap"><span class="tocnumber">7.6.5.12</span> <span class="toctext">imagemap</span></a></li>
+<li class="toclevel-4 tocsection-130"><a href="#marble"><span class="tocnumber">7.6.5.13</span> <span class="toctext">marble</span></a></li>
+<li class="toclevel-4 tocsection-131"><a href="#mix_2"><span class="tocnumber">7.6.5.14</span> <span class="toctext">mix</span></a></li>
+<li class="toclevel-4 tocsection-132"><a href="#normalmap"><span class="tocnumber">7.6.5.15</span> <span class="toctext">normalmap</span></a></li>
+<li class="toclevel-4 tocsection-133"><a href="#scale"><span class="tocnumber">7.6.5.16</span> <span class="toctext">scale</span></a></li>
+<li class="toclevel-4 tocsection-134"><a href="#subtract"><span class="tocnumber">7.6.5.17</span> <span class="toctext">subtract</span></a></li>
+<li class="toclevel-4 tocsection-135"><a href="#tabulateddata"><span class="tocnumber">7.6.5.18</span> <span class="toctext">tabulateddata</span></a></li>
+<li class="toclevel-4 tocsection-136"><a href="#windy"><span class="tocnumber">7.6.5.19</span> <span class="toctext">windy</span></a></li>
+<li class="toclevel-4 tocsection-137"><a href="#wrinkled"><span class="tocnumber">7.6.5.20</span> <span class="toctext">wrinkled</span></a></li>
 </ul>
 </li>
-<li class="toclevel-3 tocsection-138"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Blender_procedural_textures_emulation"><span class="tocnumber">7.6.6</span> <span class="toctext">Blender procedural textures emulation</span></a>
+<li class="toclevel-3 tocsection-138"><a href="#Blender_procedural_textures_emulation"><span class="tocnumber">7.6.6</span> <span class="toctext">Blender procedural textures emulation</span></a>
 <ul>
-<li class="toclevel-4 tocsection-139"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#blender_clouds"><span class="tocnumber">7.6.6.1</span> <span class="toctext">blender_clouds</span></a></li>
-<li class="toclevel-4 tocsection-140"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#blender_distortednoise"><span class="tocnumber">7.6.6.2</span> <span class="toctext">blender_distortednoise</span></a></li>
-<li class="toclevel-4 tocsection-141"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#blender_magic"><span class="tocnumber">7.6.6.3</span> <span class="toctext">blender_magic</span></a></li>
-<li class="toclevel-4 tocsection-142"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#blender_marble"><span class="tocnumber">7.6.6.4</span> <span class="toctext">blender_marble</span></a></li>
-<li class="toclevel-4 tocsection-143"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#blender_musgrave"><span class="tocnumber">7.6.6.5</span> <span class="toctext">blender_musgrave</span></a></li>
-<li class="toclevel-4 tocsection-144"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#blender_noise"><span class="tocnumber">7.6.6.6</span> <span class="toctext">blender_noise</span></a></li>
-<li class="toclevel-4 tocsection-145"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#blender_stucci"><span class="tocnumber">7.6.6.7</span> <span class="toctext">blender_stucci</span></a></li>
-<li class="toclevel-4 tocsection-146"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#blender_wood"><span class="tocnumber">7.6.6.8</span> <span class="toctext">blender_wood</span></a></li>
-<li class="toclevel-4 tocsection-147"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#blender_voronoi"><span class="tocnumber">7.6.6.9</span> <span class="toctext">blender_voronoi</span></a></li>
+<li class="toclevel-4 tocsection-139"><a href="#blender_clouds"><span class="tocnumber">7.6.6.1</span> <span class="toctext">blender_clouds</span></a></li>
+<li class="toclevel-4 tocsection-140"><a href="#blender_distortednoise"><span class="tocnumber">7.6.6.2</span> <span class="toctext">blender_distortednoise</span></a></li>
+<li class="toclevel-4 tocsection-141"><a href="#blender_magic"><span class="tocnumber">7.6.6.3</span> <span class="toctext">blender_magic</span></a></li>
+<li class="toclevel-4 tocsection-142"><a href="#blender_marble"><span class="tocnumber">7.6.6.4</span> <span class="toctext">blender_marble</span></a></li>
+<li class="toclevel-4 tocsection-143"><a href="#blender_musgrave"><span class="tocnumber">7.6.6.5</span> <span class="toctext">blender_musgrave</span></a></li>
+<li class="toclevel-4 tocsection-144"><a href="#blender_noise"><span class="tocnumber">7.6.6.6</span> <span class="toctext">blender_noise</span></a></li>
+<li class="toclevel-4 tocsection-145"><a href="#blender_stucci"><span class="tocnumber">7.6.6.7</span> <span class="toctext">blender_stucci</span></a></li>
+<li class="toclevel-4 tocsection-146"><a href="#blender_wood"><span class="tocnumber">7.6.6.8</span> <span class="toctext">blender_wood</span></a></li>
+<li class="toclevel-4 tocsection-147"><a href="#blender_voronoi"><span class="tocnumber">7.6.6.9</span> <span class="toctext">blender_voronoi</span></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toclevel-2 tocsection-148"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#PBRT_Volumes_.28deprecated.29"><span class="tocnumber">7.7</span> <span class="toctext">PBRT Volumes (deprecated)</span></a>
+<li class="toclevel-2 tocsection-148"><a href="#PBRT_Volumes_.28deprecated.29"><span class="tocnumber">7.7</span> <span class="toctext">PBRT Volumes (deprecated)</span></a>
 <ul>
-<li class="toclevel-3 tocsection-149"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Common_Volume_Parameters"><span class="tocnumber">7.7.1</span> <span class="toctext">Common Volume Parameters</span></a></li>
-<li class="toclevel-3 tocsection-150"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Specific_Volume_Parameters"><span class="tocnumber">7.7.2</span> <span class="toctext">Specific Volume Parameters</span></a></li>
+<li class="toclevel-3 tocsection-149"><a href="#Common_Volume_Parameters"><span class="tocnumber">7.7.1</span> <span class="toctext">Common Volume Parameters</span></a></li>
+<li class="toclevel-3 tocsection-150"><a href="#Specific_Volume_Parameters"><span class="tocnumber">7.7.2</span> <span class="toctext">Specific Volume Parameters</span></a></li>
 </ul>
 </li>
-<li class="toclevel-2 tocsection-151"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Mediums_.28Object_Volumes.29"><span class="tocnumber">7.8</span> <span class="toctext">Mediums (Object Volumes)</span></a>
+<li class="toclevel-2 tocsection-151"><a href="#Mediums_.28Object_Volumes.29"><span class="tocnumber">7.8</span> <span class="toctext">Mediums (Object Volumes)</span></a>
 <ul>
-<li class="toclevel-3 tocsection-152"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Example"><span class="tocnumber">7.8.1</span> <span class="toctext">Example</span></a></li>
-<li class="toclevel-3 tocsection-153"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Common_Medium_Parameters"><span class="tocnumber">7.8.2</span> <span class="toctext">Common Medium Parameters</span></a></li>
-<li class="toclevel-3 tocsection-154"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Specific_Medium_Parameters"><span class="tocnumber">7.8.3</span> <span class="toctext">Specific Medium Parameters</span></a>
+<li class="toclevel-3 tocsection-152"><a href="#Example"><span class="tocnumber">7.8.1</span> <span class="toctext">Example</span></a></li>
+<li class="toclevel-3 tocsection-153"><a href="#Common_Medium_Parameters"><span class="tocnumber">7.8.2</span> <span class="toctext">Common Medium Parameters</span></a></li>
+<li class="toclevel-3 tocsection-154"><a href="#Specific_Medium_Parameters"><span class="tocnumber">7.8.3</span> <span class="toctext">Specific Medium Parameters</span></a>
 <ul>
-<li class="toclevel-4 tocsection-155"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#clear"><span class="tocnumber">7.8.3.1</span> <span class="toctext">clear</span></a></li>
-<li class="toclevel-4 tocsection-156"><a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#homogeneous"><span class="tocnumber">7.8.3.2</span> <span class="toctext">homogeneous</span></a></li>
+<li class="toclevel-4 tocsection-155"><a href="#clear"><span class="tocnumber">7.8.3.1</span> <span class="toctext">clear</span></a></li>
+<li class="toclevel-4 tocsection-156"><a href="#homogeneous"><span class="tocnumber">7.8.3.2</span> <span class="toctext">homogeneous</span></a></li>
 </ul>
 </li>
 </ul>
@@ -2679,7 +2654,7 @@ LightSource TYPE &lt;parameters&gt;
 </p>
 <pre>NamedMaterial "examplematerial"
 </pre>
-<p>Where "examplematerial" is a material defined by a MakeNamedMaterial statement. See <a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Material" title="Scene file format 1.0">Materials</a> for more info.
+<p>Where "examplematerial" is a material defined by a MakeNamedMaterial statement. See <a href="#Material" title="Scene file format 1.0">Materials</a> for more info.
 </p><p>There are 3 possible commands, any or all can be used on a particular object:
 </p>
 <ul><li>NamedMaterial (surface shader, this should always be used)
@@ -5599,7 +5574,7 @@ MakeNamedMaterial "mat_proc" "string type" ["matte"] "texture Kd" ["mat_proc::Kd
 <th>default value
 </th></tr></tbody></table>
 <h2> <span class="mw-headline" id="PBRT_Volumes_.28deprecated.29">PBRT Volumes (deprecated)</span></h2>
-<p><i>These volume types are deprecated! Instead you should use normal shapes with Interior/Exterior defined. See <a href="http://www.luxrender.net/wiki/Scene_file_format_1.0#Mediums_.28Object_Volumes.29" title="Scene file format 1.0">Mediums</a> for more information.</i>
+<p><i>These volume types are deprecated! Instead you should use normal shapes with Interior/Exterior defined. See <a href="#Mediums_.28Object_Volumes.29" title="Scene file format 1.0">Mediums</a> for more information.</i>
 </p><p>Here are the volume types. There is no default type.
 </p>
 <ul><li><b>exponential</b>
@@ -5807,7 +5782,7 @@ Expensive parser function count: 0/100
 
 <!-- Saved in parser cache with key lux_wiki-mw_:pcache:idhash:1383-0!1!0!!en!*!edit=0 and timestamp 20131115081755 -->
 <div class="printfooter">
-Retrieved from "<a href="http://www.luxrender.net/wiki/Scene_file_format_1.0">http://www.luxrender.net/wiki/Scene_file_format_1.0</a>"</div>
+Retrieved from "<a href=""></a>"</div>
 				<div id="catlinks"><div id="catlinks" class="catlinks catlinks-allhidden"></div></div>				<!-- end content -->
 			</div>
 		</div>
