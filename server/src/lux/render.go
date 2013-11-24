@@ -24,9 +24,8 @@ type RenderError struct {
 func (a RenderError) Error() string {
 	if a.CausedBy != nil {
 		return a.Cause + "[" + a.CausedBy.Error() + "]"
-	} else {
-		return a.Cause
 	}
+	return a.Cause
 }
 
 // DoRender takes file names of scene itself, where to put the resulting png and where to dump stderr and stdout of the renderer.
@@ -64,7 +63,7 @@ func DoRender(scene, output_png, output_log  string) error {
 		return err
 	}
 
-	cmd := exec.Command(path, scene, "-o", output_base)
+	cmd := exec.Command(path, scene, "-o", output_base, "-V")
 	log.Printf("Initiating: %s %s %s %s", path, scene, "-o", output_base)
 	stderr, err := cmd.StderrPipe()
 	if err != nil {
@@ -75,10 +74,10 @@ func DoRender(scene, output_png, output_log  string) error {
 		return err
 	}
 	f, err := os.OpenFile(output_log, os.O_CREATE | os.O_RDWR, 0666)
-	defer f.Close()
 	if err != nil {
 		return err
 	}
+	defer f.Close()
 	go io.Copy(f, stdout)
 	go io.Copy(f, stderr)
 
@@ -114,10 +113,13 @@ func DoRenderScene(s LUXScener, output, status string) error {
 		return RenderError{"Zero size scene is not expected", nil}
 	}
 
-	time.Sleep(time.Second)
+	log.Printf("Generated: %s %s %s", scene, output, status)
+	err = DoRender(scene, output, status)
+	if err != nil {
+		return err
+	}
 
-	err = DoRender(scene, "C:\\github\\sheercloud\\server\\src\\lux\\new.png", status)
-
+	err = DoRender("C:\\Users\\6C57~1\\AppData\\Local\\Temp/scene1385315114.lsx", "C:\\github\\sheercloud\\server\\src\\lux\\new.png", "C:\\github\\sheercloud\\server\\src\\lux\\new.log")
 	if err != nil {
 		return err
 	}

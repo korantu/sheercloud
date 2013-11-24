@@ -57,7 +57,7 @@ func TestLuxTest(t * testing.T) {
 }
 
 // check_file performs sanity check
-func check_file (t * testing.T, file string, should_exist bool) {
+func check_file(t * testing.T, file string, should_exist bool) {
 	fi, err := os.Stat(file)
 	if err != nil && should_exist {
 		t.Fatal("Must exist:" + file + ":" +
@@ -75,7 +75,6 @@ func check_file (t * testing.T, file string, should_exist bool) {
 		}
 	}
 }
-
 
 // TestDoRender starts luxr with a predefined scene and checks that it is operational.
 func TestDoRender(t * testing.T) {
@@ -114,12 +113,13 @@ func TestDoRenderScene(t * testing.T) {
 	pix, log := "new.png", "new.log"
 
 	for _, f := range []string{pix, log} {
-		os.Remove(f); check_file(t,f,false)
+		os.Remove(f);
+		check_file(t, f, false)
 	}
 
 	DoRenderScene(new_scene, pix, log)
 
 	for _, f := range []string{pix, log} {
-		os.Remove(f); check_file(t,f,true)
+		check_file(t, f, true)
 	}
 }
