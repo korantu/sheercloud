@@ -18,7 +18,7 @@ type Point [4]float32
 type Matrix[16]float32
 
 type Camera struct {
-	Eye,             Up,             Center Point
+	Eye,              Up,              Center Point
 }
 
 /* <RenderingData>
@@ -96,8 +96,8 @@ type RenderingData struct {
 }}}}
 	RenderingSettings struct {
 	Camera struct {
-	CameraType                               string `xml:",attr"`
-	Eye,           Center,           Up      XMLPosition
+	CameraType                                 string `xml:",attr"`
+	Eye,            Center,            Up      XMLPosition
 	CameraDisplaySettings struct {
 	FOV            int `xml:"fov,attr"`
 	Resolution_X   int `xml:",attr"`
@@ -108,8 +108,8 @@ type RenderingData struct {
 }
 	Lights struct {
 	Lights []struct {
-	Position                   XMLPosition
-	Diffuse,          Specular XMLShaderParam
+	Position                    XMLPosition
+	Diffuse,           Specular XMLShaderParam
 }
 }
 }
@@ -223,7 +223,7 @@ type OBJNormal OBJTriad
 type OBJUW OBJTriad
 
 type OBJFaceVertex struct {
-	V,  N,  T int
+	V,   N,   T int
 }
 
 type OBJFace []OBJFaceVertex
@@ -288,6 +288,17 @@ func readOBJ(r io.Reader) (*OBJ, error) {
 	}
 
 	return res, nil
+}
+
+type LUXScener interface {
+	Scenify(w io.Writer) error
+}
+
+type LUXStringScene string
+
+func (a  LUXStringScene) Scenify(w io.Writer) error {
+	_, err := w.Write([]byte(a))
+	return err
 }
 
 func ToBeTested() string {

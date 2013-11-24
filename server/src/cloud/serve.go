@@ -36,7 +36,7 @@ func (err *CloudError) Error() string {
 }
 
 func NewCloudError(why string) *CloudError {
-	log.Print("CloudError: " + why)
+	// log.Print("CloudError: " + why)
 	return &CloudError{why}
 }
 
