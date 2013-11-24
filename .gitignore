@@ -35,11 +35,14 @@ tool
 #idea
 server/out/*
 server/store/*
-server/.idea/misc.xml
-server/.idea/workspace.xml
+misc.xml
+workspace.xml
 server/.idea/*
 
 #test artefacts
 server/src/lux/luxout.png
 server/src/lux/example.lsx
 server/src/lux/example.stdout
+*.png
+*.log
+misc.xml
