@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"strings"
 	"cloud"
+	"math"
 )
 
 var NotImplementedError = cloud.NewCloudError("Not implemented")
@@ -240,6 +241,33 @@ type OBJ struct {
 	Geodes   []OBJGeode
 }
 
+
+
+func (an * OBJ) boundingBox() (min, max OBJVector){
+	choose_min := func(a,b float32) float32{
+		if a < b {
+			return a
+		}
+		return b
+	}
+
+	choose_max := func(a,b float32) float32{
+		if a > b {
+			return a
+		}
+		return b
+	}
+
+	min, max = OBJVector{math.MaxFloat32, math.MaxFloat32, math.MaxFloat32}, OBJVector{-math.MaxFloat32,-math.MaxFloat32,-math.MaxFloat32}
+	for _, v := range an.Vertices {
+		for i, _ := range min {
+			min[i] = choose_min(min[i], v[i])
+			max[i] = choose_max(max[i], v[i])
+		}
+	}
+	return
+}
+
 // UGLY!!! move parsing logic into respective parts of the scene
 func readOBJ(r io.Reader) (*OBJ, error) {
 	res := &OBJ{ []OBJVector{}, []OBJNormal{}, []OBJUW{}, []OBJGeode{}}
@@ -299,6 +327,53 @@ type LUXStringScene string
 func (a  LUXStringScene) Scenify(w io.Writer) error {
 	_, err := w.Write([]byte(a))
 	return err
+}
+
+type LUXSequence []LUXScener
+
+func (a LUXSequence) Scenify(w io.Writer) error {
+	for _, piece := range a {
+		if err := piece.Scenify(w); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// LUXWrap wraps a scener in WrapperBegin / WrapperEnd
+type LUXWrap struct {
+	Inner LUXScener
+	Wrapper string
+}
+
+func (a LUXWrap) Scenify( w io.Writer) error {
+	var err error
+	if _, err = fmt.Fprint(w, a.Wrapper+"Begin"); err != nil {
+		return err
+	}
+	if err = a.Inner.Scenify(w); err != nil {
+		return err
+	}
+	if _, err = fmt.Fprint(w, a.Wrapper+"End"); err != nil {
+		return err
+	}
+	return nil
+}
+
+type LUXWorld struct {
+	Head, Rest LUXScener
+}
+
+func (a LUXWorld) Scenify( w io.Writer ) error {
+	var err error
+	if err = a.Head.Scenify(w); err != nil {
+		return err
+	}
+	main := LUXWrap{a.Rest, "World"}
+	if err = main.Scenify(w); err != nil {
+		return err
+	}
+	return nil
 }
 
 func ToBeTested() string {

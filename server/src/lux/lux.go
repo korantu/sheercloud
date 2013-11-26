@@ -7,5 +7,14 @@
  */
 package lux
 
-var LuxVersion = "0.0 Started"
+var LuxVersion = "0.1 Started"
 
+
+/*
+
+Missing parts:
+	Path resolver
+	File watcher
+	LUX printer
+
+	*/

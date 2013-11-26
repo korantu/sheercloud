@@ -108,18 +108,23 @@ func TestDoRender(t * testing.T) {
 	}
 }
 
-func TestDoRenderScene(t * testing.T) {
-	new_scene := LUXStringScene(scene)
-	pix, log := "new.png", "new.log"
+func renderScene(t * testing.T, new_scene LUXScener, out string) {
+	pix, log := out + ".png", out + ".log"
 
 	for _, f := range []string{pix, log} {
 		os.Remove(f);
 		check_file(t, f, false)
 	}
 
-	DoRenderScene(new_scene, pix, log)
+	if err := DoRenderScene(new_scene, pix, log); err != nil {
+		t.Fatal("Render failed:"+err.Error())
+	}
 
 	for _, f := range []string{pix, log} {
 		check_file(t, f, true)
 	}
+}
+
+func TestSceneTrivial( t * testing.T){
+	renderScene(t, LUXStringScene(scene), "new")
 }

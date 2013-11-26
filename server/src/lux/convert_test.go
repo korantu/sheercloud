@@ -182,4 +182,7 @@ func TestOBJLoad(t * testing.T) {
 		t.Fatalf("Expected; Geodes:6 UWs:860 Vertices:764 Normals:792; \n Got: Geodes:%d UWs:%d Vertices:%d Normals:%d",
 			len(rd.Geodes), len(rd.UWs), len(rd.Vertices), len(rd.Normals))
 	}
+
+	min, max := rd.boundingBox()
+	t.Logf("BB:%#v:%#v", min, max)
 }
