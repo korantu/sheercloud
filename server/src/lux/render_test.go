@@ -7,6 +7,8 @@ import (
 	"testing"
 	"os"
 	"io/ioutil"
+	"bytes"
+	"strings"
 )
 
 var scene = `
@@ -127,4 +129,30 @@ func renderScene(t * testing.T, new_scene LUXScener, out string) {
 
 func TestSceneTrivial( t * testing.T){
 	renderScene(t, LUXStringScene(scene), "new")
+}
+
+func TestSceneCompound(t * testing.T){
+	body := LUXStringScene(`AttributeBegin
+	Rotate 135 1 0 0
+
+	Texture "clouds_noise_generator" "float" "blender_clouds"
+		"string coordinates" ["local"] "float noisesize" [2.15] "string noisebasis" "voronoi_crackle"
+
+	Texture "clouds_diffuse" "color" "mix"
+		"color tex1" [0.8 0.1 0.1] "color tex2" [0.1 0.1 0.8] "texture amount" "clouds_noise_generator"
+
+	Material "matte"
+		"texture Kd" "clouds_diffuse"
+	Shape "disk" "float radius" [20] "float height" [-1]
+AttributeEnd
+`)
+	scene := LUXWorld{LUXHeader{[9]float32{-100,0,-100,0,0,0,0,1,0}, 31.0, 100,100,2}, LUXSequence{LUXHeadLight, body}}
+	b := &bytes.Buffer{}
+	scene.Scenify(b)
+	got := string(b.Bytes())
+	if ! strings.Contains( got, "31") {
+		t.Fatal("Expected to contain 31")
+	}
+	renderScene(t, scene, "half")
+
 }

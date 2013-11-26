@@ -8,6 +8,7 @@ import (
 	"strings"
 	"cloud"
 	"math"
+	"text/template"
 )
 
 var NotImplementedError = cloud.NewCloudError("Not implemented")
@@ -348,17 +349,46 @@ type LUXWrap struct {
 
 func (a LUXWrap) Scenify( w io.Writer) error {
 	var err error
-	if _, err = fmt.Fprint(w, a.Wrapper+"Begin"); err != nil {
+	if _, err = fmt.Fprint(w, "\n" + a.Wrapper+"Begin\n"); err != nil {
 		return err
 	}
 	if err = a.Inner.Scenify(w); err != nil {
 		return err
 	}
-	if _, err = fmt.Fprint(w, a.Wrapper+"End"); err != nil {
+	if _, err = fmt.Fprint(w, "\n" + a.Wrapper+"End\n"); err != nil {
 		return err
 	}
 	return nil
 }
+
+
+type LUXHeader struct {
+		CameraFromToUp [9]float32
+		FOV float32
+		X, Y int
+		PPX int
+}
+
+func ( a LUXHeader) Scenify( w io.Writer) error {
+	return LUXHeaderTemplate.Execute(w, a)
+}
+
+var LUXHeaderTemplate = template.Must(template.New("LUXHeader").Parse(`# Taken from the documentation 1.0
+#This is an example of a comment!
+#Global Information
+LookAt {{range .CameraFromToUp}} {{.}} {{end}}
+Camera "perspective" "float fov" [{{.FOV}}]
+
+Film "fleximage"
+"integer xresolution" [{{.X}}] "integer yresolution" [{{.Y}}]
+"integer haltspp" [{{.PPX}}] #Added by kdl
+
+PixelFilter "mitchell" "float xwidth" [2] "float ywidth" [2] "bool supersample" ["true"]
+
+Sampler "metropolis"
+
+#Scene Specific Information
+`))
 
 type LUXWorld struct {
 	Head, Rest LUXScener
@@ -375,6 +405,15 @@ func (a LUXWorld) Scenify( w io.Writer ) error {
 	}
 	return nil
 }
+
+var LUXHeadLight = LUXStringScene(`
+AttributeBegin
+CoordSysTransform "camera"
+LightSource "distant"
+"point from" [0 0 0] "point to" [0 0 1]
+"color L" [3 3 3]
+AttributeEnd
+`)
 
 func ToBeTested() string {
 	return "Done"

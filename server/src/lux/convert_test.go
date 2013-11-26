@@ -6,6 +6,7 @@ import (
 	"encoding/xml"
 	"strings"
 	"os"
+	"text/template"
 )
 
 var testconfig string = `<RenderingData><Scene>C:/Users/Sheer Temp 1/Cairnsmith/sheer/abc/Projects/testProj - Copy/Designer/testProj_design_1.osgt</Scene>
@@ -185,4 +186,13 @@ func TestOBJLoad(t * testing.T) {
 
 	min, max := rd.boundingBox()
 	t.Logf("BB:%#v:%#v", min, max)
+}
+
+func TestTemplate(t * testing.T) {
+	data := struct { X int
+			V [3]float32 }{42, [3]float32{0.1, 0.2, 0.3}}
+	a := template.Must(template.New("Fun").Parse("hi:{{.X}} bye:{{range .V}} {{.}} {{end}}"))
+	buf := &bytes.Buffer{}
+	a.Execute(buf, data)
+	t.Logf("[%s]", string(buf.Bytes()))
 }
