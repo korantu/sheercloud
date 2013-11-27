@@ -9,7 +9,24 @@ import (
 	"cloud"
 	"math"
 	"text/template"
+	"log"
 )
+
+type ConvertError struct {
+	Reason   string
+	CausedBy error
+}
+
+func (a ConvertError) Error() string {
+	if a.CausedBy != nil {
+		return a.Reason + " [" + a.Error() + "]"
+	}
+	return a.Reason
+}
+
+func NewConvertError(msg string, err error) error {
+	return ConvertError{msg, err}
+}
 
 var NotImplementedError = cloud.NewCloudError("Not implemented")
 
@@ -20,7 +37,7 @@ type Point [4]float32
 type Matrix[16]float32
 
 type Camera struct {
-	Eye,              Up,              Center Point
+	Eye,                 Up,                 Center Point
 }
 
 /* <RenderingData>
@@ -98,8 +115,8 @@ type RenderingData struct {
 }}}}
 	RenderingSettings struct {
 	Camera struct {
-	CameraType                                 string `xml:",attr"`
-	Eye,            Center,            Up      XMLPosition
+	CameraType                                       string `xml:",attr"`
+	Eye,               Center,               Up      XMLPosition
 	CameraDisplaySettings struct {
 	FOV            int `xml:"fov,attr"`
 	Resolution_X   int `xml:",attr"`
@@ -110,8 +127,8 @@ type RenderingData struct {
 }
 	Lights struct {
 	Lights []struct {
-	Position                    XMLPosition
-	Diffuse,           Specular XMLShaderParam
+	Position                       XMLPosition
+	Diffuse,              Specular XMLShaderParam
 }
 }
 }
@@ -222,10 +239,10 @@ func scanOSGT(some * bufio.Scanner) (*OSGT, error) {
 type OBJTriad [3]float32
 type OBJVector OBJTriad
 type OBJNormal OBJTriad
-type OBJUW OBJTriad
+type OBJUW [2]float32
 
 type OBJFaceVertex struct {
-	V,   N,   T int
+	V,      N,      T int
 }
 
 type OBJFace []OBJFaceVertex
@@ -242,24 +259,22 @@ type OBJ struct {
 	Geodes   []OBJGeode
 }
 
-
-
-func (an * OBJ) boundingBox() (min, max OBJVector){
-	choose_min := func(a,b float32) float32{
+func (an * OBJ) boundingBox() (min, max OBJVector) {
+	choose_min := func(a, b float32) float32 {
 		if a < b {
 			return a
 		}
 		return b
 	}
 
-	choose_max := func(a,b float32) float32{
+	choose_max := func(a, b float32) float32 {
 		if a > b {
 			return a
 		}
 		return b
 	}
 
-	min, max = OBJVector{math.MaxFloat32, math.MaxFloat32, math.MaxFloat32}, OBJVector{-math.MaxFloat32,-math.MaxFloat32,-math.MaxFloat32}
+	min, max = OBJVector{math.MaxFloat32, math.MaxFloat32, math.MaxFloat32}, OBJVector{-math.MaxFloat32, -math.MaxFloat32, -math.MaxFloat32}
 	for _, v := range an.Vertices {
 		for i, _ := range min {
 			min[i] = choose_min(min[i], v[i])
@@ -289,7 +304,8 @@ func readOBJ(r io.Reader) (*OBJ, error) {
 			res.Normals = append(res.Normals, an)
 		case strings.HasPrefix(got, "vt "):
 			an := OBJUW{}
-			fmt.Sscanf(got, "vt %f %f %f", &an[0], &an[1], &an[2])
+			var none float32
+			fmt.Sscanf(got, "vt %f %f %f", &an[0], &an[1], &none)
 			res.UWs = append(res.UWs, an)
 		case strings.HasPrefix(got, "f "):
 			an := OBJFace{}
@@ -343,33 +359,32 @@ func (a LUXSequence) Scenify(w io.Writer) error {
 
 // LUXWrap wraps a scener in WrapperBegin / WrapperEnd
 type LUXWrap struct {
-	Inner LUXScener
+	Inner   LUXScener
 	Wrapper string
 }
 
-func (a LUXWrap) Scenify( w io.Writer) error {
+func (a LUXWrap) Scenify(w io.Writer) error {
 	var err error
-	if _, err = fmt.Fprint(w, "\n" + a.Wrapper+"Begin\n"); err != nil {
+	if _, err = fmt.Fprint(w, "\n" + a.Wrapper + "Begin\n"); err != nil {
 		return err
 	}
 	if err = a.Inner.Scenify(w); err != nil {
 		return err
 	}
-	if _, err = fmt.Fprint(w, "\n" + a.Wrapper+"End\n"); err != nil {
+	if _, err = fmt.Fprint(w, "\n" + a.Wrapper + "End\n"); err != nil {
 		return err
 	}
 	return nil
 }
 
-
 type LUXHeader struct {
-		CameraFromToUp [9]float32
-		FOV float32
-		X, Y int
-		PPX int
+	CameraFromToUp [9]float32
+	FOV     float32
+	X,    Y int
+	PPX     int
 }
 
-func ( a LUXHeader) Scenify( w io.Writer) error {
+func (a LUXHeader) Scenify(w io.Writer) error {
 	return LUXHeaderTemplate.Execute(w, a)
 }
 
@@ -391,10 +406,10 @@ Sampler "metropolis"
 `))
 
 type LUXWorld struct {
-	Head, Rest LUXScener
+	Head,    Rest LUXScener
 }
 
-func (a LUXWorld) Scenify( w io.Writer ) error {
+func (a LUXWorld) Scenify(w io.Writer) error {
 	var err error
 	if err = a.Head.Scenify(w); err != nil {
 		return err
@@ -414,6 +429,71 @@ LightSource "distant"
 "color L" [3 3 3]
 AttributeEnd
 `)
+
+/*
+AttributeBegin
+	NamedMaterial "$material"
+	Shape "mesh"
+	      "normal N" [$N]
+	      "point P" [$P]
+	      "float uv" [$uv]
+	      "integer triindices" [$indices]
+AttributeEnd
+
+ */
+
+var LUXMeshTemplate = template.Must(template.New("OBJ").Parse(`
+AttributeBegin
+Shape "mesh"
+	      "normal N" [{{range .N}} {{range .}} {{.}} {{end}} {{end}}]
+	      "point P" [{{range .P}} {{range .}} {{.}} {{end}} {{end}}]
+	      "float uv" [{{range .UV}} {{range .}} {{.}} {{end}} {{end}}]
+	      "integer triindices" [{{range .T}} {{.}} {{end}}]
+AttributeEnd
+`))
+
+type LUXMesh struct {
+	N,   P [][3]float32
+	UV     [][2]float32
+	T      []int
+}
+
+func (an OBJ) Scenify(w io.Writer) error {
+	for _, g := range an.Geodes { // Over geodes
+		lm := LUXMesh{[][3]float32{}, [][3]float32{}, [][2]float32{}, []int{}} // Each geode goes through template separately
+		old_2_new := map[int] int {} // Zero-based
+		for _, face := range g.Faces { // Each face
+			for i := 1; i < (len(face) - 1); i++ { //
+				for _, v := range []int{0, i, i + 1} { // Triangulate big faces
+					old_index := face[v].V - 1; // Convert to 0-based (?)
+					if new_index, ok := old_2_new[old_index]; ok { // Seen the point already, just push it
+						lm.T = append(lm.T, new_index)
+					} else {
+						// Sanity check:
+						old_normal := face[v].N - 1
+						old_uv := face[v].T - 1
+						if len(an.Vertices) <= old_index || len(an.Normals) <= old_normal || len(an.UWs) <= old_uv {
+							lm.T = append(lm.T, 0)
+							log.Printf("Bad face: %#v max(V:%d N:%d U:%d)", face[v], len(an.Vertices),len(an.Normals),len(an.UWs))
+//							return NewConvertError("Indices/Vertices mismatch", nil)
+						} else {
+						// Copying
+						old_2_new[old_index] = len(lm.P)
+						lm.P = append(lm.P, an.Vertices[old_index])
+						lm.N = append(lm.N, an.Normals[old_normal])
+						lm.UV = append(lm.UV, an.UWs[old_uv])
+						lm.T = append(lm.T, old_2_new[old_index])
+						}
+						}
+				}
+			}
+		}
+		if err := LUXMeshTemplate.Execute(w, lm); err != nil {
+			return NewConvertError("Mesh template failed", err)
+		}
+	}
+	return nil // All ok
+}
 
 func ToBeTested() string {
 	return "Done"

@@ -93,8 +93,10 @@ func DoRenderScene(s LUXScener, output, status string) error {
 		if err != nil {
 			return "", err
 		}
-		s.Scenify(f)
-		f.Close()
+		if err := s.Scenify(f); err != nil {
+			return "", err
+		}
+		defer f.Close()
 		log.Print("Prepared " + temp_scene + " for render")
 		return temp_scene, nil
 	}

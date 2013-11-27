@@ -119,7 +119,7 @@ func renderScene(t * testing.T, new_scene LUXScener, out string) {
 	}
 
 	if err := DoRenderScene(new_scene, pix, log); err != nil {
-		t.Fatal("Render failed:"+err.Error())
+		t.Fatal("Render failed:" + err.Error())
 	}
 
 	for _, f := range []string{pix, log} {
@@ -127,11 +127,11 @@ func renderScene(t * testing.T, new_scene LUXScener, out string) {
 	}
 }
 
-func TestSceneTrivial( t * testing.T){
+func TestSceneTrivial(t * testing.T) {
 	renderScene(t, LUXStringScene(scene), "new")
 }
 
-func TestSceneCompound(t * testing.T){
+func TestSceneCompound(t * testing.T) {
 	body := LUXStringScene(`AttributeBegin
 	Rotate 135 1 0 0
 
@@ -146,13 +146,44 @@ func TestSceneCompound(t * testing.T){
 	Shape "disk" "float radius" [20] "float height" [-1]
 AttributeEnd
 `)
-	scene := LUXWorld{LUXHeader{[9]float32{-100,0,-100,0,0,0,0,1,0}, 31.0, 100,100,2}, LUXSequence{LUXHeadLight, body}}
+	scene := LUXWorld{LUXHeader{[9]float32{-100, 0, -100, 0, 0, 0, 0, 1, 0}, 31.0, 100, 100, 2}, LUXSequence{LUXHeadLight, body}}
 	b := &bytes.Buffer{}
 	scene.Scenify(b)
 	got := string(b.Bytes())
-	if ! strings.Contains( got, "31") {
+	if !strings.Contains(got, "31") {
 		t.Fatal("Expected to contain 31")
 	}
 	renderScene(t, scene, "half")
 
+}
+
+func TestObjLux(t * testing.T) {
+	an := OBJ{}
+	// Shoud be simpler?
+	an.Geodes = []OBJGeode{
+		OBJGeode{"a", []OBJFace{[]OBJFaceVertex{OBJFaceVertex{1, 1, 1}, OBJFaceVertex{2, 1, 2}, OBJFaceVertex{3, 1, 3}}}},
+		OBJGeode{"b", []OBJFace{[]OBJFaceVertex{OBJFaceVertex{1, 1, 1}, OBJFaceVertex{3, 1, 3}, OBJFaceVertex{4, 1, 4}}}}}
+	an.Vertices = []OBJVector{OBJVector{0, 0, 0}, OBJVector{0, 21, 0}, OBJVector{21, 21, 0}, OBJVector{21, 0, 0}}
+	an.Normals = []OBJNormal{OBJNormal{0, 0, 1}}
+	an.UWs = []OBJUW{OBJUW{0, 0}, OBJUW{0, 1}, OBJUW{1, 1}, OBJUW{1, 0}}
+
+	b := &bytes.Buffer{}
+	an.Scenify(b)
+	if got := (string(b.Bytes())); ! strings.Contains(got, "21"){
+		t.Fatal("Expected to get 21 somewhere in there.")
+	}
+	t.Log(string(b.Bytes()))
+
+	f, err := os.Open("../../../render/reference/Chair.obj")
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+	rd, err := readOBJ(f)
+	if err != nil {
+		t.Log(err.Error())
+		t.Fail()
+	}
+
+	scene := LUXWorld{LUXHeader{[9]float32{120, 100, 120, 0, 0, 0, 0, 1, 0}, 41.0, 800, 800, 20}, LUXSequence{LUXHeadLight, rd}}
+	renderScene(t, scene, "obj")
 }
