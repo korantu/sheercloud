@@ -174,7 +174,7 @@ func TestObjLux(t * testing.T) {
 	}
 	t.Log(string(b.Bytes()))
 
-	f, err := os.Open("../../../render/reference/Chair.obj")
+	f, err := os.Open("../../../render/reference/Swivel_Chair.obj")
 	if err != nil {
 		t.Fatal(err.Error())
 	}
