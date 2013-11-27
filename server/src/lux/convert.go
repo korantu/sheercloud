@@ -313,7 +313,7 @@ func readOBJ(r io.Reader) (*OBJ, error) {
 			for _, item := range items {
 				if strings.Contains(item, "/") {
 					point := OBJFaceVertex{}
-					fmt.Sscanf(item, "%d/%d/%d", &point.V, &point.N, &point.T)
+					fmt.Sscanf(item, "%d/%d/%d", &point.V, &point.T, &point.N)
 					an = append(an, point)
 				}
 			}
