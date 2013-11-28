@@ -350,7 +350,7 @@ type LUXScener interface {
 type LUXStringScene string
 
 func (a  LUXStringScene) Scenify(w io.Writer) error {
-	_, err := w.Write([]byte(a))
+	_, err := w.Write([]byte("\n"+a+"\n"))
 	return err
 }
 
@@ -558,6 +558,8 @@ func ( cover LUXOSGTGeometry ) Scenify( w io.Writer ) error {
 			log.Print("Array not found in geode")
 		}
 	}
+
+
 	// Setup for test:
 /*
 	_ := LUXStringScene(`AttributeBegin
@@ -579,6 +581,26 @@ AttributeEnd
 //	return body.Scenify(w)
 	return nil
 
+}
+
+
+func LUXDoTransform(tr [16]float32, a LUXScener) LUXScener {
+	return LUXWrap{
+		LUXSequence{LUXTransform{tr},
+			a}, "Transform"}
+}
+
+type LUXTransform struct {
+	Transform [16]float32
+}
+
+var LUXTransformBeginTemplate = template.Must(template.New("LUXTransformTemplate").Parse(`Transform [{{range .Transform}} {{.}} {{end}}]`))
+
+func ( an LUXTransform ) Scenify(w io.Writer) error {
+	if err := LUXTransformBeginTemplate.Execute(w, an); err != nil {
+		return err
+	}
+	return nil
 }
 
 func ToBeTested() string {

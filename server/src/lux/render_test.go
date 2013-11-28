@@ -183,7 +183,7 @@ func TestObjLux(t * testing.T) {
 
 	b := &bytes.Buffer{}
 	an.Scenify(b)
-	if got := (string(b.Bytes())); ! strings.Contains(got, "21"){
+	if got := (string(b.Bytes())); !strings.Contains(got, "21") {
 		t.Fatal("Expected to get 21 somewhere in there.")
 	}
 
@@ -195,8 +195,8 @@ func TestObjLux(t * testing.T) {
 	renderScene(t, bed, "bed")
 }
 
-func TestOsgtLux(t * testing.T){
-		f, err := os.Open("../../../render/reference/testProj_design_1.osgt")
+func TestOsgtLux(t * testing.T) {
+	f, err := os.Open("../../../render/reference/testProj_design_1.osgt")
 	if err != nil {
 		t.Fatal(err.Error())
 	}
@@ -210,4 +210,17 @@ func TestOsgtLux(t * testing.T){
 	walls := LUXWorld{LUXHeader{[9]float32{1220, 100, 1220, 0, 0, 0, -1, 0, 0}, 31.0, 150, 150, 20}, LUXSequence{LUXHeadLight, walls_scene}}
 	renderScene(t, walls, "walls")
 
+}
+
+func TestTransformLux(t * testing.T) {
+	disk := LUXStringScene(`AttributeBegin
+		Shape "disk" "float radius" [1]
+		AttributeEnd`)
+	transform := LUXWorld{LUXHeader{[9]float32{0, 0, -1, 0, 0, 0, 0, 1, 0}, 90.0, 150, 150, 1}, LUXSequence{LUXHeadLight,
+		LUXDoTransform([16]float32{
+				0.5, 0, 0, 0,
+				0, 0.5, 0, 0,
+				0, 0, 0.5, 0,
+				0, 0.5, 0, 1}, disk)}}
+	renderScene(t, transform, "transform")
 }
