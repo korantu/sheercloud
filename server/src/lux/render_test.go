@@ -157,6 +157,20 @@ AttributeEnd
 
 }
 
+func testReadObj(t * testing.T, where string) * OBJ {
+	f, err := os.Open("../../../render/reference/" + where)
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+	rd, err := readOBJ(f)
+	defer f.Close()
+	if err != nil {
+		t.Log(err.Error())
+		t.Fail()
+	}
+	return rd
+}
+
 func TestObjLux(t * testing.T) {
 	an := OBJ{}
 	// Shoud be simpler?
@@ -172,18 +186,28 @@ func TestObjLux(t * testing.T) {
 	if got := (string(b.Bytes())); ! strings.Contains(got, "21"){
 		t.Fatal("Expected to get 21 somewhere in there.")
 	}
-	t.Log(string(b.Bytes()))
 
-	f, err := os.Open("../../../render/reference/Swivel_Chair.obj")
+	chair := LUXWorld{LUXHeader{[9]float32{120, 100, 120, 0, 40, 0, 0, 1, 0}, 41.0, 150, 150, 2}, LUXSequence{LUXHeadLight, testReadObj(t, "Swivel_Chair.obj")}}
+	table := LUXWorld{LUXHeader{[9]float32{120, 100, 120, 0, 40, 0, 0, 1, 0}, 50.0, 150, 150, 2}, LUXSequence{LUXHeadLight, testReadObj(t, "Coffe-Table.obj")}}
+	bed := LUXWorld{LUXHeader{[9]float32{220, 200, 220, 0, 40, 0, 0, 1, 0}, 41.0, 150, 150, 2}, LUXSequence{LUXHeadLight, testReadObj(t, "Dalselv_Bed.obj")}}
+	renderScene(t, chair, "chair")
+	renderScene(t, table, "table")
+	renderScene(t, bed, "bed")
+}
+
+func TestOsgtLux(t * testing.T){
+		f, err := os.Open("../../../render/reference/testProj_design_1.osgt")
 	if err != nil {
 		t.Fatal(err.Error())
 	}
-	rd, err := readOBJ(f)
-	if err != nil {
+	var rd * OSGT
+	if rd, err = readOSGT(f); err != nil {
 		t.Log(err.Error())
 		t.Fail()
 	}
 
-	scene := LUXWorld{LUXHeader{[9]float32{120, 100, 120, 0, 0, 0, 0, 1, 0}, 41.0, 800, 800, 20}, LUXSequence{LUXHeadLight, rd}}
-	renderScene(t, scene, "obj")
+	walls_scene := LUXOSGTGeometry {*rd}
+	walls := LUXWorld{LUXHeader{[9]float32{1220, 100, 1220, 0, 0, 0, -1, 0, 0}, 31.0, 150, 150, 20}, LUXSequence{LUXHeadLight, walls_scene}}
+	renderScene(t, walls, "walls")
+
 }

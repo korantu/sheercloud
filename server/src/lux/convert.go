@@ -37,7 +37,7 @@ type Point [4]float32
 type Matrix[16]float32
 
 type Camera struct {
-	Eye,                 Up,                 Center Point
+	Eye,                  Up,                  Center Point
 }
 
 /* <RenderingData>
@@ -115,8 +115,8 @@ type RenderingData struct {
 }}}}
 	RenderingSettings struct {
 	Camera struct {
-	CameraType                                       string `xml:",attr"`
-	Eye,               Center,               Up      XMLPosition
+	CameraType                                         string `xml:",attr"`
+	Eye,                Center,                Up      XMLPosition
 	CameraDisplaySettings struct {
 	FOV            int `xml:"fov,attr"`
 	Resolution_X   int `xml:",attr"`
@@ -127,8 +127,8 @@ type RenderingData struct {
 }
 	Lights struct {
 	Lights []struct {
-	Position                       XMLPosition
-	Diffuse,              Specular XMLShaderParam
+	Position                        XMLPosition
+	Diffuse,               Specular XMLShaderParam
 }
 }
 }
@@ -236,13 +236,17 @@ func scanOSGT(some * bufio.Scanner) (*OSGT, error) {
 	return out, nil
 }
 
+
+
+// OBJ
+
 type OBJTriad [3]float32
 type OBJVector OBJTriad
 type OBJNormal OBJTriad
 type OBJUW [2]float32
 
 type OBJFaceVertex struct {
-	V,      N,      T int
+	V,       N,       T int
 }
 
 type OBJFace []OBJFaceVertex
@@ -311,7 +315,11 @@ func readOBJ(r io.Reader) (*OBJ, error) {
 			an := OBJFace{}
 			items := strings.Split(got, " ")
 			for _, item := range items {
-				if strings.Contains(item, "/") {
+				if strings.Contains(item, "//") {
+					point := OBJFaceVertex{}
+					fmt.Sscanf(item, "%d//%d", &point.V, &point.N)
+					an = append(an, point)
+				} else if strings.Contains(item, "/") {
 					point := OBJFaceVertex{}
 					fmt.Sscanf(item, "%d/%d/%d", &point.V, &point.T, &point.N)
 					an = append(an, point)
@@ -379,9 +387,9 @@ func (a LUXWrap) Scenify(w io.Writer) error {
 
 type LUXHeader struct {
 	CameraFromToUp [9]float32
-	FOV     float32
-	X,    Y int
-	PPX     int
+	FOV      float32
+	X,     Y int
+	PPX      int
 }
 
 func (a LUXHeader) Scenify(w io.Writer) error {
@@ -406,7 +414,7 @@ Sampler "metropolis"
 `))
 
 type LUXWorld struct {
-	Head,    Rest LUXScener
+	Head,     Rest LUXScener
 }
 
 func (a LUXWorld) Scenify(w io.Writer) error {
@@ -452,10 +460,19 @@ Shape "mesh"
 AttributeEnd
 `))
 
+
+var LUXMeshVertexTemplate = template.Must(template.New("OBJ").Parse(`
+AttributeBegin
+Shape "mesh"
+	      "point P" [{{range .P}} {{range .}} {{.}} {{end}} {{end}}]
+	      "integer triindices" [{{range .T}} {{.}} {{end}}]
+AttributeEnd
+`))
+
 type LUXMesh struct {
-	N,   P [][3]float32
-	UV     [][2]float32
-	T      []int
+	N,    P [][3]float32
+	UV      [][2]float32
+	T       []int
 }
 
 func (an OBJ) Scenify(w io.Writer) error {
@@ -472,19 +489,25 @@ func (an OBJ) Scenify(w io.Writer) error {
 						// Sanity check:
 						old_normal := face[v].N - 1
 						old_uv := face[v].T - 1
-						if len(an.Vertices) <= old_index || len(an.Normals) <= old_normal || len(an.UWs) <= old_uv {
+						if (len(an.Vertices) < old_index+1) || (len(an.Normals) < old_normal+1) || (len(an.UWs) < old_uv+1) {
 							lm.T = append(lm.T, 0)
-							log.Printf("Bad face: %#v max(V:%d N:%d U:%d)", face[v], len(an.Vertices),len(an.Normals),len(an.UWs))
-//							return NewConvertError("Indices/Vertices mismatch", nil)
+							log.Printf("Bad face: %#v max(V:%d N:%d U:%d)", face[v], len(an.Vertices), len(an.Normals), len(an.UWs))
+							//							return NewConvertError("Indices/Vertices mismatch", nil)
 						} else {
-						// Copying
-						old_2_new[old_index] = len(lm.P)
-						lm.P = append(lm.P, an.Vertices[old_index])
-						lm.N = append(lm.N, an.Normals[old_normal])
-						lm.UV = append(lm.UV, an.UWs[old_uv])
-						lm.T = append(lm.T, old_2_new[old_index])
+							// Copying
+							old_2_new[old_index] = len(lm.P)
+							lm.P = append(lm.P, an.Vertices[old_index])
+							lm.N = append(lm.N, an.Normals[old_normal])
+
+							if old_uv >= 0 {
+								lm.UV = append(lm.UV, an.UWs[old_uv])
+							} else {
+								lm.UV = append(lm.UV, [2]float32{0,0})
+							}
+
+							lm.T = append(lm.T, old_2_new[old_index])
 						}
-						}
+					}
 				}
 			}
 		}
@@ -493,6 +516,69 @@ func (an OBJ) Scenify(w io.Writer) error {
 		}
 	}
 	return nil // All ok
+}
+
+type LUXOSGTGeometry struct {
+	Osgt OSGT
+}
+
+// Define how it works
+
+func ( cover LUXOSGTGeometry ) Scenify( w io.Writer ) error {
+
+	an := cover.Osgt
+
+	list := an.Find("Geode")
+
+	if len(list) == 0 {
+		log.Print("There supposed to be geodes in the scene")
+	}
+
+	for _, each := range list {
+
+		if vtx := each.Find("VertexData"); len(vtx) == 1 {
+			arr := vtx[0].Find("Array")
+			if len(arr) == 1 {
+				lm := LUXMesh{[][3]float32{}, [][3]float32{}, [][2]float32{}, []int{}} // Each geode goes through template separately
+				for _, k := range arr[0].List {
+					a := [3]float32{}
+
+					fmt.Sscanf(k.Key, "%f %f %f", &a[0], &a[1], &a[2])
+					lm.P = append(lm.P, a)
+				}
+				for tri := 1; tri < len(lm.P)-1; tri++{
+					lm.T = append(lm.T, 0, tri, tri+1)
+				}
+				if err := LUXMeshVertexTemplate.Execute(w, lm); err!= nil {
+					log.Print("Problem: ", err)
+					return err
+				}
+			}
+		} else {
+			log.Print("Array not found in geode")
+		}
+	}
+	// Setup for test:
+/*
+	_ := LUXStringScene(`AttributeBegin
+	Rotate 135 1 0 0
+
+	Texture "clouds_noise_generator" "float" "blender_clouds"
+		"string coordinates" ["local"] "float noisesize" [2.15] "string noisebasis" "voronoi_crackle"
+
+	Texture "clouds_diffuse" "color" "mix"
+		"color tex1" [0.8 0.1 0.1] "color tex2" [0.1 0.1 0.8] "texture amount" "clouds_noise_generator"
+
+	Material "matte"
+		"texture Kd" "clouds_diffuse"
+	Shape "disk" "float radius" [500] "float height" [-1]
+AttributeEnd
+`)
+*/
+
+//	return body.Scenify(w)
+	return nil
+
 }
 
 func ToBeTested() string {
