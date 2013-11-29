@@ -195,8 +195,8 @@ func TestObjLux(t * testing.T) {
 	renderScene(t, bed, "bed")
 }
 
-func TestOsgtLux(t * testing.T) {
-	f, err := os.Open("../../../render/reference/testProj_design_1.osgt")
+func testRenderOsgtLux(t * testing.T, ref, name string) {
+	f, err := os.Open("../../../render/reference/" + ref)
 	if err != nil {
 		t.Fatal(err.Error())
 	}
@@ -208,8 +208,13 @@ func TestOsgtLux(t * testing.T) {
 
 	walls_scene := LUXOSGTGeometry {*rd}
 	walls := LUXWorld{LUXHeader{[9]float32{1220, 100, 1220, 0, 0, 0, -1, 0, 0}, 31.0, 150, 150, 20}, LUXSequence{LUXHeadLight, walls_scene}}
-	renderScene(t, walls, "walls")
+	renderScene(t, walls, name)
 
+}
+
+func TestOsgtLux(t * testing.T) {
+	testRenderOsgtLux(t, "testProj_design_1.osgt", "main_walls")
+	testRenderOsgtLux(t, "KdlProject_design_1.osgt", "tri_walls")
 }
 
 func TestTransformLux(t * testing.T) {
