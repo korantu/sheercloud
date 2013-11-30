@@ -229,3 +229,60 @@ func TestTransformLux(t * testing.T) {
 				0, 0.5, 0, 1}, disk)}}
 	renderScene(t, transform, "transform")
 }
+
+
+func TestLightLux(t * testing.T) {
+	disk := LUXStringScene(`AttributeBegin
+		Shape "sphere" "float radius" [1]
+		AttributeEnd`)
+	light := LUXWorld{LUXHeader{[9]float32{0, 0, -1.3, 0, 0, 0, 0, 1, 0}, 90.0, 100, 100, 100}, LUXSequence{LUXLight{[3]float32{-0, -0, -1.3}}, disk}}
+	renderScene(t, light, "light")
+}
+
+// TestResolver lists all the file paths. May also be further used for new file detection.
+func TestResolver(t* testing.T) {
+	a, b := Resolver{}, Resolver{}
+	var err error
+	err = a.Scan("C:/github/sheercloud/render")
+	b.Scan("C:/github/sheercloud/render")
+	b.Scan("C:/github/sheercloud/render")
+	switch {
+	case err != nil:
+		t.Fatal("Unable to scan the location:" + err.Error())
+	case a.Len() < 3:
+		t.Fatal("Expected several files inside")
+	case a.Len() != b.Len():
+		t.Errorf("Expected equal: a:%d b:%d", a.Len(), b.Len())
+	}
+
+	if _, err = a.Get("not exstent at all whatsoever"); err == nil {
+		t.Errorf("Should report non-existing files")
+	}
+
+	exists := func(f string) bool {
+		inf, err := os.Stat(f)
+		if err != nil {
+			t.Log(err.Error())
+			return false
+		}
+		if inf.IsDir() {
+			t.Log("Looking for a file, not directory")
+			return false
+		}
+		return true
+	}
+
+	verify := func(to_verify string) {
+		t.Log("Checking " + to_verify)
+		switch f, err := a.Get(to_verify); {
+		case err != nil:
+			t.Errorf("File supposed to exist")
+		case !exists(f):
+			t.Errorf("File %s does not really exist", f)
+		}
+	}
+
+	verify("C:/Users/Sheer Temp 1/Cairnsmith/sheer/abc/Projects/testProj - Copy/Designer/testProj_design_1.osgt")
+	verify("testProj_design_1.osgt")
+
+}

@@ -603,6 +603,29 @@ func ( an LUXTransform ) Scenify(w io.Writer) error {
 	return nil
 }
 
+
+type LUXLight struct {
+  Position [3]float32
+}
+
+var LUXLightTemplate = template.Must(template.New("LUXLight").Parse(`
+AttributeBegin
+LightSource "point"
+"point from" [{{range .Position}} {{.}} {{end}}]
+"color L" [3 3 3]
+"float gain" [100]
+AttributeEnd
+`))
+
+func ( an LUXLight ) Scenify(w io.Writer) error {
+	if err := LUXLightTemplate.Execute(w, an); err != nil {
+		return err
+	}
+	return nil
+}
+
+
+
 func ToBeTested() string {
 	return "Done"
 }

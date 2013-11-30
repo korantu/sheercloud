@@ -12,12 +12,13 @@ import (
 	"path"
 	"time"
 	"fmt"
+	"path/filepath"
 )
 
 var LUX = "luxconsole"
 
 type RenderError struct {
-	Cause string
+	Cause    string
 	CausedBy error
 }
 
@@ -136,4 +137,45 @@ func CheckLux() error {
 	}
 	log.Printf("Found renderer at %s", path)
 	return nil
+}
+
+// Resolver scans a location for file list,
+type Resolver []string
+
+func (a * Resolver) Scan(some string) error {
+	info, err := os.Stat(some)
+
+	*a = Resolver{} // Empty
+
+	switch { // Check bad cases.
+	case err != nil:
+		return RenderError{"Failed to access [" + some + "]", err}
+	case !info.IsDir():
+		return RenderError{"Directory is expected:[" + some + "]", nil}
+	}
+
+	filepath.Walk(some, func(path string, info os.FileInfo, err error) error {
+			if info != nil && !info.IsDir() {
+				*a = append(*a, strings.Replace(path, "\\", "/", -1))
+			}
+			return nil
+		})
+	return nil
+}
+
+func (a Resolver) Len() int {
+	return len(a)
+}
+
+// Get attempts to find most probable match; Mathces name only for now.
+// TODO:Do further comparison as well.
+func (a Resolver) Get(some string) (string, error) {
+	_, some_file := path.Split(strings.Replace(some, "\\", "/", -1)) // Normalize slashes
+	for i, p := range a {
+		_, p_file := path.Split(p)
+		if p_file == some_file {
+			return a[i], nil
+		}
+	}
+	return "", RenderError{"Unable to locate file in the list", nil}
 }
