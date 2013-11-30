@@ -10,6 +10,7 @@ import (
 	"math"
 	"text/template"
 	"log"
+	"os"
 )
 
 type ConvertError struct {
@@ -134,6 +135,7 @@ type RenderingData struct {
 }
 }
 
+// readConfiguration picks up all the information from the configuration file.
 func readConfiguration(some io.Reader) (res * RenderingData, err error) {
 	d := xml.NewDecoder(some)
 	out := RenderingData{}
@@ -141,6 +143,16 @@ func readConfiguration(some io.Reader) (res * RenderingData, err error) {
 		return nil, err
 	}
 	return &out, nil
+}
+
+func ReadConfigurationFile(some string) (res * RenderingData, err error) {
+	f, err := os.Open(some)
+	if err != nil {
+		return nil, RenderError{"Failed to open scene file", err}
+	}
+	defer f.Close()
+
+	return readConfiguration(f)
 }
 
 // OSGT reading
@@ -625,6 +637,11 @@ func ( an LUXLight ) Scenify(w io.Writer) error {
 }
 
 
+type LUXSceneFull string
+
+func (a LUXSceneFull) Scenify(w io.Writer) error {
+	return RenderError{"Not implemented", nil}
+}
 
 func ToBeTested() string {
 	return "Done"

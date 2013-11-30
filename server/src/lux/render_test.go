@@ -11,6 +11,8 @@ import (
 	"strings"
 )
 
+var STORE_PLACE = "C:/github/sheercloud/render"
+
 var scene = `
 # Taken from the documentation 1.0
 #This is an example of a comment!
@@ -243,9 +245,9 @@ func TestLightLux(t * testing.T) {
 func TestResolver(t* testing.T) {
 	a, b := Resolver{}, Resolver{}
 	var err error
-	err = a.Scan("C:/github/sheercloud/render")
-	b.Scan("C:/github/sheercloud/render")
-	b.Scan("C:/github/sheercloud/render")
+	err = a.Scan(STORE_PLACE)
+	b.Scan(STORE_PLACE)
+	b.Scan(STORE_PLACE)
 	switch {
 	case err != nil:
 		t.Fatal("Unable to scan the location:" + err.Error())
@@ -285,4 +287,22 @@ func TestResolver(t* testing.T) {
 	verify("C:/Users/Sheer Temp 1/Cairnsmith/sheer/abc/Projects/testProj - Copy/Designer/testProj_design_1.osgt")
 	verify("testProj_design_1.osgt")
 
+}
+
+func TestReadConfiguraton(t * testing.T){
+	a := Resolver{}
+	err := a.Scan(STORE_PLACE)
+	if err != nil {
+		t.Fatal(a)
+	}
+	file, err := a.Get("RenderingData.xml")
+	if err != nil {
+		t.Fatal("Render scene file not found:", err.Error())
+	}
+	scn, err := ReadConfigurationFile(file)
+	if err != nil {
+		t.Error( " Failed tor read scene:", file, ":", err.Error())
+	}
+
+	t.Logf("Scene:\n%#v", scn)
 }
