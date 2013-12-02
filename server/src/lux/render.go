@@ -177,5 +177,30 @@ func (a Resolver) Get(some string) (string, error) {
 			return a[i], nil
 		}
 	}
-	return "", RenderError{"Unable to locate file in the list", nil}
+	return "", RenderError{"Unable to locate file ["+some+"] in the list", nil}
+}
+
+
+func (a Resolver) EndsWith(suffix string) []string {
+	out := []string{}
+	for _, item := range a {
+		if strings.HasSuffix(item, suffix) {
+			out = append(out, item)
+		}
+	}
+
+	return out
+}
+
+func touch( file string) error{
+	f, err := os.Create(file)
+	if err != nil {
+	   return err
+	}
+	defer f.Close()
+}
+
+// DoRender scans Resolver, picks out .job extensions, delete them and starts renderfunc for each.
+func DoRender(a Resolver, renderfunc func(string)) error {
+	return RenderError{"Not implemented", nil}
 }

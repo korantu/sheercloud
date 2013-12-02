@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"bytes"
 	"strings"
+	"path"
 )
 
 var STORE_PLACE = "C:/github/sheercloud/render"
@@ -289,7 +290,7 @@ func TestResolver(t* testing.T) {
 
 }
 
-func TestReadConfiguraton(t * testing.T){
+func TestReadConfiguraton(t * testing.T) {
 	a := Resolver{}
 	err := a.Scan(STORE_PLACE)
 	if err != nil {
@@ -301,8 +302,29 @@ func TestReadConfiguraton(t * testing.T){
 	}
 	scn, err := ReadConfigurationFile(file)
 	if err != nil {
-		t.Error( " Failed tor read scene:", file, ":", err.Error())
+		t.Error(" Failed tor read scene:", file, ":", err.Error())
 	}
 
-	t.Logf("Scene:\n%#v", scn)
+	all := LUXSceneFull{a, *scn}
+
+	renderScene(t, all, "full")
+
+}
+
+func TestDoRender(t * testing.T) {
+	a := Resolver{}
+	err := a.Scan(STORE_PLACE)
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+
+	new := path.Join(STORE_PLACE, "RenderingData.xml")
+	marker := new + ".job"
+
+	touch(marker)
+
+	if _, err = os.Stat(marker); err != nil {
+		t.Fatal(err.Error())
+
+	}
 }

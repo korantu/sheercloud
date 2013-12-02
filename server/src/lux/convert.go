@@ -220,6 +220,15 @@ func readOSGT(some io.Reader) (*OSGT, error) {
 	return scanOSGT(scnr)
 }
 
+func ReadFileOSGT(some string) (*OSGT, error) {
+	f, err := os.Open(some)
+	if err != nil {
+		return nil, RenderError{"Failed to read OSGT scene file", err}
+	}
+	defer f.Close()
+	return readOSGT(f)
+}
+
 func scanOSGT(some * bufio.Scanner) (*OSGT, error) {
 
 	out := NewOSGT()
@@ -637,10 +646,24 @@ func ( an LUXLight ) Scenify(w io.Writer) error {
 }
 
 
-type LUXSceneFull string
+type LUXSceneFull struct {
+	Files Resolver
+	World RenderingData
+}
 
 func (a LUXSceneFull) Scenify(w io.Writer) error {
-	return RenderError{"Not implemented", nil}
+	scene_file_name, err := a.Files.Get(a.World.Scene)
+	if err != nil {
+		return RenderError{"Unable to locate scene", err}
+	}
+	osgt, err := ReadFileOSGT(scene_file_name)
+	walls_scene := LUXOSGTGeometry{*osgt}
+
+	c:=a.World.RenderingSettings.Camera
+
+	all := LUXWorld{LUXHeader{[9]float32{c.Eye.X, c.Eye.Y, c.Eye.Z , c.Center.X, c.Center.Y, c.Center.Z, c.Up.X, c.Up.Y, c.Up.Z}, 70.0, 150, 150, 20}, LUXSequence{LUXHeadLight, walls_scene}}
+
+	return all.Scenify(w)
 }
 
 func ToBeTested() string {
