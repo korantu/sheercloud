@@ -19,7 +19,14 @@ func init() {
 	// Real server should probably configured away from the default location.
 	// make sure the place is new.
 	Configure("/tmp/cloud_testing/" + fmt.Sprint(time.Now().Unix()))
-	go Serve("8080", ui_dir)
+	go func() {
+		Serve("8080", ui_dir)
+		defer func() {
+			if r := recover(); r != nil {
+				log.Print("Failed to start server.")
+			}
+		}()
+	}()
 	time.Sleep(100 * time.Millisecond)
 	log.Print("Test server is up and running.\n")
 }

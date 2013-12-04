@@ -659,7 +659,7 @@ func Serve(port, static string) {
 	}
 
 	if err := http.ListenAndServe(":" + port, nil); err != nil {
-		log.Panic(err.Error())
+		log.Print(err.Error())
 	}
 }
 
