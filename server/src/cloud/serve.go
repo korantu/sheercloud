@@ -53,13 +53,13 @@ Create config strucutre.
 // Company specifies global company data, such as admin password,
 // payment facilities, etc.
 type Company struct {
-	FullName, Login, Password string
+	FullName,   Login,   Password string
 }
 
 // Member specifies the user of the system, with the amount of resources allocated to him.
 type Member struct {
-	FullName, Login, Password string
-	Renders, Storage          int
+	FullName,   Login,   Password string
+	Renders,   Storage            int
 }
 
 // Meta holds volatile configuration information which should not be saved.
@@ -159,7 +159,7 @@ func info(w http.ResponseWriter, r *http.Request) {
 
 	list_params := func(in map[string][]string) {
 		for key, values := range in {
-			say(w, key+":")
+			say(w, key + ":")
 			for i, value := range values {
 				if i != 0 {
 					say(w, "|")
@@ -174,11 +174,11 @@ func info(w http.ResponseWriter, r *http.Request) {
 	incoming, err := ioutil.ReadAll(r.Body) // Must read body first
 	must_not(err)
 	in_url := r.URL.String()
-	say(w, "Request to: "+in_url+" \n")
+	say(w, "Request to: " + in_url + " \n")
 	list_params(r.URL.Query())
 	say(w, "Headers:\n")
 	list_params(r.Header)
-	say(w, "Input:--["+string(incoming)+"]--\n")
+	say(w, "Input:--[" + string(incoming) + "]--\n")
 }
 
 // RequestInfo stores verified information for processing
@@ -189,8 +189,8 @@ type RequestInfo struct {
 }
 
 // worker processes the information
-type worker func(http.ResponseWriter, *http.Request, *RequestInfo) error
-type worker_simple func(http.ResponseWriter, *http.Request) error
+type worker func (http.ResponseWriter, *http.Request, *RequestInfo) error
+type worker_simple func (http.ResponseWriter, *http.Request) error
 
 // worker_http makes a simple worker out of HandlerFunc
 func worker_http(a http.HandlerFunc) worker_simple {
@@ -217,9 +217,8 @@ func worker_crash(w http.ResponseWriter, _ *http.Request) error {
 func worker_authorizer(w http.ResponseWriter, r *http.Request, info *RequestInfo) error {
 	if info.Who != "" {
 		return send_OK(w)
-	} else {
-		return &CloudError{"Authentication failed"}
 	}
+	return &CloudError{"Authentication failed"}
 }
 
 //---> PlaceFileHelpers
@@ -354,26 +353,26 @@ func worker_lister(w http.ResponseWriter, r *http.Request, info *RequestInfo) er
 	var result string = ""
 
 	filepath.Walk(listing_place, func(where string, fi os.FileInfo, err error) error {
-		if fi.IsDir() {
+			if fi.IsDir() {
+				return nil
+			}
+			md5 := ""
+			var md5err error
+			if md5, md5err = get_md5_for_file(where); err != nil {
+				return md5err
+			}
+			user_path := strings.Replace(slash(where), slash(listing_place), asked, 1)
+			mod_time := fi.ModTime().Unix()
+			result += fmt.Sprintf("%s\n%s\n%d\n", user_path, md5, mod_time)
 			return nil
-		}
-		md5 := ""
-		var md5err error
-		if md5, md5err = get_md5_for_file(where); err != nil {
-			return md5err
-		}
-		user_path := strings.Replace(slash(where), slash(listing_place), asked, 1)
-		mod_time := fi.ModTime().Unix()
-		result += fmt.Sprintf("%s\n%s\n%d\n", user_path, md5, mod_time)
-		return nil
-	})
+		})
 
 	w.Write([]byte(result))
 	return nil
 }
 
 // parse_inputs_for generates a function which deals with input stuff, leaving worker only with actual logic
-func parse_inputs_for(a worker) func(http.ResponseWriter, *http.Request) error {
+func parse_inputs_for(a worker) func (http.ResponseWriter, *http.Request) error {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		// Reading
 		Log("Doing " + r.URL.String())
@@ -406,7 +405,7 @@ func parse_inputs_for(a worker) func(http.ResponseWriter, *http.Request) error {
 
 // catch_errors_for takes function which represents normal path through request.
 // If main path fails, function returned by catcher handles the resulting error.
-func catch_errors_for(a func(w http.ResponseWriter, r *http.Request) error) func(w http.ResponseWriter, r *http.Request) {
+func catch_errors_for(a func (w http.ResponseWriter, r *http.Request) error) func (w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		defer func() { // In case things go wrong
 			if r := recover(); r != nil {
@@ -499,7 +498,7 @@ func user_and_file(param map[string][]string) (the_user *User, paths []CloudPath
 
 // catcher takes function which represents normal path through request.
 // If main path fails, function returned by catcher handles the resulting error.
-func catcher(a func(w http.ResponseWriter, r *http.Request) error) func(w http.ResponseWriter, r *http.Request) {
+func catcher(a func (w http.ResponseWriter, r *http.Request) error) func (w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := a(w, r); err != nil {
 			w.Write([]byte("FAIL:" + err.Error()))
@@ -516,13 +515,13 @@ func job(w http.ResponseWriter, r *http.Request) {
 	// Main response:
 	_, err := ioutil.ReadAll(r.Body) // Must read body first
 	if err != nil {
-		say(w, "FAIL: Reading data: "+err.Error())
+		say(w, "FAIL: Reading data: " + err.Error())
 		return
 	}
 
 	_, file_path, err := user_and_file(r.URL.Query())
 	if err != nil {
-		say(w, "FAIL:"+err.Error())
+		say(w, "FAIL:" + err.Error())
 		return
 	}
 
@@ -537,13 +536,13 @@ func progress(w http.ResponseWriter, r *http.Request) {
 	// Main response:
 	_, err := ioutil.ReadAll(r.Body) // Must read body first
 	if err != nil {
-		say(w, "FAIL: Reading data: "+err.Error())
+		say(w, "FAIL: Reading data: " + err.Error())
 		return
 	}
 
 	the_user := user(r.URL.Query())
 	if the_user == nil {
-		say(w, "FAIL:"+err.Error())
+		say(w, "FAIL:" + err.Error())
 		return
 	}
 
@@ -557,7 +556,7 @@ func progress(w http.ResponseWriter, r *http.Request) {
 	// Render
 	result, err := JobDone(JobID(id[0]))
 	if err != nil {
-		say(w, "FAIL:"+err.Error())
+		say(w, "FAIL:" + err.Error())
 		return
 	}
 
@@ -644,10 +643,8 @@ func Serve(port, static string) {
 		"/download":  parse_inputs_for(worker_downloader),
 		"/upload":    parse_inputs_for(worker_uploader),
 		"/delete":    parse_inputs_for(worker_deleter),
-
 		"/jobstart":  parse_inputs_for(worker_jober),
 		"/jobresult": parse_inputs_for(worker_progresser),
-
 		"/info":    worker_http(info),
 		"/version": worker_http(version),
 		//	"/job":      worker_http(job),
@@ -659,7 +656,7 @@ func Serve(port, static string) {
 		http.HandleFunc(url, catch_errors_for(action))
 	}
 
-	if err := http.ListenAndServe(":"+port, nil); err != nil {
+	if err := http.ListenAndServe(":" + port, nil); err != nil {
 		log.Panic(err.Error())
 	}
 }
@@ -684,7 +681,7 @@ func Get(point string) []byte {
 }
 
 func Post(point string, to_post []byte) []byte {
-	resp, err := http.Post("http://localhost:8080/"+point, "application/octet-stream", bytes.NewReader(to_post))
+	resp, err := http.Post("http://localhost:8080/" + point, "application/octet-stream", bytes.NewReader(to_post))
 	if err != nil {
 		Log("Post for [" + string(to_post) + "] failed: " + err.Error())
 		return []byte{}
@@ -703,7 +700,7 @@ func (i Identity) Authorize() string {
 }
 
 func (i Identity) Upload(remote string, data []byte) string {
-	return string(Post("upload?login="+i.Login+"&password="+i.Password+"&file="+remote, data))
+	return string(Post("upload?login=" + i.Login + "&password=" + i.Password + "&file=" + remote, data))
 }
 
 type FileID struct {
@@ -716,7 +713,7 @@ func ParseIdList(raw_list []byte) []FileID {
 	name_id_list := strings.Split(string(raw_list), "\n")
 	var result []FileID
 	for n := 0; (n + 2) < len(name_id_list); n += 3 {
-		result = append(result, FileID{name_id_list[n], name_id_list[n+1], name_id_list[n+2]})
+		result = append(result, FileID{name_id_list[n], name_id_list[n + 1], name_id_list[n + 2]})
 	}
 	return result
 }
@@ -736,7 +733,7 @@ func (i Identity) Delete(remote string) string {
 
 func (i Identity) Job(remote string) string {
 	log.Print("Starting processing " + remote)
-	return string(Post("job?login="+i.Login+"&password="+i.Password+"&file="+remote, []byte{}))
+	return string(Post("job?login=" + i.Login + "&password=" + i.Password + "&file=" + remote, []byte{}))
 }
 
 func (i Identity) Progress(id JobID) string {
@@ -746,10 +743,10 @@ func (i Identity) Progress(id JobID) string {
 
 func (i Identity) JobStart(remote string) string {
 	log.Print("Starting processing " + remote)
-	return string(Post("jobstart?login="+i.Login+"&password="+i.Password+"&file="+remote, []byte{}))
+	return string(Post("jobstart?login=" + i.Login + "&password=" + i.Password + "&file=" + remote, []byte{}))
 }
 
 func (i Identity) JobResult(remote string) string {
 	log.Print("Getting reslut of a job ")
-	return string(Post("jobresult?login="+i.Login+"&password="+i.Password+"&file="+remote, []byte{}))
+	return string(Post("jobresult?login=" + i.Login + "&password=" + i.Password + "&file=" + remote, []byte{}))
 }
