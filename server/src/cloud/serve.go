@@ -53,13 +53,13 @@ Create config strucutre.
 // Company specifies global company data, such as admin password,
 // payment facilities, etc.
 type Company struct {
-	FullName,   Login,   Password string
+	FullName,    Login,    Password string
 }
 
 // Member specifies the user of the system, with the amount of resources allocated to him.
 type Member struct {
-	FullName,   Login,   Password string
-	Renders,   Storage            int
+	FullName,    Login,    Password string
+	Renders,    Storage             int
 }
 
 // Meta holds volatile configuration information which should not be saved.
@@ -276,9 +276,8 @@ func get_md5_for_data(data []byte) string {
 func get_md5_for_file(fpath string) (string, error) {
 	if data, err := ioutil.ReadFile(fpath); err != nil {
 		return "", err
-	} else {
-		return get_md5_for_data(data), nil
 	}
+	return get_md5_for_data(data), nil
 }
 
 // worker_uploader puts a file in the cloud
