@@ -46,3 +46,5 @@ server/src/lux/example.stdout
 *.png
 *.log
 misc.xml
+*.jobout
+*.xml
