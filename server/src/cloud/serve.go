@@ -274,7 +274,8 @@ func get_md5_for_data(data []byte) string {
 
 // get_md5_for_file calculates md5 for file contents
 func get_md5_for_file(fpath string) (string, error) {
-	if data, err := ioutil.ReadFile(fpath); err != nil {
+	data, err := ioutil.ReadFile(fpath)
+	if err != nil {
 		return "", err
 	}
 	return get_md5_for_data(data), nil
