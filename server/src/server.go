@@ -22,8 +22,8 @@ func main() {
 	}
 
 	if *do_scan {
-		log.Print("Scanning mode at " + storage_base)
-		lux.WatchAndRender(storage_base)
+		log.Print("Scanning mode at " + *storage_base)
+		lux.WatchAndRender(*storage_base)
 		return
 	}
 	log.Print("Port: " + *port)
