@@ -126,21 +126,23 @@ func (a *CloudConfig) GetOsPath(login, user_path string) string {
 	return path.Join(a.GetRoot(login), user_path)
 }
 
+var cfg = &CloudConfig{
+Company{"Test Company Inc.", "company", "abc"},
+[]Member{
+Member{"Konstantin Levinski", "kdl", "p@ssw0rd", 0, 0},
+Member{"Alvine Agbo", "alvine", "abc", 0, 0},
+Member{"Shawn Ignatius", "shawn", "secret", 0, 0},
+Member{"Sheer Industries", "sheer", "all", 0, 0},
+Member{"Me", "sheer/abc", "123", 0, 0},
+Member{"Him", "sheer/asd", "456", 0, 0},
+Member{"Big CEO", "sheer/important", "7890", 0, 0}},
+os.TempDir(), nil}
+
 func default_configuration() *CloudConfig {
-	cfg := &CloudConfig{
-		Company{"Test Company Inc.", "company", "abc"},
-		[]Member{
-			Member{"Konstantin Levinski", "kdl", "p@ssw0rd", 0, 0},
-			Member{"Alvine Agbo", "alvine", "abc", 0, 0},
-			Member{"Shawn Ignatius", "shawn", "secret", 0, 0},
-			Member{"Sheer Industries", "sheer", "all", 0, 0},
-			Member{"Me", "sheer/abc", "123", 0, 0},
-			Member{"Him", "sheer/asd", "456", 0, 0},
-			Member{"Big CEO", "sheer/important", "7890", 0, 0}},
-		os.TempDir(), nil}
 	cfg.organize()
 	return cfg
 }
+
 
 // Entry point to getting configuration
 func TheCloud() *CloudConfig {

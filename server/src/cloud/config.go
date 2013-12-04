@@ -17,6 +17,10 @@ func unused_init() {
 const users_config = "users.json"
 
 func Configure(where string) {
+
+	TheCloud().TheRoot = where;
+	log.Printf("Setting path to [%s]", where);
+
 	var err error
 	// Create filestore from the location
 	theCloud, err = NewFileStore(where)
