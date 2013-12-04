@@ -311,20 +311,70 @@ func TestReadConfiguraton(t * testing.T) {
 
 }
 
-func TestDoRender(t * testing.T) {
+func TestDoFindRender(t * testing.T) {
 	a := Resolver{}
-	err := a.Scan(STORE_PLACE)
-	if err != nil {
+
+	var err error
+
+	to_render := path.Join(STORE_PLACE, "reference/RenderingData.xml")
+	marker := to_render + ".job"
+
+	if _, err = os.Stat(to_render); err != nil {
 		t.Fatal(err.Error())
 	}
 
-	new := path.Join(STORE_PLACE, "RenderingData.xml")
-	marker := new + ".job"
+	if _, err = os.Stat(marker); err == nil {
+		t.Fatalf("Marker [%s] already is!!", marker)
+	}
+
 
 	touch(marker)
 
 	if _, err = os.Stat(marker); err != nil {
 		t.Fatal(err.Error())
-
 	}
+
+
+	if _, err = os.Stat(to_render); err != nil {
+		t.Fatal("Must exist " + to_render + ":" + err.Error())
+	}
+
+	// Scan in advance
+	err = a.Scan(STORE_PLACE)
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+
+	t.Logf("Files:\n%#v\n", a)
+
+	place := ""
+
+	if err = DoFindRender(&a, func(a string) {place = a}) ; err != nil{
+		t.Fatal(err.Error())
+	}
+
+	if _, err = os.Stat(marker); err == nil {
+		t.Fatal(marker + " not supposed to exist")
+	}
+
+	if place != to_render {
+		t.Fatalf("[%s] must be equal to [%s]", place, to_render)
+	}
+
+	// Post-condition check
+	if err = DoFindRender(&a, func(a string) {t.Fatal("All jobs supposed to have been processed already")}) ; err != nil{
+		t.Fatal(err.Error())
+	}
+
+	if finally, err := a.Get("nonexisting reference/RenderingData.xml"); err != nil {
+		t.Fatal(err.Error())
+	}  else {
+		if _, err := os.Stat( finally); err != nil {
+			t.Fatalf("File [%s] seem to not exist:%s", finally, err.Error())
+		}
+	}
+}
+
+func NotTestRenderScene(t * testing.T){
+	WatchAndRender(STORE_PLACE)
 }

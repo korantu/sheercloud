@@ -122,10 +122,12 @@ func DoRenderScene(s LUXScener, output, status string) error {
 		return err
 	}
 
+	/*
 	err = DoRender("C:\\Users\\6C57~1\\AppData\\Local\\Temp/scene1385315114.lsx", "C:\\github\\sheercloud\\server\\src\\lux\\new.png", "C:\\github\\sheercloud\\server\\src\\lux\\new.log")
 	if err != nil {
 		return err
 	}
+    */
 
 	return nil
 }
@@ -177,7 +179,7 @@ func (a Resolver) Get(some string) (string, error) {
 			return a[i], nil
 		}
 	}
-	return "", RenderError{"Unable to locate file ["+some+"] in the list", nil}
+	return "", RenderError{"Unable to locate file [" + some + "] in the list", nil}
 }
 
 
@@ -192,15 +194,105 @@ func (a Resolver) EndsWith(suffix string) []string {
 	return out
 }
 
-func touch( file string) error{
+func touch(file string) error {
 	f, err := os.Create(file)
 	if err != nil {
-	   return err
+		return err
 	}
 	defer f.Close()
+	return nil
 }
 
 // DoRender scans Resolver, picks out .job extensions, delete them and starts renderfunc for each.
-func DoRender(a Resolver, renderfunc func(string)) error {
-	return RenderError{"Not implemented", nil}
+func DoFindRender(a * Resolver, renderfunc func (string)) error {
+	marker := ".job"
+
+	some := []string{}
+
+	for _, file := range *a {
+		if strings.HasSuffix(file, marker) {
+			main := file[:len(file) - len(marker)]
+			if info, err := os.Stat(main); err != nil || info.IsDir() {
+				return RenderError{"Unable to use [" + main + "]", err}
+			}
+
+			if _, err := os.Stat(file); err != nil {
+				return RenderError{"Should exist: [" + file + "]", err}
+			}
+
+			if err := os.Remove(file); err != nil {
+				return err;
+			}
+
+			if _, err := os.Stat(file); err == nil {
+				return RenderError{"Just deleted but still exists: [" + file + "]", err}
+			}
+
+			log.Printf("Removed %s", file)
+			renderfunc(main)
+		} else {
+			some = append(some, file)
+		}
+	}
+
+	*a = some
+	return nil
+}
+
+// WatchAndRender looks for .xml.job and starts rendering for then, with .png anf .jobout
+func WatchAndRender(some_dir string) error {
+	log.Printf("Scanning %s", some_dir)
+	a := Resolver{}
+
+
+	// Now simple forward, should include job control as well
+	render := func(a LUXScener, where, log string) {
+		DoRenderScene(a, where, log)
+	}
+
+	for {
+		a.Scan(some_dir)
+		DoFindRender(&a, func(scene_file string) {
+				scene_log := scene_file + ".jobout"
+				scene_picture := scene_file + ".png"
+				var scene LUXScener
+				say := func(what string) {
+					f, err := os.OpenFile(scene_log, os.O_APPEND | os.O_WRONLY, 0666)
+					if err != nil {
+						f, err = os.Create(scene_log)
+						log.Printf("Creating log: [%s] [%s]", what, scene_log)
+						if err != nil {
+							log.Print("Failed to create log:" + err.Error())
+						}
+					}
+					defer f.Close()
+					fmt.Fprintf(f, "[%s]\n", what)
+				}
+				say("Picking " + scene_file)
+				switch {
+				case strings.HasSuffix(scene_file, ".osgt"):
+					say("OSGT format; fixed camera")
+					osg, err := ReadFileOSGT(scene_file)
+					if err != nil {
+						log.Printf("Failed to read scene [%s]", scene)
+						say(err.Error())
+						return
+					}
+					scene = LUXWorld{LUXHeader{[9]float32{1220, 100, 1220, 0, 0, 0, -1, 0, 0}, 31.0, 150, 150, 20}, LUXSequence{LUXHeadLight, LUXOSGTGeometry{*osg}}}
+				case strings.HasSuffix(scene_file, ".xml"):
+					say("Full format; controlled camera")
+					cfg, err := ReadConfigurationFile(scene_file)
+					if err != nil {
+						log.Printf("Failed to read full scene [%s]", scene)
+						say(err.Error())
+						return
+					}
+					scene = LUXSceneFull{a, *cfg}
+				default:
+					log.Printf("Unknown scene format for [%s]", scene)
+					return
+				}
+				render(scene, scene_picture, scene_log)
+			})
+	}
 }
