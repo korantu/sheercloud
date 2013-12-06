@@ -346,7 +346,7 @@ func worker_lister(w http.ResponseWriter, r *http.Request, info *RequestInfo) er
 	listing_place := the_root
 	asked := ""
 
-	log.Print("Using path [%s]", the_root)
+	log.Printf("Using path [%s]", the_root)
 
 	param := r.URL.Query()
 
@@ -376,6 +376,8 @@ func worker_lister(w http.ResponseWriter, r *http.Request, info *RequestInfo) er
 	}
 
 	var result string = ""
+
+	log.Printf("Listing user files from: [%s]", listing_place);
 
 	filepath.Walk(listing_place, func(where string, fi os.FileInfo, err error) error {
 			if fi.IsDir() && dirs == nil {
