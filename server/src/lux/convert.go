@@ -670,7 +670,7 @@ func (a LUXSceneFull) Scenify(w io.Writer) error {
 	clamp(&res_x)
 	clamp(&res_y)
 
-	res_x, res_y = 200, 200; // Debug
+	// res_x, res_y = 200, 200; // Debug
 
 	all := LUXWorld{LUXHeader{[9]float32{c.Eye.X, c.Eye.Y, c.Eye.Z ,
 		c.Center.X, c.Center.Y, c.Center.Z,
