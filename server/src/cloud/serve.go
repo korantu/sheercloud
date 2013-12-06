@@ -393,7 +393,7 @@ func worker_lister(w http.ResponseWriter, r *http.Request, info *RequestInfo) er
 			user_path := strings.Replace(slash(where), slash(listing_place), asked, 1)
 			mod_time := fi.ModTime().Unix()
 			is_depth := strings.Count(user_path, "/")
-			log.Printf("is/max :%d/%d", is_depth, max_depth);
+			log.Printf("%s is/max :%d/%d", user_path, is_depth, max_depth);
 			if max_depth < 0 || is_depth <= max_depth {
 			    result += fmt.Sprintf("%s\n%s\n%d\n", user_path, md5, mod_time)
 			}
