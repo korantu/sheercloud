@@ -18,8 +18,6 @@ const users_config = "users.json"
 
 func Configure(where string) {
 
-	TheCloud().TheRoot = where;
-	log.Printf("Setting path to [%s]", where);
 
 	var err error
 	// Create filestore from the location
@@ -28,6 +26,8 @@ func Configure(where string) {
 		panic(err.Error())
 	}
 
+	TheCloud().TheRoot = where;
+	log.Printf("Setting path to [%s]", where);
 	// Populate users
 	users_place := path.Join(theCloud.location, users_config)
 
