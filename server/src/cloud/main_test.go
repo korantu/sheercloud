@@ -151,6 +151,14 @@ func TestFileList(t *testing.T) {
 		}
 		checked[to_check.File] = true
 	}
+
+	got = Get("list?login=sheer/important&password=7890&file=to/list&depth=2")
+	log.Printf("Lines:%d",len(strings.Split(string(got), "\n")))
+	log.Printf("Content:%s", string(got))
+
+	got = Get("list?login=sheer/important&password=7890&file=to/list&depth=1&dirs=1")
+	log.Printf("Lines:%d",len(strings.Split(string(got), "\n")))
+	log.Printf("Content:%s", string(got))
 }
 
 func TestFileListInterface(t *testing.T) {

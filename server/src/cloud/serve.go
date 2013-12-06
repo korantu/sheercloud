@@ -53,13 +53,13 @@ Create config strucutre.
 // Company specifies global company data, such as admin password,
 // payment facilities, etc.
 type Company struct {
-	FullName,    Login,    Password string
+	FullName,     Login,     Password string
 }
 
 // Member specifies the user of the system, with the amount of resources allocated to him.
 type Member struct {
-	FullName,    Login,    Password string
-	Renders,    Storage             int
+	FullName,     Login,     Password string
+	Renders,     Storage              int
 }
 
 // Meta holds volatile configuration information which should not be saved.
@@ -127,22 +127,21 @@ func (a *CloudConfig) GetOsPath(login, user_path string) string {
 }
 
 var cfg = &CloudConfig{
-Company{"Test Company Inc.", "company", "abc"},
-[]Member{
-Member{"Konstantin Levinski", "kdl", "p@ssw0rd", 0, 0},
-Member{"Alvine Agbo", "alvine", "abc", 0, 0},
-Member{"Shawn Ignatius", "shawn", "secret", 0, 0},
-Member{"Sheer Industries", "sheer", "all", 0, 0},
-Member{"Me", "sheer/abc", "123", 0, 0},
-Member{"Him", "sheer/asd", "456", 0, 0},
-Member{"Big CEO", "sheer/important", "7890", 0, 0}},
-os.TempDir(), nil}
+	Company{"Test Company Inc.", "company", "abc"},
+	[]Member{
+		Member{"Konstantin Levinski", "kdl", "p@ssw0rd", 0, 0},
+		Member{"Alvine Agbo", "alvine", "abc", 0, 0},
+		Member{"Shawn Ignatius", "shawn", "secret", 0, 0},
+		Member{"Sheer Industries", "sheer", "all", 0, 0},
+		Member{"Me", "sheer/abc", "123", 0, 0},
+		Member{"Him", "sheer/asd", "456", 0, 0},
+		Member{"Big CEO", "sheer/important", "7890", 0, 0}},
+	os.TempDir(), nil}
 
 func default_configuration() *CloudConfig {
 	cfg.organize()
 	return cfg
 }
-
 
 // Entry point to getting configuration
 func TheCloud() *CloudConfig {
@@ -347,6 +346,28 @@ func worker_lister(w http.ResponseWriter, r *http.Request, info *RequestInfo) er
 	listing_place := the_root
 	asked := ""
 
+	param := r.URL.Query()
+
+	depth := param["depth"]
+	dirs := param["dirs"]
+
+	max_depth := -1;
+
+	if depth != nil && len(depth) > 0 {
+		log.Print("Depth provied");
+		n, err := fmt.Sscanf(depth[0], "%d", &max_depth)
+		if err == nil && n == 1 {
+			log.Print("limiting depth to ", max_depth);
+		} else {
+			log.Print("Failed to parse depth ", depth[0])
+		}
+	}
+
+	if dirs != nil {
+		log.Print("Dirs provied");
+	}
+
+
 	if len(info.Paths) > 0 {
 		asked = info.Paths[0]
 		listing_place = TheCloud().GetOsPath(info.Who, asked)
@@ -355,17 +376,23 @@ func worker_lister(w http.ResponseWriter, r *http.Request, info *RequestInfo) er
 	var result string = ""
 
 	filepath.Walk(listing_place, func(where string, fi os.FileInfo, err error) error {
-			if fi.IsDir() {
+			if fi.IsDir() && dirs == nil {
 				return nil
 			}
 			md5 := ""
 			var md5err error
-			if md5, md5err = get_md5_for_file(where); err != nil {
-				return md5err
+			if ! fi.IsDir() {
+				if md5, md5err = get_md5_for_file(where); err != nil {
+					return md5err
+				}
 			}
 			user_path := strings.Replace(slash(where), slash(listing_place), asked, 1)
 			mod_time := fi.ModTime().Unix()
-			result += fmt.Sprintf("%s\n%s\n%d\n", user_path, md5, mod_time)
+			is_depth := strings.Count(user_path, "/")
+			log.Printf("is/max :%d/%d", is_depth, max_depth);
+			if max_depth < 0 || is_depth <= max_depth {
+			    result += fmt.Sprintf("%s\n%s\n%d\n", user_path, md5, mod_time)
+			}
 			return nil
 		})
 
