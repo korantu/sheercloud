@@ -19,17 +19,17 @@ const users_config = "users.json"
 func Configure(where string) {
 
 
-	var err error
+//	var err error
 	// Create filestore from the location
-	theCloud, err = NewFileStore(where)
+/*	theCloud, err = NewFileStore(where)
 	if err != nil {
 		panic(err.Error())
 	}
-
+  */
 	TheCloud().TheRoot = where;
 	log.Printf("Setting path to [%s]", where);
 	// Populate users
-	users_place := path.Join(theCloud.location, users_config)
+	users_place := path.Join(TheCloud().TheRoot, users_config)
 
 	old_guys := Users{} // Where to try to load
 
@@ -46,7 +46,7 @@ func Configure(where string) {
 }
 
 func SaveUsers() {
-	users_place := path.Join(theCloud.location, users_config)
+	users_place := path.Join(path.Join(TheCloud().TheRoot, users_config))
 
 	saved_guys := Users{}
 	for _, user := range by_login {

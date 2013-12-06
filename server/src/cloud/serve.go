@@ -346,6 +346,8 @@ func worker_lister(w http.ResponseWriter, r *http.Request, info *RequestInfo) er
 	listing_place := the_root
 	asked := ""
 
+	log.Print("Using path [%s]", the_root)
+
 	param := r.URL.Query()
 
 	depth := param["depth"]

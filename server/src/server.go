@@ -2,10 +2,10 @@
 package main
 
 import (
-	"cloud"
 	"flag"
 	"log"
 	"lux"
+	"cloud"
 )
 
 var storage_base = flag.String("store", "./store", "Location of the data")
