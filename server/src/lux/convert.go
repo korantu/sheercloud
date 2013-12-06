@@ -38,7 +38,7 @@ type Point [4]float32
 type Matrix[16]float32
 
 type Camera struct {
-	Eye,                  Up,                  Center Point
+	Eye,                    Up,                    Center Point
 }
 
 /* <RenderingData>
@@ -116,8 +116,8 @@ type RenderingData struct {
 }}}}
 	RenderingSettings struct {
 	Camera struct {
-	CameraType                                         string `xml:",attr"`
-	Eye,                Center,                Up      XMLPosition
+	CameraType                                             string `xml:",attr"`
+	Eye,                  Center,                  Up      XMLPosition
 	CameraDisplaySettings struct {
 	FOV            int `xml:"fov,attr"`
 	Resolution_X   int `xml:",attr"`
@@ -128,8 +128,8 @@ type RenderingData struct {
 }
 	Lights struct {
 	Lights []struct {
-	Position                        XMLPosition
-	Diffuse,               Specular XMLShaderParam
+	Position                          XMLPosition
+	Diffuse,                 Specular XMLShaderParam
 }
 }
 }
@@ -257,8 +257,6 @@ func scanOSGT(some * bufio.Scanner) (*OSGT, error) {
 	return out, nil
 }
 
-
-
 // OBJ
 
 type OBJTriad [3]float32
@@ -267,7 +265,7 @@ type OBJNormal OBJTriad
 type OBJUW [2]float32
 
 type OBJFaceVertex struct {
-	V,       N,       T int
+	V,         N,         T int
 }
 
 type OBJFace []OBJFaceVertex
@@ -371,7 +369,7 @@ type LUXScener interface {
 type LUXStringScene string
 
 func (a  LUXStringScene) Scenify(w io.Writer) error {
-	_, err := w.Write([]byte("\n"+a+"\n"))
+	_, err := w.Write([]byte("\n" + a + "\n"))
 	return err
 }
 
@@ -408,9 +406,9 @@ func (a LUXWrap) Scenify(w io.Writer) error {
 
 type LUXHeader struct {
 	CameraFromToUp [9]float32
-	FOV      float32
-	X,     Y int
-	PPX      int
+	FOV        float32
+	X,       Y int
+	PPX        int
 }
 
 func (a LUXHeader) Scenify(w io.Writer) error {
@@ -435,7 +433,7 @@ Sampler "metropolis"
 `))
 
 type LUXWorld struct {
-	Head,     Rest LUXScener
+	Head,       Rest LUXScener
 }
 
 func (a LUXWorld) Scenify(w io.Writer) error {
@@ -491,9 +489,9 @@ AttributeEnd
 `))
 
 type LUXMesh struct {
-	N,    P [][3]float32
-	UV      [][2]float32
-	T       []int
+	N,      P [][3]float32
+	UV        [][2]float32
+	T         []int
 }
 
 func (an OBJ) Scenify(w io.Writer) error {
@@ -510,7 +508,7 @@ func (an OBJ) Scenify(w io.Writer) error {
 						// Sanity check:
 						old_normal := face[v].N - 1
 						old_uv := face[v].T - 1
-						if (len(an.Vertices) < old_index+1) || (len(an.Normals) < old_normal+1) || (len(an.UWs) < old_uv+1) {
+						if (len(an.Vertices) < old_index + 1) || (len(an.Normals) < old_normal + 1) || (len(an.UWs) < old_uv + 1) {
 							lm.T = append(lm.T, 0)
 							log.Printf("Bad face: %#v max(V:%d N:%d U:%d)", face[v], len(an.Vertices), len(an.Normals), len(an.UWs))
 							//							return NewConvertError("Indices/Vertices mismatch", nil)
@@ -523,7 +521,7 @@ func (an OBJ) Scenify(w io.Writer) error {
 							if old_uv >= 0 {
 								lm.UV = append(lm.UV, an.UWs[old_uv])
 							} else {
-								lm.UV = append(lm.UV, [2]float32{0,0})
+								lm.UV = append(lm.UV, [2]float32{0, 0})
 							}
 
 							lm.T = append(lm.T, old_2_new[old_index])
@@ -545,7 +543,7 @@ type LUXOSGTGeometry struct {
 
 // Define how it works
 
-func ( cover LUXOSGTGeometry ) Scenify( w io.Writer ) error {
+func (cover LUXOSGTGeometry) Scenify(w io.Writer) error {
 
 	an := cover.Osgt
 
@@ -567,10 +565,10 @@ func ( cover LUXOSGTGeometry ) Scenify( w io.Writer ) error {
 					fmt.Sscanf(k.Key, "%f %f %f", &a[0], &a[1], &a[2])
 					lm.P = append(lm.P, a)
 				}
-				for tri := 1; tri < len(lm.P)-1; tri++{
-					lm.T = append(lm.T, 0, tri, tri+1)
+				for tri := 1; tri < len(lm.P) - 1; tri++ {
+					lm.T = append(lm.T, 0, tri, tri + 1)
 				}
-				if err := LUXMeshVertexTemplate.Execute(w, lm); err!= nil {
+				if err := LUXMeshVertexTemplate.Execute(w, lm); err != nil {
 					log.Print("Problem: ", err)
 					return err
 				}
@@ -582,28 +580,27 @@ func ( cover LUXOSGTGeometry ) Scenify( w io.Writer ) error {
 
 
 	// Setup for test:
-/*
-	_ := LUXStringScene(`AttributeBegin
-	Rotate 135 1 0 0
+	/*
+		_ := LUXStringScene(`AttributeBegin
+		Rotate 135 1 0 0
 
-	Texture "clouds_noise_generator" "float" "blender_clouds"
-		"string coordinates" ["local"] "float noisesize" [2.15] "string noisebasis" "voronoi_crackle"
+		Texture "clouds_noise_generator" "float" "blender_clouds"
+			"string coordinates" ["local"] "float noisesize" [2.15] "string noisebasis" "voronoi_crackle"
 
-	Texture "clouds_diffuse" "color" "mix"
-		"color tex1" [0.8 0.1 0.1] "color tex2" [0.1 0.1 0.8] "texture amount" "clouds_noise_generator"
+		Texture "clouds_diffuse" "color" "mix"
+			"color tex1" [0.8 0.1 0.1] "color tex2" [0.1 0.1 0.8] "texture amount" "clouds_noise_generator"
 
-	Material "matte"
-		"texture Kd" "clouds_diffuse"
-	Shape "disk" "float radius" [500] "float height" [-1]
-AttributeEnd
-`)
-*/
+		Material "matte"
+			"texture Kd" "clouds_diffuse"
+		Shape "disk" "float radius" [500] "float height" [-1]
+	AttributeEnd
+	`)
+	*/
 
-//	return body.Scenify(w)
+	//	return body.Scenify(w)
 	return nil
 
 }
-
 
 func LUXDoTransform(tr [16]float32, a LUXScener) LUXScener {
 	return LUXWrap{
@@ -617,16 +614,15 @@ type LUXTransform struct {
 
 var LUXTransformBeginTemplate = template.Must(template.New("LUXTransformTemplate").Parse(`Transform [{{range .Transform}} {{.}} {{end}}]`))
 
-func ( an LUXTransform ) Scenify(w io.Writer) error {
+func (an LUXTransform) Scenify(w io.Writer) error {
 	if err := LUXTransformBeginTemplate.Execute(w, an); err != nil {
 		return err
 	}
 	return nil
 }
 
-
 type LUXLight struct {
-  Position [3]float32
+	Position [3]float32
 }
 
 var LUXLightTemplate = template.Must(template.New("LUXLight").Parse(`
@@ -638,13 +634,12 @@ LightSource "point"
 AttributeEnd
 `))
 
-func ( an LUXLight ) Scenify(w io.Writer) error {
+func (an LUXLight) Scenify(w io.Writer) error {
 	if err := LUXLightTemplate.Execute(w, an); err != nil {
 		return err
 	}
 	return nil
 }
-
 
 type LUXSceneFull struct {
 	Files Resolver
@@ -659,9 +654,27 @@ func (a LUXSceneFull) Scenify(w io.Writer) error {
 	osgt, err := ReadFileOSGT(scene_file_name)
 	walls_scene := LUXOSGTGeometry{*osgt}
 
-	c:=a.World.RenderingSettings.Camera
+	c := a.World.RenderingSettings.Camera
 
-	all := LUXWorld{LUXHeader{[9]float32{c.Eye.X, c.Eye.Y, c.Eye.Z , c.Center.X, c.Center.Y, c.Center.Z, c.Up.X, c.Up.Y, c.Up.Z}, 70.0, 150, 150, 20}, LUXSequence{LUXHeadLight, walls_scene}}
+	clamp := func(an * int) {
+		if *an > 1000 || *an < 50 {
+			new := 150
+			log.Print("Incorrect resilution %d; Changed to %d", *an, new)
+			*an = new
+		}
+	}
+
+	res_x := a.World.RenderingSettings.Camera.CameraDisplaySettings.Resolution_X
+	res_y := a.World.RenderingSettings.Camera.CameraDisplaySettings.Resolution_Y
+
+	clamp(&res_x)
+	clamp(&res_y)
+
+	res_x, res_y = 200, 200; // Debug
+
+	all := LUXWorld{LUXHeader{[9]float32{c.Eye.X, c.Eye.Y, c.Eye.Z ,
+		c.Center.X, c.Center.Y, c.Center.Z,
+		c.Up.X, c.Up.Y, c.Up.Z}, 70.0, res_x, res_y, 20}, LUXSequence{LUXHeadLight, walls_scene}}
 
 	return all.Scenify(w)
 }
