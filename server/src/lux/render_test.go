@@ -290,6 +290,7 @@ func TestResolver(t* testing.T) {
 
 }
 
+// ResrTeadConfiguration verifies complete scene reading from the configuration.
 func TestReadConfiguraton(t * testing.T) {
 	a := Resolver{}
 	err := a.Scan(STORE_PLACE)

@@ -229,6 +229,17 @@ func ReadFileOSGT(some string) (*OSGT, error) {
 	return readOSGT(f)
 }
 
+func ReadFileOBJ(some string) (*OBJ, error) {
+	f, err := os.Open(some)
+	if err != nil {
+		return nil, RenderError{"Failed to read OBJ file", err}
+	}
+	defer f.Close()
+	return readOBJ(f)
+}
+
+
+
 func scanOSGT(some * bufio.Scanner) (*OSGT, error) {
 
 	out := NewOSGT()
@@ -670,11 +681,59 @@ func (a LUXSceneFull) Scenify(w io.Writer) error {
 	clamp(&res_x)
 	clamp(&res_y)
 
-	// res_x, res_y = 200, 200; // Debug
+	 res_x, res_y = 200, 200 // Debug
+
+	get_model := func (i int) (scn LUXScener, err error) {
+		item := a.World.Models.LibraryItem[i]
+		real_path, err := a.Files.Get(item.Path)
+		if err != nil {
+			return nil, RenderError{"Unable to resolve path:", err}
+		}
+		objmodel, err := ReadFileOBJ(real_path)
+		if err != nil {
+			return nil, RenderError{"Failed to read model", err}
+		}
+
+		tr :=[16]float32{}
+ 		n, err := fmt.Sscanf(item.Transform, "%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f",
+			&tr[0], &tr[1], &tr[2], &tr[3],
+			&tr[4], &tr[5], &tr[6], &tr[7],
+			&tr[8], &tr[9], &tr[10], &tr[11],
+			&tr[12], &tr[13], &tr[14], &tr[15])
+
+		if err != nil || n != 16 {
+			return nil, RenderError{"Unable to obtain transformation for model " + real_path, err}
+		}
+
+		 return LUXDoTransform(tr, objmodel), nil
+
+	}
+
+	var objects_light = LUXSequence{LUXHeadLight}; // Default
+	lights := a.World.RenderingSettings.Lights.Lights
+	if lights != nil && len(lights) > 0 {
+		objects_light = LUXSequence{};
+		for _, l := range lights {
+			objects_light = append(objects_light, LUXLight{[3]float32{l.Position.X, l.Position.Y, l.Position.Z}})
+		}
+
+	}
+
+	objects_scene := LUXSequence{}
+	// Each chair
+	for i, obj := range a.World.Models.LibraryItem {
+		 model, err := get_model(i)
+		if err == nil {
+			log.Print("Attempting ", model)
+			objects_scene = append(objects_scene, model)
+		} else {
+			log.Print("Problems dealing with model: ", obj.Path)
+		}
+	}
 
 	all := LUXWorld{LUXHeader{[9]float32{c.Eye.X, c.Eye.Y, c.Eye.Z ,
 		c.Center.X, c.Center.Y, c.Center.Z,
-		c.Up.X, c.Up.Y, c.Up.Z}, float32(c.CameraDisplaySettings.FOV), res_x, res_y, 20}, LUXSequence{LUXHeadLight, walls_scene}}
+		c.Up.X, c.Up.Y, c.Up.Z}, float32(c.CameraDisplaySettings.FOV), res_x, res_y, 20}, LUXSequence{objects_light, walls_scene, objects_scene}}
 
 	return all.Scenify(w)
 }
