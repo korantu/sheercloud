@@ -174,75 +174,8 @@ func testReadObj(t * testing.T, where string) * OBJ {
 	return rd
 }
 
-func TestObjLux(t * testing.T) {
-	an := OBJ{}
-	// Shoud be simpler?
-	an.Geodes = []OBJGeode{
-		OBJGeode{"a", []OBJFace{[]OBJFaceVertex{OBJFaceVertex{1, 1, 1}, OBJFaceVertex{2, 1, 2}, OBJFaceVertex{3, 1, 3}}}},
-		OBJGeode{"b", []OBJFace{[]OBJFaceVertex{OBJFaceVertex{1, 1, 1}, OBJFaceVertex{3, 1, 3}, OBJFaceVertex{4, 1, 4}}}}}
-	an.Vertices = []OBJVector{OBJVector{0, 0, 0}, OBJVector{0, 21, 0}, OBJVector{21, 21, 0}, OBJVector{21, 0, 0}}
-	an.Normals = []OBJNormal{OBJNormal{0, 0, 1}}
-	an.UWs = []OBJUW{OBJUW{0, 0}, OBJUW{0, 1}, OBJUW{1, 1}, OBJUW{1, 0}}
-
-	b := &bytes.Buffer{}
-	an.Scenify(b)
-	if got := (string(b.Bytes())); !strings.Contains(got, "21") {
-		t.Fatal("Expected to get 21 somewhere in there.")
-	}
-
-	chair := LUXWorld{LUXHeader{[9]float32{120, 100, 120, 0, 40, 0, 0, 1, 0}, 41.0, 150, 150, 2}, LUXSequence{LUXHeadLight, testReadObj(t, "Swivel_Chair.obj")}}
-	table := LUXWorld{LUXHeader{[9]float32{120, 100, 120, 0, 40, 0, 0, 1, 0}, 50.0, 150, 150, 2}, LUXSequence{LUXHeadLight, testReadObj(t, "Coffe-Table.obj")}}
-	bed := LUXWorld{LUXHeader{[9]float32{220, 200, 220, 0, 40, 0, 0, 1, 0}, 41.0, 150, 150, 2}, LUXSequence{LUXHeadLight, testReadObj(t, "Dalselv_Bed.obj")}}
-	renderScene(t, chair, "chair")
-	renderScene(t, table, "table")
-	renderScene(t, bed, "bed")
-}
-
-func testRenderOsgtLux(t * testing.T, ref, name string) {
-	f, err := os.Open("../../../render/reference/" + ref)
-	if err != nil {
-		t.Fatal(err.Error())
-	}
-	var rd * OSGT
-	if rd, err = readOSGT(f); err != nil {
-		t.Log(err.Error())
-		t.Fail()
-	}
-
-	walls_scene := LUXOSGTGeometry {*rd}
-	walls := LUXWorld{LUXHeader{[9]float32{1220, 100, 1220, 0, 0, 0, -1, 0, 0}, 31.0, 150, 150, 20}, LUXSequence{LUXHeadLight, walls_scene}}
-	renderScene(t, walls, name)
-
-}
-
-func TestOsgtLux(t * testing.T) {
-	testRenderOsgtLux(t, "testProj_design_1.osgt", "main_walls")
-	testRenderOsgtLux(t, "KdlProject_design_1.osgt", "tri_walls")
-}
-
-func TestTransformLux(t * testing.T) {
-	disk := LUXStringScene(`AttributeBegin
-		Shape "disk" "float radius" [1]
-		AttributeEnd`)
-	transform := LUXWorld{LUXHeader{[9]float32{0, 0, -1, 0, 0, 0, 0, 1, 0}, 90.0, 150, 150, 1}, LUXSequence{LUXHeadLight,
-		LUXDoTransform([16]float32{
-				0.5, 0, 0, 0,
-				0, 0.5, 0, 0,
-				0, 0, 0.5, 0,
-				0, 0.5, 0, 1}, disk)}}
-	renderScene(t, transform, "transform")
-}
-
-
-func TestLightLux(t * testing.T) {
-	disk := LUXStringScene(`AttributeBegin
-		Shape "sphere" "float radius" [1]
-		AttributeEnd`)
-	light := LUXWorld{LUXHeader{[9]float32{0, 0, -1.3, 0, 0, 0, 0, 1, 0}, 90.0, 100, 100, 100}, LUXSequence{LUXLight{[3]float32{-0, -0, -1.3}}, disk}}
-	renderScene(t, light, "light")
-}
-
-// TestResolver lists all the file paths. May also be further used for new file detection.
+// TestResolver checlks if Resolver lists all the file paths.
+// May also be further used for new file detection.
 func TestResolver(t* testing.T) {
 	a, b := Resolver{}, Resolver{}
 	var err error
@@ -290,8 +223,81 @@ func TestResolver(t* testing.T) {
 
 }
 
-// ResrTeadConfiguration verifies complete scene reading from the configuration.
-func TestReadConfiguraton(t * testing.T) {
+// TestObjLux tests conversion from obj format.
+func TestObjLux(t * testing.T) {
+	an := OBJ{}
+	// Shoud be simpler?
+	an.Geodes = []OBJGeode{
+		OBJGeode{"a", []OBJFace{[]OBJFaceVertex{OBJFaceVertex{1, 1, 1}, OBJFaceVertex{2, 1, 2}, OBJFaceVertex{3, 1, 3}}}},
+		OBJGeode{"b", []OBJFace{[]OBJFaceVertex{OBJFaceVertex{1, 1, 1}, OBJFaceVertex{3, 1, 3}, OBJFaceVertex{4, 1, 4}}}}}
+	an.Vertices = []OBJVector{OBJVector{0, 0, 0}, OBJVector{0, 21, 0}, OBJVector{21, 21, 0}, OBJVector{21, 0, 0}}
+	an.Normals = []OBJNormal{OBJNormal{0, 0, 1}}
+	an.UWs = []OBJUW{OBJUW{0, 0}, OBJUW{0, 1}, OBJUW{1, 1}, OBJUW{1, 0}}
+
+	b := &bytes.Buffer{}
+	an.Scenify(b)
+	if got := (string(b.Bytes())); !strings.Contains(got, "21") {
+		t.Fatal("Expected to get 21 somewhere in there.")
+	}
+
+	chair := LUXWorld{LUXHeader{[9]float32{120, 100, 120, 0, 40, 0, 0, 1, 0}, 41.0, 150, 150, 2}, LUXSequence{LUXHeadLight, testReadObj(t, "Swivel_Chair.obj")}}
+	table := LUXWorld{LUXHeader{[9]float32{120, 100, 120, 0, 40, 0, 0, 1, 0}, 50.0, 150, 150, 2}, LUXSequence{LUXHeadLight, testReadObj(t, "Coffe-Table.obj")}}
+	bed := LUXWorld{LUXHeader{[9]float32{220, 200, 220, 0, 40, 0, 0, 1, 0}, 41.0, 150, 150, 2}, LUXSequence{LUXHeadLight, testReadObj(t, "Dalselv_Bed.obj")}}
+	renderScene(t, chair, "chair")
+	renderScene(t, table, "table")
+	renderScene(t, bed, "bed")
+}
+
+// testRenderOsgtLux renders a reference osgt objects.
+func testRenderOsgtLux(t * testing.T, ref, name string) {
+	f, err := os.Open("../../../render/reference/" + ref)
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+	var rd * OSGT
+	if rd, err = readOSGT(f); err != nil {
+		t.Log(err.Error())
+		t.Fail()
+	}
+
+	walls_scene := LUXOSGTGeometry {*rd}
+	walls := LUXWorld{LUXHeader{[9]float32{1220, 100, 1220, 0, 0, 0, -1, 0, 0}, 31.0, 150, 150, 20}, LUXSequence{LUXHeadLight, walls_scene}}
+	renderScene(t, walls, name)
+
+}
+
+// TestOsgtLux verifies rendering for reference osgt scenes.
+func TestOsgtLux(t * testing.T) {
+	testRenderOsgtLux(t, "testProj_design_1.osgt", "main_walls")
+	testRenderOsgtLux(t, "KdlProject_design_1.osgt", "tri_walls")
+}
+
+// TestTransformLux verifies that LUX transform is behaving properly.
+func TestTransformLux(t * testing.T) {
+	disk := LUXStringScene(`AttributeBegin
+		Shape "disk" "float radius" [1]
+		AttributeEnd`)
+	transform := LUXWorld{LUXHeader{[9]float32{0, 0, -1, 0, 0, 0, 0, 1, 0}, 90.0, 150, 150, 1}, LUXSequence{LUXHeadLight,
+		LUXDoTransform([16]float32{
+				0.5, 0, 0, 0,
+				0, 0.5, 0, 0,
+				0, 0, 0.5, 0,
+				0, 0.5, 0, 1}, disk)}}
+	renderScene(t, transform, "transform")
+}
+
+// TetLightLux verifies lights rendering.
+func TestLightLux(t * testing.T) {
+	disk := LUXStringScene(`AttributeBegin
+		Shape "sphere" "float radius" [1]
+		AttributeEnd`)
+	light := LUXWorld{LUXHeader{[9]float32{0, 0, -1.3, 0, 0, 0, 0, 1, 0}, 90.0, 100, 100, 100}, LUXSequence{LUXLight{[3]float32{-0, -0, -1.3}}, disk}}
+	renderScene(t, light, "light")
+}
+
+// TestFullyConfiguredSceneLux verifies complete scene reading from the configuration.
+// Includes walls, objects and lights. TODO: textures.
+func TestConfiguredSceneLux(t * testing.T) {
 	a := Resolver{}
 	err := a.Scan(STORE_PLACE)
 	if err != nil {
@@ -312,6 +318,7 @@ func TestReadConfiguraton(t * testing.T) {
 
 }
 
+// TestDoFindRender finds and renders scene by its job suffix.
 func TestDoFindRender(t * testing.T) {
 	a := Resolver{}
 
@@ -376,6 +383,7 @@ func TestDoFindRender(t * testing.T) {
 	}
 }
 
+// NotTestRenderScene infinite test full cycle with markers.
 func NotTestRenderScene(t * testing.T){
 	WatchAndRender(STORE_PLACE)
 }
