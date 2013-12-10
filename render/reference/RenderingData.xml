@@ -37,10 +37,10 @@
 </Models>
 <RenderingSettings>
  <Camera CameraType="Prespective">
-  <Eye x="195.3267974853516" y="531.846923828125" z="499.4320983886719"/>
+  <Eye x="195.3267974853516" y="131.846923828125" z="499.4320983886719"/>
   <Center x="0" y="0" z="0"/>
   <Up x="0" y="0" z="1"/>
-  <CameraDisplaySettings fov="30" Resolution_X="800" Resolution_Y="600" AspectRatio_X="1" AspectRatio_Y="1"/>
+  <CameraDisplaySettings fov="90" Resolution_X="800" Resolution_Y="600" AspectRatio_X="1" AspectRatio_Y="1"/>
  </Camera>
  <Lights>
   <Lights SpotCutOffAngle="-1" type="PointSource">
