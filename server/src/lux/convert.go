@@ -681,7 +681,9 @@ func (a LUXSceneFull) Scenify(w io.Writer) error {
 	clamp(&res_x)
 	clamp(&res_y)
 
+	if "" != os.Getenv("CLOUDDEBUG") {
 	 res_x, res_y = 200, 200 // Debug
+	}
 
 	get_model := func (i int) (scn LUXScener, err error) {
 		item := a.World.Models.LibraryItem[i]
