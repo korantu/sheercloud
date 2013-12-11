@@ -38,7 +38,7 @@ type Point [4]float32
 type Matrix[16]float32
 
 type Camera struct {
-	Eye,                    Up,                    Center Point
+	Eye,                        Up,                        Center Point
 }
 
 /* <RenderingData>
@@ -116,8 +116,8 @@ type RenderingData struct {
 }}}}
 	RenderingSettings struct {
 	Camera struct {
-	CameraType                                             string `xml:",attr"`
-	Eye,                  Center,                  Up      XMLPosition
+	CameraType                                                     string `xml:",attr"`
+	Eye,                      Center,                      Up      XMLPosition
 	CameraDisplaySettings struct {
 	FOV            int `xml:"fov,attr"`
 	Resolution_X   int `xml:",attr"`
@@ -128,8 +128,8 @@ type RenderingData struct {
 }
 	Lights struct {
 	Lights []struct {
-	Position                          XMLPosition
-	Diffuse,                 Specular XMLShaderParam
+	Position                              XMLPosition
+	Diffuse,                     Specular XMLShaderParam
 }
 }
 }
@@ -276,7 +276,7 @@ type OBJNormal OBJTriad
 type OBJUW [2]float32
 
 type OBJFaceVertex struct {
-	V,         N,         T int
+	V,             N,             T int
 }
 
 type OBJFace []OBJFaceVertex
@@ -417,9 +417,9 @@ func (a LUXWrap) Scenify(w io.Writer) error {
 
 type LUXHeader struct {
 	CameraFromToUp [9]float32
-	FOV        float32
-	X,       Y int
-	PPX        int
+	FOV            float32
+	X,           Y int
+	PPX            int
 }
 
 func (a LUXHeader) Scenify(w io.Writer) error {
@@ -444,7 +444,7 @@ Sampler "metropolis"
 `))
 
 type LUXWorld struct {
-	Head,       Rest LUXScener
+	Head,           Rest LUXScener
 }
 
 func (a LUXWorld) Scenify(w io.Writer) error {
@@ -500,9 +500,9 @@ AttributeEnd
 `))
 
 type LUXMesh struct {
-	N,      P [][3]float32
-	UV        [][2]float32
-	T         []int
+	N,          P [][3]float32
+	UV            [][2]float32
+	T             []int
 }
 
 func (an OBJ) Scenify(w io.Writer) error {
@@ -564,9 +564,9 @@ func (cover LUXOSGTGeometry) Scenify(w io.Writer) error {
 		log.Print("There supposed to be geodes in the scene")
 	}
 
-	for _, each := range list {
+	for _, geode := range list {
 
-		if vtx := each.Find("VertexData"); len(vtx) == 1 {
+		if vtx := geode.Find("VertexData"); len(vtx) == 1 {
 			arr := vtx[0].Find("Array")
 			if len(arr) == 1 {
 				lm := LUXMesh{[][3]float32{}, [][3]float32{}, [][2]float32{}, []int{}} // Each geode goes through template separately
@@ -659,7 +659,7 @@ type LUXSceneFull struct {
 
 var CLOUDDEBUG bool = false
 
-func init(){
+func init() {
 	CLOUDDEBUG = true
 }
 
@@ -688,10 +688,10 @@ func (a LUXSceneFull) Scenify(w io.Writer) error {
 	clamp(&res_y)
 
 	if CLOUDDEBUG {
-	 res_x, res_y = 300, 300 // Debug
+		res_x, res_y = 300, 300 // Debug
 	}
 
-	get_model := func (i int) (scn LUXScener, err error) {
+	get_model := func(i int) (scn LUXScener, err error) {
 		item := a.World.Models.LibraryItem[i]
 		real_path, err := a.Files.Get(item.Path)
 		if err != nil {
@@ -702,8 +702,8 @@ func (a LUXSceneFull) Scenify(w io.Writer) error {
 			return nil, RenderError{"Failed to read model", err}
 		}
 
-		tr :=[16]float32{}
- 		n, err := fmt.Sscanf(item.Transform, "%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f",
+		tr := [16]float32{}
+		n, err := fmt.Sscanf(item.Transform, "%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f",
 			&tr[0], &tr[1], &tr[2], &tr[3],
 			&tr[4], &tr[5], &tr[6], &tr[7],
 			&tr[8], &tr[9], &tr[10], &tr[11],
@@ -713,15 +713,15 @@ func (a LUXSceneFull) Scenify(w io.Writer) error {
 			return nil, RenderError{"Unable to obtain transformation for model " + real_path, err}
 		}
 
-		objfix :=[16]float32{ // Openscenegraph wants this for some reason.
-			1,0,0,0,
-			0,0,1,0,
-			0,-1,0,0,
-			0,0,0,1 }
+		objfix := [16]float32{ // Openscenegraph wants this for some reason.
+			1, 0, 0, 0,
+			0, 0, 1, 0,
+			0, -1, 0, 0,
+			0, 0, 0, 1 }
 
-		transformed  := LUXWrap{
-			LUXSequence{LUXTransform{tr},LUXTransform{objfix},
-		objmodel}, "Transform"}
+		transformed := LUXWrap{
+			LUXSequence{LUXTransform{tr}, LUXTransform{objfix},
+				objmodel}, "Transform"}
 
 		return transformed, nil
 
@@ -740,7 +740,7 @@ func (a LUXSceneFull) Scenify(w io.Writer) error {
 	objects_scene := LUXSequence{}
 	// Each chair
 	for i, obj := range a.World.Models.LibraryItem {
-		 model, err := get_model(i)
+		model, err := get_model(i)
 		if err == nil {
 			log.Print("Attempting ", model)
 			objects_scene = append(objects_scene, model)
