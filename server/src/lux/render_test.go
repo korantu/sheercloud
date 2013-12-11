@@ -286,14 +286,29 @@ func TestTransformLux(t * testing.T) {
 	renderScene(t, transform, "transform")
 }
 
-// TetLightLux verifies lights rendering.
+// TestLightLux verifies lights rendering.
 func TestLightLux(t * testing.T) {
 	disk := LUXStringScene(`AttributeBegin
 		Shape "sphere" "float radius" [1]
 		AttributeEnd`)
-	light := LUXWorld{LUXHeader{[9]float32{0, 0, -1.3, 0, 0, 0, 0, 1, 0}, 90.0, 100, 100, 100}, LUXSequence{LUXLight{[3]float32{-0, -0, -1.3}}, disk}}
+	light := LUXWorld{LUXHeader{[9]float32{0, 0, -1.3, 0, 0, 0, 0, 1, 0}, 90.0, 100, 100, 100},
+		LUXSequence{LUXLight{[3]float32{-0, -0, -1.3}}, disk}}
 	renderScene(t, light, "light")
 }
+
+// TestTextureLux verifies lights rendering.
+func TestTextureLux(t * testing.T) {
+	disk := LUXStringScene(`AttributeBegin
+		NamedMaterial "fun"
+		Shape "sphere" "float radius" [1]
+		AttributeEnd`)
+	texture := LUXNamedMaterial{"fun", STORE_PLACE + "/store/sheer_abc/CSLibrairies/Materials/FloorTexture.tga"}
+	light := LUXWorld{LUXHeader{[9]float32{0, 0, -1.3, 0, 0, 0, 0, 1, 0}, 90.0, 100, 100, 100},
+		LUXSequence{LUXLight{[3]float32{-0, -0, -1.3}}, texture, disk}}
+	renderScene(t, light, "texture")
+}
+
+
 
 // TestFullyConfiguredSceneLux verifies complete scene reading from the configuration.
 // Includes walls, objects and lights. TODO: textures.

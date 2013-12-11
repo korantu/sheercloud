@@ -632,6 +632,34 @@ func (an LUXTransform) Scenify(w io.Writer) error {
 	return nil
 }
 
+type LUXNamedMaterial struct {
+	Name string
+	File string
+}
+
+var LUXNamedMaterialTemplate = template.Must(template.New("LUXTransformTemplate").Parse(`
+Texture "$the_name-texture" "color" "imagemap"
+	"string filename" ["{{ .File }}"]
+	"string wrap" ["repeat"]
+	"float gamma" [2.200000000000000]
+
+MakeNamedMaterial "{{ .Name }}"
+	"bool multibounce" ["false"]
+	"texture Kd" ["$the_name-texture"]
+	"color Ks" [0.34237525 0.64237525 0.34237525]
+	"float index" [0.000000000000000]
+	"float uroughness" [0.250000000000000]
+	"float vroughness" [0.250000000000000]
+	"string type" ["glossy"]
+	`))
+
+func (a LUXNamedMaterial) Scenify(w io.Writer) error {
+	if err := LUXNamedMaterialTemplate.Execute(w, a); err != nil {
+		return err
+	}
+	return nil
+}
+
 type LUXLight struct {
 	Position [3]float32
 }
