@@ -713,7 +713,17 @@ func (a LUXSceneFull) Scenify(w io.Writer) error {
 			return nil, RenderError{"Unable to obtain transformation for model " + real_path, err}
 		}
 
-		 return LUXDoTransform(tr, objmodel), nil
+		objfix :=[16]float32{ // Openscenegraph wants this for some reason.
+			1,0,0,0,
+			0,0,1,0,
+			0,-1,0,0,
+			0,0,0,1 }
+
+		transformed  := LUXWrap{
+			LUXSequence{LUXTransform{tr},LUXTransform{objfix},
+		objmodel}, "Transform"}
+
+		return transformed, nil
 
 	}
 
