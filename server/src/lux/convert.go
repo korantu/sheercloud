@@ -623,7 +623,7 @@ type LUXTransform struct {
 	Transform [16]float32
 }
 
-var LUXTransformBeginTemplate = template.Must(template.New("LUXTransformTemplate").Parse(`Transform [{{range .Transform}} {{.}} {{end}}]`))
+var LUXTransformBeginTemplate = template.Must(template.New("LUXTransformTemplate").Parse("\nConcatTransform [{{range .Transform}} {{.}} {{end}}]"))
 
 func (an LUXTransform) Scenify(w io.Writer) error {
 	if err := LUXTransformBeginTemplate.Execute(w, an); err != nil {
