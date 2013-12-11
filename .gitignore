@@ -48,3 +48,4 @@ server/src/lux/example.stdout
 misc.xml
 *.jobout
 *.xml
+*/store/*
