@@ -657,6 +657,12 @@ type LUXSceneFull struct {
 	World RenderingData
 }
 
+var CLOUDDEBUG bool = false
+
+func init(){
+	CLOUDDEBUG = true
+}
+
 func (a LUXSceneFull) Scenify(w io.Writer) error {
 	scene_file_name, err := a.Files.Get(a.World.Scene)
 	if err != nil {
@@ -681,8 +687,8 @@ func (a LUXSceneFull) Scenify(w io.Writer) error {
 	clamp(&res_x)
 	clamp(&res_y)
 
-	if "" != os.Getenv("CLOUDDEBUG") {
-	 res_x, res_y = 200, 200 // Debug
+	if CLOUDDEBUG {
+	 res_x, res_y = 300, 300 // Debug
 	}
 
 	get_model := func (i int) (scn LUXScener, err error) {
