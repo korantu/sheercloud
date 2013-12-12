@@ -204,6 +204,22 @@ func (an *OSGT) Find(pattern string) []*OSGT {
 	return res
 }
 
+func (an *OSGT) FindKey(pattern string) string {
+	for _, item := range an.List {
+		if strings.Contains(item.Key, pattern) {
+			return item.Key
+		}
+
+		if item.Child != nil {
+			if maybe := item.Child.FindKey(pattern); maybe != "" {
+				return maybe
+			}
+		}
+	}
+	return ""
+}
+
+
 func (an * OSGT) print_indent(indent string) string {
 	out := ""
 	for _, more := range (an.List) {
