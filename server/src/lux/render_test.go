@@ -302,10 +302,10 @@ func TestLightLux(t * testing.T) {
 // TestTextureLux verifies lights rendering.
 func TestTextureLux(t * testing.T) {
 	disk := LUXStringScene(`AttributeBegin
-		NamedMaterial "fun"
-		Shape "sphere" "float radius" [1]
+		NamedMaterial "/store/sheer_a bc/CSLibrairies/Materials/FloorTexture.tga"
+		Shape "sphere" "float radius" [2]
 		AttributeEnd`)
-	texture := LUXNamedMaterial{"fun", STORE_PLACE + "/store/sheer_abc/CSLibrairies/Materials/FloorTexture.tga"}
+	texture := LUXNamedMaterial{"/store/sheer_a bc/CSLibrairies/Materials/FloorTexture.tga", STORE_PLACE + "/store/sheer_abc/CSLibrairies/Materials/FloorTexture.tga"}
 	light := LUXWorld{LUXHeader{[9]float32{0, 0, -1.3, 0, 0, 0, 0, 1, 0}, 90.0, 100, 100, 100},
 		LUXSequence{LUXLight{[3]float32{-0, -0, -1.3}}, texture, disk}}
 	renderScene(t, light, "texture")
@@ -321,6 +321,8 @@ func TestConfiguredSceneLux(t * testing.T) {
 	if err != nil {
 		t.Fatal(a)
 	}
+	
+//	file, err := a.Get("test11Dec02_New-Render_1.xml")
 	file, err := a.Get("RenderingData.xml")
 	if err != nil {
 		t.Fatal("Render scene file not found:", err.Error())
@@ -330,9 +332,22 @@ func TestConfiguredSceneLux(t * testing.T) {
 		t.Error(" Failed tor read scene:", file, ":", err.Error())
 	}
 
-	all := LUXSceneFull{a, *scn}
 
-	renderScene(t, all, "full")
+	all := LUXSceneFull{a, *scn}	
+
+	f, e := os.Create("hi.lux")
+	if e != nil {
+		t.Log("Error:", e.Error())
+		return
+	}
+	defer f.Close()
+
+	err = all.Scenify(f)
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+        renderScene(t, all, "full")
 
 }
 
