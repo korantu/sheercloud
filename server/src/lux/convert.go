@@ -587,7 +587,8 @@ func (an OBJ) Scenify(w io.Writer) error {
 }
 
 type LUXOSGTGeometry struct {
-	Osgt OSGT
+	Osgt  OSGT
+	Files Resolver
 }
 
 // Define how it works
@@ -602,29 +603,86 @@ func (cover LUXOSGTGeometry) Scenify(w io.Writer) error {
 		log.Print("There supposed to be geodes in the scene")
 	}
 
+	known_materials := map[string] bool{};
+
 	for _, geode := range list {
-
-		if vtx := geode.Find("VertexData"); len(vtx) == 1 {
-			arr := vtx[0].Find("Array")
-			if len(arr) == 1 {
-				lm := LUXMesh{[][3]float32{}, [][3]float32{}, [][2]float32{}, []int{}} // Each geode goes through template separately
-				for _, k := range arr[0].List {
-					a := [3]float32{}
-
-					fmt.Sscanf(k.Key, "%f %f %f", &a[0], &a[1], &a[2])
-					lm.P = append(lm.P, a)
-				}
-				for tri := 1; tri < len(lm.P) - 1; tri++ {
-					lm.T = append(lm.T, 0, tri, tri + 1)
-				}
-				if err := LUXMeshVertexTemplate.Execute(w, lm); err != nil {
-					log.Print("Problem: ", err)
-					return err
-				}
-			}
-		} else {
-			log.Print("Array not found in geode")
+		vtx := geode.Find("VertexData")
+		if len(vtx) != 1 {
+			log.Print("VertexData not found in geode")
+			continue
 		}
+
+		arr := vtx[0].Find("Array")
+		if len(arr) != 1 {
+			log.Print("Array not found in geode")
+			continue
+		}
+
+		tex := geode.Find("TexCoordData")
+		if len(tex) != 1 {
+			log.Print("TexCoordData not found in geode")
+			continue
+		}
+
+		arr_tex := tex[0].Find("Array")
+		if len(arr_tex) != 1 {
+			log.Print("Array for textures not found in geode")
+			continue
+		}
+
+		if len(arr_tex) != len(arr) {
+			log.Print("Texture coordinates do not match vertices")
+			continue
+		}
+
+		material := geode.Find("Image")
+		material_image := "CairnSmith/Resources/WallTexture4.tga" // Default
+		if len(material) == 1 {
+			name_list := strings.Split(material[0].FindKey("FileName"), "\"")
+			if len(name_list) < 2 {
+				log.Print("Unable to get texture name")
+			} else {
+				material_image = name_list[1]
+			}
+		}
+
+		if nil != cover.Files {
+			lookup, err := cover.Files.Get(material_image)
+			if err == nil {
+				material_image = lookup
+			} else {
+				log.Printf("Unable to look up texture: %s [%s] ", material_image, err.Error())
+			}
+		}
+
+		log.Print("Using material ", material_image)
+
+		if _, ok := known_materials[material_image]; !ok {
+			known_materials[material_image] = true;
+			some  := LUXNamedMaterial{material_image, material_image}
+			some.Scenify(w);
+		}
+
+
+		lm := LUXTexturedMesh{material_image, [][3]float32{}, [][3]float32{}, [][2]float32{}, []int{}} // Each geode goes through template separately
+		for i, _ := range arr[0].List {
+			a := [3]float32{}
+			t := [2]float32{}
+
+			fmt.Sscanf(arr[0].List[i].Key, "%f %f %f", &a[0], &a[1], &a[2])
+			fmt.Sscanf(arr_tex[0].List[i].Key, "%f %f", &t[0], &t[1])
+			lm.P = append(lm.P, a)
+			lm.UV = append(lm.UV, t)
+		}
+		for tri := 1; tri < len(lm.P) - 1; tri++ {
+			lm.T = append(lm.T, 0, tri, tri + 1)
+		}
+		
+		if err := LUXTexturedMeshTemplate.Execute(w, lm); err != nil {
+			log.Print("Problem: ", err)
+			return err
+		}
+		
 	}
 
 
@@ -676,14 +734,14 @@ type LUXNamedMaterial struct {
 }
 
 var LUXNamedMaterialTemplate = template.Must(template.New("LUXTransformTemplate").Parse(`
-Texture "$the_name-texture" "color" "imagemap"
+Texture "{{ .Name }}_" "color" "imagemap"
 	"string filename" ["{{ .File }}"]
 	"string wrap" ["repeat"]
 	"float gamma" [2.200000000000000]
 
 MakeNamedMaterial "{{ .Name }}"
 	"bool multibounce" ["false"]
-	"texture Kd" ["$the_name-texture"]
+	"texture Kd" ["{{ .Name }}_"]
 	"color Ks" [0.34237525 0.64237525 0.34237525]
 	"float index" [0.000000000000000]
 	"float uroughness" [0.250000000000000]
@@ -730,12 +788,13 @@ func init() {
 }
 
 func (a LUXSceneFull) Scenify(w io.Writer) error {
+	
 	scene_file_name, err := a.Files.Get(a.World.Scene)
 	if err != nil {
 		return RenderError{"Unable to locate scene", err}
 	}
 	osgt, err := ReadFileOSGT(scene_file_name)
-	walls_scene := LUXOSGTGeometry{*osgt}
+	walls_scene := LUXOSGTGeometry{*osgt, a.Files}
 
 	c := a.World.RenderingSettings.Camera
 

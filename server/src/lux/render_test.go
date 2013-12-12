@@ -260,7 +260,10 @@ func testRenderOsgtLux(t * testing.T, ref, name string) {
 		t.Fail()
 	}
 
-	walls_scene := LUXOSGTGeometry {*rd}
+	files := Resolver{}
+	files.Scan(STORE_PLACE)
+
+	walls_scene := LUXOSGTGeometry {*rd, files}
 	walls := LUXWorld{LUXHeader{[9]float32{1220, 100, 1220, 0, 0, 0, -1, 0, 0}, 31.0, 150, 150, 20}, LUXSequence{LUXHeadLight, walls_scene}}
 	renderScene(t, walls, name)
 
