@@ -278,7 +278,8 @@ func WatchAndRender(some_dir string) error {
 						say(err.Error())
 						return
 					}
-					scene = LUXWorld{LUXHeader{[9]float32{1220, 100, 1220, 0, 0, 0, -1, 0, 0}, 31.0, 150, 150, 20}, LUXSequence{LUXHeadLight, LUXOSGTGeometry{*osg}}}
+					scene = LUXWorld{LUXHeader{[9]float32{1220, 100, 1220, 0, 0, 0, -1, 0, 0}, 31.0, 150, 150, 20},
+						LUXSequence{LUXHeadLight, LUXOSGTGeometry{*osg, nil}}}
 				case strings.HasSuffix(scene_file, ".xml"):
 					say("Full format; controlled camera")
 					cfg, err := ReadConfigurationFile(scene_file)

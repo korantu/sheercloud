@@ -38,7 +38,7 @@ type Point [4]float32
 type Matrix[16]float32
 
 type Camera struct {
-	Eye,                        Up,                        Center Point
+	Eye,                             Up,                             Center Point
 }
 
 /* <RenderingData>
@@ -116,8 +116,8 @@ type RenderingData struct {
 }}}}
 	RenderingSettings struct {
 	Camera struct {
-	CameraType                                                     string `xml:",attr"`
-	Eye,                      Center,                      Up      XMLPosition
+	CameraType                                                               string `xml:",attr"`
+	Eye,                           Center,                           Up      XMLPosition
 	CameraDisplaySettings struct {
 	FOV            int `xml:"fov,attr"`
 	Resolution_X   int `xml:",attr"`
@@ -128,8 +128,8 @@ type RenderingData struct {
 }
 	Lights struct {
 	Lights []struct {
-	Position                              XMLPosition
-	Diffuse,                     Specular XMLShaderParam
+	Position                                   XMLPosition
+	Diffuse,                          Specular XMLShaderParam
 }
 }
 }
@@ -276,7 +276,7 @@ type OBJNormal OBJTriad
 type OBJUW [2]float32
 
 type OBJFaceVertex struct {
-	V,             N,             T int
+	V,                  N,                  T int
 }
 
 type OBJFace []OBJFaceVertex
@@ -417,9 +417,9 @@ func (a LUXWrap) Scenify(w io.Writer) error {
 
 type LUXHeader struct {
 	CameraFromToUp [9]float32
-	FOV            float32
-	X,           Y int
-	PPX            int
+	FOV                 float32
+	X,                Y int
+	PPX                 int
 }
 
 func (a LUXHeader) Scenify(w io.Writer) error {
@@ -444,7 +444,7 @@ Sampler "metropolis"
 `))
 
 type LUXWorld struct {
-	Head,           Rest LUXScener
+	Head,                Rest LUXScener
 }
 
 func (a LUXWorld) Scenify(w io.Writer) error {
@@ -491,18 +491,40 @@ AttributeEnd
 `))
 
 
-var LUXMeshVertexTemplate = template.Must(template.New("OBJ").Parse(`
+var LUXTexturedMeshTemplate = template.Must(template.New("OBJTextured").Parse(`
 AttributeBegin
+NamedMaterial "{{ .Texture }}"
 Shape "mesh"
 	      "point P" [{{range .P}} {{range .}} {{.}} {{end}} {{end}}]
+	      "float uv" [{{range .UV}} {{range .}} {{.}} {{end}} {{end}}]
 	      "integer triindices" [{{range .T}} {{.}} {{end}}]
 AttributeEnd
 `))
 
+
+
+var LUXMeshVertexTemplate = template.Must(template.New("OBJ").Parse(`
+AttributeBegin
+Shape "mesh"
+	      "point P" [{{range .P}} {{range .}} {{.}} {{end}} {{end}}]
+	      "float uv" [{{range .UV}} {{range .}} {{.}} {{end}} {{end}}]
+	      "integer triindices" [{{range .T}} {{.}} {{end}}]
+AttributeEnd
+`))
+
+
+
 type LUXMesh struct {
-	N,          P [][3]float32
-	UV            [][2]float32
-	T             []int
+	N,               P [][3]float32
+	UV                 [][2]float32
+	T                  []int
+}
+
+type LUXTexturedMesh struct {
+	Texture string
+	N,               P [][3]float32
+	UV                 [][2]float32
+	T                  []int
 }
 
 func (an OBJ) Scenify(w io.Writer) error {
@@ -741,7 +763,7 @@ func (a LUXSceneFull) Scenify(w io.Writer) error {
 			return nil, RenderError{"Unable to obtain transformation for model " + real_path, err}
 		}
 
-		objfix := [16]float32{ // Openscenegraph wants this for some reason.
+		objfix := [16]float32{ // OpenSceneGraph wants this to match their coord system convention.
 			1, 0, 0, 0,
 			0, 0, 1, 0,
 			0, -1, 0, 0,
