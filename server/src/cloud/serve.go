@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net"
 	"os"
 	"path"
 	"path/filepath"
@@ -689,7 +690,12 @@ func Serve(port, static string) {
 		http.HandleFunc(url, catch_errors_for(action))
 	}
 
-	if err := http.ListenAndServe(":" + port, nil); err != nil {
+	l, e := net.Listen("tcp4", ":"+port)
+	if e != nil {
+		log.Print("Unable to listen:", e.Error())
+	}
+
+	if err := http.Serve(l, nil); err != nil {
 		log.Print(err.Error())
 	}
 }
