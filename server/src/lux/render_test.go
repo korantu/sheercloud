@@ -12,6 +12,11 @@ import (
 	"path"
 )
 
+
+func init() {
+	CLOUDDEBUG = true
+}
+
 var STORE_PLACE = "C:/github/sheercloud/render"
 
 var scene = `

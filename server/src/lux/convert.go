@@ -814,10 +814,6 @@ type LUXSceneFull struct {
 
 var CLOUDDEBUG bool = false
 
-func init() {
-	CLOUDDEBUG = true
-}
-
 func (a LUXSceneFull) Scenify(w io.Writer) error {
 	
 	scene_file_name, err := a.Files.Get(a.World.Scene)
