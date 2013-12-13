@@ -37,6 +37,7 @@
 </Models>
 <RenderingSettings>
  <Camera CameraType="Prespective">
+  <Quality>400</Quality>
   <Eye x="195.3267974853516" y="131.846923828125" z="499.4320983886719"/>
   <Center x="0" y="0" z="0"/>
   <Up x="0" y="0" z="1"/>

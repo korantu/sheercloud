@@ -116,6 +116,7 @@ type RenderingData struct {
 }}}}
 	RenderingSettings struct {
 	Camera struct {
+	Quality int
 	CameraType                                                               string `xml:",attr"`
 	Eye,                           Center,                           Up      XMLPosition
 	CameraDisplaySettings struct {
@@ -809,11 +810,13 @@ func (a LUXSceneFull) Scenify(w io.Writer) error {
 	res_x := a.World.RenderingSettings.Camera.CameraDisplaySettings.Resolution_X
 	res_y := a.World.RenderingSettings.Camera.CameraDisplaySettings.Resolution_Y
 
+	quality := a.World.RenderingSettings.Camera.Quality
+
 	clamp(&res_x)
 	clamp(&res_y)
 
 	if CLOUDDEBUG {
-		res_x, res_y = 300, 300 // Debug
+		res_x, res_y = 100, 100 // Debug
 	}
 
 	get_model := func(i int) (scn LUXScener, err error) {
@@ -876,7 +879,7 @@ func (a LUXSceneFull) Scenify(w io.Writer) error {
 
 	all := LUXWorld{LUXHeader{[9]float32{c.Eye.X, c.Eye.Y, c.Eye.Z ,
 		c.Center.X, c.Center.Y, c.Center.Z,
-		c.Up.X, c.Up.Y, c.Up.Z}, float32(c.CameraDisplaySettings.FOV), res_x, res_y, 20}, LUXSequence{objects_light, walls_scene, objects_scene}}
+		c.Up.X, c.Up.Y, c.Up.Z}, float32(c.CameraDisplaySettings.FOV), res_x, res_y, 20+quality}, LUXSequence{objects_light, walls_scene, objects_scene}}
 
 	return all.Scenify(w)
 }
