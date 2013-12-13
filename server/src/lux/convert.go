@@ -777,6 +777,36 @@ func (an LUXLight) Scenify(w io.Writer) error {
 	return nil
 }
 
+type LUXAreaLight struct {
+	Size float32
+	Position [3]float32
+}
+
+var LUXAreaLightTemplate = template.Must(template.New("LUXAreaLight").Parse(`AttributeBegin #  "Area.002"
+
+Translate {{range .Position}} {{.}} {{end}}
+
+LightGroup "default"
+
+AreaLightSource "area"
+	"float importance" [1.000000000000000]
+	"float power" [100.000000000000000]
+	"float efficacy" [17.000000000000000]
+	"color L" [0.80000001 0.80000001 0.80000001]
+	"integer nsamples" [1]
+	"float gain" [1.000000000000000]
+
+Shape "sphere" "float radius" [{{ .Size }}]
+AttributeEnd # ""
+`))
+
+func (an LUXAreaLight) Scenify(w io.Writer) error {
+	if err := LUXAreaLightTemplate.Execute(w, an); err != nil {
+		return err
+	}
+	return nil
+}
+
 type LUXSceneFull struct {
 	Files Resolver
 	World RenderingData
@@ -860,7 +890,8 @@ func (a LUXSceneFull) Scenify(w io.Writer) error {
 	if lights != nil && len(lights) > 0 {
 		objects_light = LUXSequence{};
 		for _, l := range lights {
-			objects_light = append(objects_light, LUXLight{[3]float32{l.Position.X, l.Position.Y, l.Position.Z}})
+			//			objects_light = append(objects_light, LUXAreaLight{50, [3]float32{l.Position.X, l.Position.Y, l.Position.Z}})
+			objects_light = append(objects_light, LUXLight{ [3]float32{l.Position.X, l.Position.Y, l.Position.Z}})
 		}
 
 	}

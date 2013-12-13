@@ -294,9 +294,19 @@ func TestLightLux(t * testing.T) {
 	disk := LUXStringScene(`AttributeBegin
 		Shape "sphere" "float radius" [1]
 		AttributeEnd`)
-	light := LUXWorld{LUXHeader{[9]float32{0, 0, -1.3, 0, 0, 0, 0, 1, 0}, 90.0, 100, 100, 100},
-		LUXSequence{LUXLight{[3]float32{-0, -0, -1.3}}, disk}}
+	moon := LUXStringScene(`TransformBegin
+		Translate -0.8 -0.8 -0.8
+			Shape "sphere" "float radius" [0.25]
+		TransformEnd`)
+
+	point_light := LUXLight{[3]float32{-1.3, -1.3, -1.3}}
+	area_light := LUXAreaLight{0.3, [3]float32{-1.3, -1.3, -1.3}}
+
+	light := LUXWorld{LUXHeader{[9]float32{0, 0, -20, 0, 0, 0, 0, 1, 0}, 7.0, 100, 100, 50},
+		LUXSequence{area_light, disk, moon}}
 	renderScene(t, light, "light")
+	t.Log(point_light)
+	t.Log(area_light)
 }
 
 // TestTextureLux verifies lights rendering.
