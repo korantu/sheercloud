@@ -1,5 +1,8 @@
 /**
- * Created with IntelliJ IDEA.
+(C) Sheer Industries Group
+
+Rendering conversion and control.
+
  */
 package lux
 
@@ -15,8 +18,13 @@ import (
 	"path/filepath"
 )
 
+// LUX is a name of LuxRender command line tool.
 var LUX = "luxconsole"
 
+// POD is the executable name for POD generation tool.
+var POD = "PVRGeoPODCLI"
+
+// RenderError carries information on a render process failure.
 type RenderError struct {
 	Cause    string
 	CausedBy error
@@ -132,6 +140,17 @@ func DoRenderScene(s LUXScener, output, status string) error {
 	return nil
 }
 
+// CheckPod checks that POD format convertor is available.
+func CheckPod() error {
+	path, err := exec.LookPath(POD)
+	if err != nil {
+		return err
+	}
+	log.Printf("Found POD converter at %s", path)
+	return nil
+}
+
+// CheckLux checks that Lux render is available.
 func CheckLux() error {
 	path, err := exec.LookPath(LUX)
 	if err != nil {
@@ -141,9 +160,11 @@ func CheckLux() error {
 	return nil
 }
 
-// Resolver scans a location for file list,
+// Resolver scans a location for file list.
+// This functionality is needed as a fallback for incorrectly specified paths.
 type Resolver []string
 
+// Scan goes through a location, and caches all the file names for further lookup.
 func (a * Resolver) Scan(some string) error {
 	info, err := os.Stat(some)
 
@@ -165,6 +186,7 @@ func (a * Resolver) Scan(some string) error {
 	return nil
 }
 
+// Len returns the number of files cached.
 func (a Resolver) Len() int {
 	return len(a)
 }
@@ -182,7 +204,7 @@ func (a Resolver) Get(some string) (string, error) {
 	return "", RenderError{"Unable to locate file [" + some + "] in the list", nil}
 }
 
-
+// EndsWith lists files with the specified suffix.
 func (a Resolver) EndsWith(suffix string) []string {
 	out := []string{}
 	for _, item := range a {
@@ -203,7 +225,7 @@ func touch(file string) error {
 	return nil
 }
 
-// DoRender scans Resolver, picks out .job extensions, delete them and starts renderfunc for each.
+// DoFindRender scans Resolver, picks out files with .job extensions, delete them and starts renderfunc for each.
 func DoFindRender(a * Resolver, renderfunc func (string)) error {
 	marker := ".job"
 
@@ -239,7 +261,8 @@ func DoFindRender(a * Resolver, renderfunc func (string)) error {
 	return nil
 }
 
-// WatchAndRender looks for .xml.job and starts rendering for then, with .png anf .jobout
+// WatchAndRender looks for .xml.job and starts rendering for each.
+// .png anf .jobout are generated for image and job standard output/error respecively.
 func WatchAndRender(some_dir string) error {
 	log.Printf("Scanning %s", some_dir)
 	a := Resolver{}
@@ -278,6 +301,7 @@ func WatchAndRender(some_dir string) error {
 						say(err.Error())
 						return
 					}
+					// If it is just .osgt, then we have to come up with camera information.
 					scene = LUXWorld{LUXHeader{[9]float32{1220, 100, 1220, 0, 0, 0, -1, 0, 0}, 31.0, 150, 150, 20},
 						LUXSequence{LUXHeadLight, LUXOSGTGeometry{*osg, nil}}}
 				case strings.HasSuffix(scene_file, ".xml"):

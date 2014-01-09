@@ -1,4 +1,13 @@
-// package tool
+/**
+ (C) Sheer Industries Group
+
+  The server can work in two modes:
+
+  Server:   serving files from file system.
+  Renderer: (-scan) scanning file system for requests to render.
+
+*/
+
 package main
 
 import (
@@ -22,6 +31,9 @@ func main() {
 	}
 
 	if *do_scan {
+		if err := lux.CheckLux(); err != nil {
+			log.Fatal("luxconsole seem to not exist or absent from PATH");
+		}
 		log.Print("Scanning mode at " + *storage_base)
 		lux.WatchAndRender(*storage_base)
 		return

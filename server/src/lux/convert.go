@@ -1,3 +1,9 @@
+/*
+ (C) Sheer Industries Group
+
+ File format conversion routines.
+ */
+
 package lux
 
 import (
@@ -13,6 +19,7 @@ import (
 	"os"
 )
 
+// ConvertError indicates a problem in the conversion process.
 type ConvertError struct {
 	Reason   string
 	CausedBy error
@@ -31,7 +38,6 @@ func NewConvertError(msg string, err error) error {
 
 var NotImplementedError = cloud.NewCloudError("Not implemented")
 
-// Configuration
 
 type Point [4]float32
 
@@ -40,6 +46,7 @@ type Matrix[16]float32
 type Camera struct {
 	Eye,                             Up,                             Center Point
 }
+
 
 /* <RenderingData>
 <Scene>C:/Users/Sheer Temp 1/Cairnsmith/sheer/abc/Projects/testProj - Copy/Designer/testProj_design_1.osgt</Scene>
@@ -104,6 +111,9 @@ type XMLShaderParam struct {
 	B float32 `xml:"b,attr"`
 }
 
+// RenderingData specifies the components needed for conversion.
+// The required information is which scene to use, what objects to include,
+// how to position camera and lights.
 type RenderingData struct {
 	Scene string
 	Models struct {
@@ -146,6 +156,8 @@ func readConfiguration(some io.Reader) (res * RenderingData, err error) {
 	return &out, nil
 }
 
+// ReadConfigurationFile parses the specified configuration file
+// into RenderingData structure.
 func ReadConfigurationFile(some string) (res * RenderingData, err error) {
 	f, err := os.Open(some)
 	if err != nil {
@@ -174,6 +186,8 @@ func ReadConfigurationFile(some string) (res * RenderingData, err error) {
  */
 
 
+// OSGTEntry is a node in OSG scene graph (tree, in this case).
+// Each node contains a key and a list of sub-nodes.
 type OSGTEntry struct {
 	Key string
 	Child * OSGT
@@ -191,6 +205,8 @@ func (an * OSGT) Print() string {
 	return an.print_indent("")
 }
 
+// Find searches OSG nodes for a substring.
+// It returns the list of nodes found.
 func (an *OSGT) Find(pattern string) []*OSGT {
 	res := []*OSGT{}
 	for _, item := range an.List {
@@ -205,6 +221,8 @@ func (an *OSGT) Find(pattern string) []*OSGT {
 	return res
 }
 
+
+// FindKey searches OSG nodes for a substring and returns the key.
 func (an *OSGT) FindKey(pattern string) string {
 	for _, item := range an.List {
 		if strings.Contains(item.Key, pattern) {
@@ -221,6 +239,7 @@ func (an *OSGT) FindKey(pattern string) string {
 }
 
 
+// print_indent is a simple pretty-printer for OSG tree.
 func (an * OSGT) print_indent(indent string) string {
 	out := ""
 	for _, more := range (an.List) {
@@ -232,11 +251,13 @@ func (an * OSGT) print_indent(indent string) string {
 	return out
 }
 
+// readOSGT reads OSG tree from an io.Reader
 func readOSGT(some io.Reader) (*OSGT, error) {
 	scnr := bufio.NewScanner(some)
 	return scanOSGT(scnr)
 }
 
+// ReadFileOSGT parses specifed .osgt file into *OSGT structure.
 func ReadFileOSGT(some string) (*OSGT, error) {
 	f, err := os.Open(some)
 	if err != nil {
@@ -246,6 +267,7 @@ func ReadFileOSGT(some string) (*OSGT, error) {
 	return readOSGT(f)
 }
 
+// ReadFileOBJ parses specifed .obj file into *OBJ structure.
 func ReadFileOBJ(some string) (*OBJ, error) {
 	f, err := os.Open(some)
 	if err != nil {
@@ -303,6 +325,8 @@ type OBJGeode struct {
 	Faces []OBJFace
 }
 
+// OBJ structure contains all the components read from .osg file.
+// It is used for generating .lux and .collada files
 type OBJ struct {
 	Vertices []OBJVector
 	Normals  []OBJNormal
@@ -335,7 +359,9 @@ func (an * OBJ) boundingBox() (min, max OBJVector) {
 	return
 }
 
-// UGLY!!! move parsing logic into respective parts of the scene
+// TODO: move parsing logic into respective parts of the scene
+
+// readOBJ reads .obj format with simplistic scanner and outputs OBJ structure.
 func readOBJ(r io.Reader) (*OBJ, error) {
 	res := &OBJ{ []OBJVector{}, []OBJNormal{}, []OBJUW{}, []OBJGeode{}}
 	scnr := bufio.NewScanner(r)
@@ -390,10 +416,13 @@ func readOBJ(r io.Reader) (*OBJ, error) {
 	return res, nil
 }
 
+// LUXScener interface oututs chunks of LUX format.
+// They can be composed to obtain the complete scene as needed.
 type LUXScener interface {
 	Scenify(w io.Writer) error
 }
 
+// LUXStringScene adds the interface to a string, to output literal LUX chunks.
 type LUXStringScene string
 
 func (a  LUXStringScene) Scenify(w io.Writer) error {
@@ -401,6 +430,7 @@ func (a  LUXStringScene) Scenify(w io.Writer) error {
 	return err
 }
 
+// LUXSequence combines several sceners in a sequence.
 type LUXSequence []LUXScener
 
 func (a LUXSequence) Scenify(w io.Writer) error {
@@ -432,10 +462,13 @@ func (a LUXWrap) Scenify(w io.Writer) error {
 	return nil
 }
 
+// LUXHeader produces a lux scene header with specified camera, quality and resolution.
 type LUXHeader struct {
 	CameraFromToUp [9]float32
 	FOV                 float32
 	X,                Y int
+
+	// PPX is cut-off samples-per-pixel value, to stor prenderer automatically.
 	PPX                 int
 }
 
@@ -460,6 +493,7 @@ Sampler "metropolis"
 #Scene Specific Information
 `))
 
+// LUXWorld is the topmost scener
 type LUXWorld struct {
 	Head,                Rest LUXScener
 }
@@ -476,6 +510,7 @@ func (a LUXWorld) Scenify(w io.Writer) error {
 	return nil
 }
 
+// LUXHeadLight adds a light in the viewer coordinate system to make sure the scene is lit.
 var LUXHeadLight = LUXStringScene(`
 AttributeBegin
 CoordSysTransform "camera"
@@ -497,6 +532,7 @@ AttributeEnd
 
  */
 
+// LUXMeshTemplate generates a mesh component for LUX scene.
 var LUXMeshTemplate = template.Must(template.New("OBJ").Parse(`
 AttributeBegin
 Shape "mesh"
@@ -508,6 +544,7 @@ AttributeEnd
 `))
 
 
+// LUXTextureMeshTemplate generates a mesh component for LUX scene, including the texture parameter.
 var LUXTexturedMeshTemplate = template.Must(template.New("OBJTextured").Parse(`
 AttributeBegin
 NamedMaterial "{{ .Texture }}"
@@ -517,7 +554,6 @@ Shape "mesh"
 	      "integer triindices" [{{range .T}} {{.}} {{end}}]
 AttributeEnd
 `))
-
 
 
 var LUXMeshVertexTemplate = template.Must(template.New("OBJ").Parse(`
@@ -530,13 +566,14 @@ AttributeEnd
 `))
 
 
-
+// LUXMesh is a structure for un-textured mesh template.
 type LUXMesh struct {
 	N,               P [][3]float32
 	UV                 [][2]float32
 	T                  []int
 }
 
+// LUXTexturedMesh is a textured mesh template.
 type LUXTexturedMesh struct {
 	Texture string
 	N,               P [][3]float32
@@ -544,6 +581,7 @@ type LUXTexturedMesh struct {
 	T                  []int
 }
 
+// Scenify makes OBJ directly includeable in a LUX scene.
 func (an OBJ) Scenify(w io.Writer) error {
 	for _, g := range an.Geodes { // Over geodes
 		lm := LUXMesh{[][3]float32{}, [][3]float32{}, [][2]float32{}, []int{}} // Each geode goes through template separately
@@ -587,13 +625,13 @@ func (an OBJ) Scenify(w io.Writer) error {
 	return nil // All ok
 }
 
+// LUXOSGTGeometry specifies an OSG structure to convert to LUX, and what resolver to use to locate texture images.
 type LUXOSGTGeometry struct {
 	Osgt  OSGT
 	Files Resolver
 }
 
 // Define how it works
-
 func (cover LUXOSGTGeometry) Scenify(w io.Writer) error {
 
 	an := cover.Osgt
@@ -710,6 +748,7 @@ func (cover LUXOSGTGeometry) Scenify(w io.Writer) error {
 
 }
 
+// LUXDoTransform adds a transform over a scener.
 func LUXDoTransform(tr [16]float32, a LUXScener) LUXScener {
 	return LUXWrap{
 		LUXSequence{LUXTransform{tr},
@@ -729,6 +768,7 @@ func (an LUXTransform) Scenify(w io.Writer) error {
 	return nil
 }
 
+// LUXNamedMaterial creates a named material in a lux scene. File should point to existing location.
 type LUXNamedMaterial struct {
 	Name string
 	File string
@@ -757,6 +797,7 @@ func (a LUXNamedMaterial) Scenify(w io.Writer) error {
 	return nil
 }
 
+// LUXLight creates a point light.
 type LUXLight struct {
 	Position [3]float32
 }
@@ -807,6 +848,7 @@ func (an LUXAreaLight) Scenify(w io.Writer) error {
 	return nil
 }
 
+// LUXSceneFull represents complete LUX scene, including a way to resolve all texture files.
 type LUXSceneFull struct {
 	Files Resolver
 	World RenderingData

@@ -66,6 +66,12 @@ func TestLuxTest(t * testing.T) {
 	}
 }
 
+func TestPodTest(t * testing.T) {
+	if err := CheckPod(); err != nil {
+		t.Error(err.Error())
+	}
+}
+
 // check_file performs sanity check
 func check_file(t * testing.T, file string, should_exist bool) {
 	fi, err := os.Stat(file)
